@@ -5,6 +5,6 @@ import App from "./App";
 test("renders the ilionx logo", async () => {
     
     render(<App />);
-    const ilionxLogo = screen.getByAltText(/ilionx logi/);
+    const ilionxLogo = screen.getByAltText(/ilionx logo/);
     expect(ilionxLogo).toHaveAttribute("src", "/assets/img/logo.png");
 });
