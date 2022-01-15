@@ -1,22 +1,25 @@
 import { useKeycloak } from "@react-keycloak/web";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Unauthorized } from "../pages/Unauthorized";
 
 type Props = {
   children: JSX.Element;
 };
 
 const PrivateRoute: React.FC<Props> = ({ children }) => {
-  const { keycloak } = useKeycloak();
-  let navigate = useNavigate();
+    const { keycloak } = useKeycloak();
+    let navigate = useNavigate();
 
-  const isLoggedIn = keycloak.authenticated;
+    const isLoggedIn = keycloak.authenticated;
 
-  if (!isLoggedIn) {
-    navigate("/unauthorized");
-  }
+    useEffect(() => {
+        if (!isLoggedIn) {
+            navigate("/unauthorized");
+        }
+    }, [isLoggedIn, navigate]);
 
-  return children;
+
+    return children;
 };
 
 export default PrivateRoute;
