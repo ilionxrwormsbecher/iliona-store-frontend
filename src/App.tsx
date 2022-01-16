@@ -1,9 +1,8 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Header } from "./components/Header";
 import { HeaderBar } from "./components/HeaderBar";
-import Nav from "./components/Nav";
-import PrivateRoute from "./helpers/PrivateRoute";
 import keycloak from "./Keycloak";
 
 import WelcomePage from "./pages/Homepage";
@@ -19,27 +18,21 @@ function App() {
                 initOptions={ { onLoad: "login-required" } }
             >
                 <HeaderBar />
-                <Nav />
+                <Header background="/assets/img/logo_ggd.jpg" id="logo" />
                 <BrowserRouter>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <PrivateRoute>
-                                    <WelcomePage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/secured"
-                            element={
-                                <PrivateRoute>
-                                    <SecuredPage />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route path="/unauthorized" element={ <Unauthorized /> } />
-                    </Routes>
+                    <main>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={ <WelcomePage /> }
+                            />
+                            <Route
+                                path="/secured"
+                                element={ <SecuredPage /> }
+                            />
+                            <Route path="/unauthorized" element={ <Unauthorized /> } />
+                        </Routes>
+                    </main>
                 </BrowserRouter>
             </ReactKeycloakProvider>
         </div>
