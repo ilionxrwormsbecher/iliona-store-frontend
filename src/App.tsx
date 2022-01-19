@@ -1,36 +1,32 @@
-import { ReactKeycloakProvider } from "@react-keycloak/web";
+import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Header } from "./components/Header";
-import { HeaderBar } from "./components/HeaderBar";
+import { BrowserRouter,  Route,  Routes } from "react-router-dom";
+import { Header } from "./components/header/Header";
+import { HeaderBar } from "./components/headerBar/HeaderBar";
+import Nav from "./components/nav/Nav";
 import keycloak from "./Keycloak";
+import { Home } from "./pages/Home";
 
-import WelcomePage from "./pages/Homepage";
-import SecuredPage from "./pages/SecuredPage";
-import { Unauthorized } from "./pages/Unauthorized";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/stylesheets/default.scss";
 
 function App() {
+
     return (
         <div className="page-wrapper">
             <ReactKeycloakProvider
                 authClient={ keycloak }
                 initOptions={ { onLoad: "login-required" } }
             >
-                <HeaderBar />
-                <Header background="/assets/img/logo_ggd.jpg" id="logo" />
+
+
                 <BrowserRouter>
+                    <HeaderBar />
+                    <Header background="/assets/img/logo_ggd.jpg" id="logo" />
+                    <Nav />
                     <main>
                         <Routes>
-                            <Route
-                                path="/"
-                                element={ <WelcomePage /> }
-                            />
-                            <Route
-                                path="/secured"
-                                element={ <SecuredPage /> }
-                            />
-                            <Route path="/unauthorized" element={ <Unauthorized /> } />
+                            <Route path="/" element={ <Home /> } />
                         </Routes>
                     </main>
                 </BrowserRouter>

@@ -3,4 +3,9 @@
 // Base classes
 @import "../base/_reset";
 @import "../base/_overwrites";
+@import "../base/variables";
 @import "../main/_layout";
+
+// Component specific style sheets
+@import "../../components//headerBar/headerBar";
+@import "../../components/nav/nav";

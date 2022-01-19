@@ -6,6 +6,6 @@ interface IHeaderProps extends HTMLAttributes<HTMLElement> {
 
 export const Header = ({ background, ...props }: IHeaderProps) => {
     return (
-        <header style={ { backgroundImage: `url(${background})` } }  { ...props } />
+        <header data-testid="header" style={ { backgroundImage: `url(${background})` } }  { ...props } />
     );
 };

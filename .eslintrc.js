@@ -10,14 +10,13 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:jsx-a11y/recommended",
         "plugin:react-hooks/recommended",
         "plugin:jest/recommended",
         "plugin:testing-library/react"
     ],
     overrides: [
         {
-            files: [ "**/*.ts?(x)" ],
+            files: ["**/*.ts?(x)"],
             parser: "@typescript-eslint/parser",
             parserOptions: {
                 ecmaFeatures: {
@@ -39,7 +38,7 @@ module.exports = {
         }
     ],
     parser: "@babel/eslint-parser", // Uses babel-eslint transforms.
-    
+
     parserOptions: {
         ecmaFeatures: {
             jsx: true
