@@ -1,6 +1,7 @@
-import { RouterState } from "connected-react-router";
-import { Reducer } from "react";
+import { PackagesState } from "../../store/slices/packageTypes";
 
 export interface IReduxApplicationState {
-    router: any
+    router: any,
+    packagesSlice: PackagesState
+
 }

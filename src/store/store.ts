@@ -1,9 +1,9 @@
-import { connectRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createReduxHistoryContext, reachify } from "redux-first-history";
 import ThunkMiddleware from "redux-thunk";
+import { PackagesReducer } from "./slices/packagesReducer";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 
 
@@ -16,6 +16,7 @@ const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHisto
 
 const rootReducer = () =>
     combineReducers<IReduxApplicationState>({
+        packagesSlice: PackagesReducer,
         router: routerReducer
     });
 

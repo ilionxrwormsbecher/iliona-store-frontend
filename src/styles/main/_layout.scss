@@ -31,3 +31,18 @@ main {
     display: grid;
     grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
 }
+
+.main-content {
+    display: flex;
+    grid-row: 6 / 7;
+    grid-column: 2 / 12;
+    margin: 3.2rem 0;
+    flex-direction: column;
+}
+
+.h1-header {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 28px;
+    line-height: 39px;
+}
