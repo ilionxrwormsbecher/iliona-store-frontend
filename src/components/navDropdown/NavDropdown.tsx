@@ -1,6 +1,4 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { HTMLAttributes, useState } from "react";
+import React, { HTMLAttributes } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 
 interface INavDropdownProps extends HTMLAttributes<HTMLElement> {
@@ -8,7 +6,7 @@ interface INavDropdownProps extends HTMLAttributes<HTMLElement> {
 }
 
 
-export const NavDropdown = ({ items, ...props }: INavDropdownProps ) => {
+export const NavDropdown = ({ items }: INavDropdownProps ) => {
     
     const listItems = items.map((item: string) => {
         return (<Dropdown.Item key={ item } as="button">{ item }</Dropdown.Item>);
