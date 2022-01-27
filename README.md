@@ -1,5 +1,9 @@
 # Getting Started with Create React App
 
+ docker-compose up -d --force-recreate --no-deps --build frontend
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

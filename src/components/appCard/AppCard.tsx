@@ -18,7 +18,7 @@ export const AppCard = ({ title, category, imageUrl, price, backgroundColor, ...
                 <div style={ { backgroundImage: `url(${imageUrl})` } }>
 
                 </div>
-                { title }
+                { title } bla
             </div>
         </div>
     );
