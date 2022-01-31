@@ -1,38 +1,60 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { NavDropdown } from "../navDropdown/NavDropdown";
+import styled from "styled-components";
+import NavItems from "./NavItems";
+import { screenSize } from "../../themes/global";
+
+const NavigationContainer = styled.div`
+    width: 100%;
+    grid-row: 4 / 5;
+    grid-column: 1 / 13;
+    height: 4rem;
+    display: grid;
+    grid-template-columns: 1.6rem repeat(10, 1fr) 1.6rem;
+    background: white;
+    border-bottom: 1px solid #aaa;
+    border-top: 1px solid #aaa;
+    font-size: 1.4rem;
+
+    @media ${screenSize.tablet} {
+        grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
+    }
+`;
+
+const CategoryContainer = styled.div`
+    display: flex;
+    grid-column:  2/12;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+
+    .btn-primary,
+    .btn-primary:focus,
+    .btn-primary:hover {
+        background-color: white;
+        border-color: white;
+        color: #737373;
+        font-size: 1.4rem;
+        box-shadow: none;
+        padding: 0;
+
+        &::after {
+            margin-left: 1.6rem;
+        }
+
+        & + div {
+            font-size: 1.4rem;
+        }
+    }
+`;
 
 const Nav = () => {
- 
-    const items = [
-        "Apps", 
-        "Security", 
-        "tools"
-    ];
-
     return (
-        <div className="navigation-container">
-            <div className="category-container">
-                <NavDropdown items={ items }  />
-
-                <nav className="nav-items-container">
-                    <ul>
-                        <li>
-                            <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>Home</NavLink>
-                        </li>
-                        <li>
-                            <NavLink 
-                                to="/patches" 
-                                className={ ({ isActive }) => (isActive ? "active" : "") }>
-                                Patches
-                            </NavLink>
-                        </li>
-                    </ul>
-                </nav>
-             
-             
-            </div>
-        </div>
+        <NavigationContainer>
+            <CategoryContainer>
+                <NavItems />
+            </CategoryContainer>
+        </NavigationContainer>
     );
 };
 

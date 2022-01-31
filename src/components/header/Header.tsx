@@ -1,11 +1,23 @@
 import React, { HTMLAttributes } from "react";
+import styled from "styled-components";
 
 interface IHeaderProps extends HTMLAttributes<HTMLElement> {
     background: string;
 }
 
-export const Header = ({ background, ...props }: IHeaderProps) => {
+const Header = styled.header<IHeaderProps>`
+    height: 212px;
+    grid-column: 1 / 13;
+    background-position: center;
+    background-size: cover cover;
+    background-repeat: no-repeat;
+    ${props => props.background && 
+        `background-image: url(${props.background})`
+}
+`;
+
+export const HeaderComponent = ( { background, ...props } : IHeaderProps) => {
     return (
-        <header data-testid="header" style={ { backgroundImage: `url(${background})` } }  { ...props } />
+        <Header data-testid="header" background={ background } { ...props } />
     );
 };

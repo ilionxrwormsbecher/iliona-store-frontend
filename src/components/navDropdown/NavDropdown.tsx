@@ -13,7 +13,7 @@ export const NavDropdown = ({ items }: INavDropdownProps ) => {
     });
 
     return (
-        <DropdownButton id="dropdown-item-button" title="Category">
+        <DropdownButton title="Category">
             { listItems }
         </DropdownButton>
     );
