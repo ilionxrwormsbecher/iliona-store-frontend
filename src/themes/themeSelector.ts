@@ -1,5 +1,5 @@
-import { ggdTheme } from './ggdTheme';
-import { ilionxTheme } from './ilionx';
+import { ggdTheme } from "./ggdTheme";
+import { ilionxTheme } from "./ilionx";
 
 export function themeSelector(themeName: string) {
 
