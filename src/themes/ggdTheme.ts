@@ -1,7 +1,18 @@
+import { IThemeModel } from "../models/IThemeModel";
 
+//@ts-ignore sort-keys
+export const ggdTheme: IThemeModel = {
+    primaryColor: "#0957B9",
+    secondaryColor: "black",
 
+    // borders
+    borderNeutral: "orange",
+    borderContentSeperator: "hotpink",
 
-export const ggdTheme = {
-    primaryColor: '#0957B9',
-    secondaryColor: 'black'
-}
+    // text colors
+    primaryTextColor: "darkred",
+    primaryNavigationTextColor: "green",
+
+    //header
+    headerBackgroundColor: "yellow"
+};

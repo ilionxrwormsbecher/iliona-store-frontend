@@ -11,9 +11,8 @@ const Header = styled.header<IHeaderProps>`
     background-position: center;
     background-size: cover cover;
     background-repeat: no-repeat;
-    ${props => props.background && 
-        `background-image: url(${props.background})`
-}
+    background-color: ${p => p.theme.headerBackgroundColor};
+    ${props => props.background && `background-image: url(${props.background})` }
 `;
 
 export const HeaderComponent = ( { background, ...props } : IHeaderProps) => {

@@ -11,8 +11,8 @@ const NavigationContainer = styled.div`
     display: grid;
     grid-template-columns: 1.6rem repeat(10, 1fr) 1.6rem;
     background: white;
-    border-bottom: 1px solid #aaa;
-    border-top: 1px solid #aaa;
+    border-bottom: 1px solid ${ p => p.theme.borderNeutral};
+    border-top: 1px solid  ${ p => p.theme.borderNeutral};
     font-size: 1.4rem;
 
     @media ${screenSize.tablet} {
@@ -33,7 +33,7 @@ const CategoryContainer = styled.div`
     .btn-primary:hover {
         background-color: white;
         border-color: white;
-        color: #737373;
+        color:  ${ p => p.theme.primaryNavigationTextColor};
         font-size: 1.4rem;
         box-shadow: none;
         padding: 0;

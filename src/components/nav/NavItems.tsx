@@ -8,7 +8,7 @@ const NavItemsContainer = styled.nav`
     display: flex;
     flex-direction: row;
     height: 100%;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid ${p => p.theme.borderContentSeperator};
     margin-left: 2.4rem;
 
     ul {
@@ -28,7 +28,7 @@ const NavItemsContainer = styled.nav`
             font-size: 1.4rem;
 
             & a {
-                color: #737373;
+                color: ${ p => p.theme.primaryNavigationTextColor};
                 padding: 0 8px;
                 height: 100%;
                 display: inline-flex;

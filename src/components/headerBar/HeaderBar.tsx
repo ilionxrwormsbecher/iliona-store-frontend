@@ -10,7 +10,7 @@ const TopbarSection = styled.div`
     grid-column: 1 / 13;
     display: grid;
     grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid ${p => p.theme.borderNeutral};
     background: white;
 `;
 

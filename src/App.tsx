@@ -1,5 +1,5 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route,  Routes } from "react-router-dom";
 import { HistoryRouter as Router } from "redux-first-history/rr6";
 import styled, { ThemeProvider } from "styled-components";
@@ -12,6 +12,7 @@ import { history } from "./store/store";
 
 import { ggdTheme } from "./themes/ggdTheme";
 import { ilionxTheme } from "./themes/ilionx";
+import { themeSelector } from "./themes/themeSelector";
 
 const Main = styled.main`
     width: 100%;
@@ -21,10 +22,18 @@ const Main = styled.main`
     grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
 `;
 
+const Wrapper = styled.div`
+    color: ${ p => p.theme.primaryTextColor};
+`
+
 
 function App() {
     const [theme, setTheme] = useState(ggdTheme);
-
+    
+    useEffect(() => {
+        setTheme(themeSelector("ggd"));
+    }, []);
+    
     return (
         <>
             <ReactKeycloakProvider
@@ -34,14 +43,16 @@ function App() {
 
                 <ThemeProvider theme={ theme }>
                     <Router history={ history }>
-                        <HeaderBar />
-                        <Header background="/assets/img/logo_ggd.jpg" />
-                        <Nav />
-                        <Main>
-                            <Routes>
-                                <Route path="/" element={ <Home /> } />
-                            </Routes>
-                        </Main>
+                        <Wrapper>
+                            <HeaderBar />
+                            <Header background="/assets/img/logo_ggd.jpg" />
+                            <Nav />
+                            <Main>
+                                <Routes>
+                                    <Route path="/" element={ <Home /> } />
+                                </Routes>
+                            </Main>
+                        </Wrapper>
                     </Router>
                 </ThemeProvider>
             </ReactKeycloakProvider>
