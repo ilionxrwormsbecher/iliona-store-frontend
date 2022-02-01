@@ -2,7 +2,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { screenSize } from "../../themes/global";
-import { NavDropdown } from "../navDropdown/NavDropdown";
+import  NavDropdown from "../navDropdown/NavDropdown";
+import { FormattedMessage } from "react-intl"
 
 const NavItemsContainer = styled.nav`
     display: flex;
@@ -60,13 +61,15 @@ const NavItems = () => {
             <NavItemsContainer>
                 <ul>
                     <li>
-                        <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>Home</NavLink>
+                        <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>
+                            <FormattedMessage id="navigation.home.text" defaultMessage="Patches"></FormattedMessage>
+                        </NavLink>
                     </li>
                     <li>
                         <NavLink 
                             to="/patches" 
                             className={ ({ isActive }) => (isActive ? "active" : "") }>
-                            Patches
+                            <FormattedMessage id="navigation.patches.text" defaultMessage="Patches"></FormattedMessage>
                         </NavLink>
                     </li>
                 </ul>

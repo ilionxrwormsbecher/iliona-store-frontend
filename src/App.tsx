@@ -9,10 +9,11 @@ import Nav from "./components/nav/Nav";
 import keycloak from "./Keycloak";
 import { Home } from "./pages/Home";
 import { history } from "./store/store";
+import { IntlProvider } from "react-intl"
 
-import { ggdTheme } from "./themes/ggdTheme";
 import { ilionxTheme } from "./themes/ilionx";
 import { themeSelector } from "./themes/themeSelector";
+import { translationSets } from "./i18n/translations";
 
 const Main = styled.main`
     width: 100%;
@@ -28,7 +29,7 @@ const Wrapper = styled.div`
 
 
 function App() {
-    const [theme, setTheme] = useState(ggdTheme);
+    const [theme, setTheme] = useState(ilionxTheme);
     
     useEffect(() => {
         setTheme(themeSelector("ggd"));
@@ -42,18 +43,20 @@ function App() {
             >
 
                 <ThemeProvider theme={ theme }>
-                    <Router history={ history }>
-                        <Wrapper>
-                            <HeaderBar />
-                            <Header background="/assets/img/logo_ggd.jpg" />
-                            <Nav />
-                            <Main>
-                                <Routes>
-                                    <Route path="/" element={ <Home /> } />
-                                </Routes>
-                            </Main>
-                        </Wrapper>
-                    </Router>
+                    <IntlProvider locale={'nl'} messages={translationSets['nl']}>
+                        <Router history={ history }>
+                            <Wrapper>
+                                <HeaderBar />
+                                <Header background="/assets/img/logo_ggd.jpg" />
+                                <Nav />
+                                <Main>
+                                    <Routes>
+                                        <Route path="/" element={ <Home /> } />
+                                    </Routes>
+                                </Main>
+                            </Wrapper>
+                        </Router>
+                    </IntlProvider>
                 </ThemeProvider>
             </ReactKeycloakProvider>
         </>
