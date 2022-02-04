@@ -6,11 +6,11 @@ export const ilionxTheme: IThemeModel = {
     secondaryColor: "green",
 
     // borders
-    borderNeutral: "red",
-    borderContentSeperator: "red",
+    borderNeutral: "#ccc",
+    borderContentSeperator: "#ddd",
 
     // text colors
-    primaryTextColor: "red",
+    primaryTextColor: "#616161",
     primaryNavigationTextColor: "#737373",
 
     // header

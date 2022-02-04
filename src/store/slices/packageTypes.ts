@@ -1,4 +1,4 @@
-import { IIlionaPackages } from "../../models/IIlionaPackage";
+import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../../models/IIlionaPackage";
 
 export enum IlionaPackagesTypes {
     FETCH_ILIONA_PACKAGES_STARTED = "@@FETCH_ILIONA_PACKAGES_STARTED",
@@ -11,7 +11,7 @@ export enum IlionaPackagesTypes {
 }
 
 export type PackagesState = Readonly<{
-    ilionaPackages: IIlionaPackages[];
+    ilionaPackages: IIlionaPackagesAbbreviated[];
     errorMessage: string;
     isFetching: boolean;
     packageInstallSuccessful: boolean;

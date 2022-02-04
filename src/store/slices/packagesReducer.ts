@@ -1,10 +1,11 @@
+import { IIlionaPackagesAbbreviated } from './../../models/IIlionaPackage';
 /* eslint-disable indent */
 import { IlionaPackagesTypes, PackagesState } from "./packageTypes";
 import { IIlionaPackages } from "../../models/IIlionaPackage";
 
 const initialState: PackagesState = {
     errorMessage: "",
-    ilionaPackages: {} as IIlionaPackages[],
+    ilionaPackages: {} as IIlionaPackagesAbbreviated[],
     isFetching: false,
     packageInstallFailed: false,
     packageInstallSuccessful: false

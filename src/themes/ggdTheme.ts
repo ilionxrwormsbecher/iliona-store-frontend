@@ -10,7 +10,7 @@ export const ggdTheme: IThemeModel = {
     borderContentSeperator: "hotpink",
 
     // text colors
-    primaryTextColor: "darkred",
+    primaryTextColor: "#616161",
     primaryNavigationTextColor: "green",
 
     //header

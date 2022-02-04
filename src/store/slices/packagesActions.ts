@@ -27,8 +27,11 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             );
 
             const result = await response.json();
+            const parsedResult = JSON.parse(result);
 
-            const requestSuccessAction: RequestSuccessDispatchType = { payload: { packages: result }, type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_SUCCESS };
+            console.log('result', parsedResult);
+
+            const requestSuccessAction: RequestSuccessDispatchType = { payload: { packages: parsedResult }, type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_SUCCESS };
             dispatch(requestSuccessAction);
         } catch (error) {
             const requestFailedAction: RequestFailedDispatchType = { errorMessage: error, type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE };

@@ -1,3 +1,15 @@
+
+export interface IIlionaPackagesAbbreviated {
+    displayName: string;
+    imageUrl: string;
+    packageName: string;
+    rowKey: string;
+    summary: string;
+    category: string;
+    requiresLicense: boolean;
+}
+
+
 export interface IIlionaPackages {
     Id: string;
     Version: string;

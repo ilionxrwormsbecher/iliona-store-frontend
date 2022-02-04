@@ -7,6 +7,8 @@ interface IAppCardProps extends HTMLAttributes<HTMLElement> {
     imageUrl?: string;
     price?: string;
     backgroundColor?: string;
+    summary?: string;
+    requiresLicense?: boolean;
 }
 
 const CardContainer = styled.div`
@@ -20,19 +22,62 @@ const CardContainer = styled.div`
 
 const ImageContainer = styled.div`
     width: 100%;
+
+`;
+
+const PackageContentContainer = styled.div`
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+`;
+
+const PackageHeader = styled.div`
+    font-size: 1.6rem;
+    color: ${ p => p.theme.primaryTextColor};
+`;
+
+const PackageCategory = styled.div`
+    font-size: 1.4rem;
+`;
+const PackageLicense = styled.div`
+    font-size: 1.4rem;
+    margin-top: 16px;
+    text-align: right;
+
+    .negative {
+        color: #842029;
+    }
+
+    .positive {
+        color: #0f5132;
+    }
+
+
 `;
 
 
 
-export const AppCard = ({ title, category, imageUrl, price, backgroundColor, ...props }: IAppCardProps) => {
+
+
+
+
+export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, ...props }: IAppCardProps) => {
+    console.log('license needed', requiresLicense)
+    const licenseIndication = requiresLicense ? <span className="negative">licensie vereist</span> : <span className="positive">Gratis</span>
+
     return (
         <CardContainer { ...props }>
-            <ImageContainer>
-                <div style={ { backgroundImage: `url(${imageUrl})` } }>
-
-                </div>
-                { title } 
+            <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
             </ImageContainer>
+
+
+            <PackageContentContainer>
+                <PackageHeader>{ title }</PackageHeader>
+                <PackageCategory>{ category }</PackageCategory>
+                <PackageLicense>{licenseIndication}</PackageLicense>
+            </PackageContentContainer>
+
         </CardContainer>
     );
 };

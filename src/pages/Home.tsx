@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { AppCard } from "../components/appCard/AppCard";
 import { Header1 } from "../components/html/header/Header";
-import { IIlionaPackages } from "../models/IIlionaPackage";
+import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../models/IIlionaPackage";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { fetchIlionaPackages } from "../store/slices/packagesActions";
 
@@ -33,11 +33,14 @@ export const Home = () => {
 
 
     if (packages.ilionaPackages.length > 0) {
-        packageCards = packages.ilionaPackages.map((packageApp: IIlionaPackages) => (
+        packageCards = packages.ilionaPackages.map((packageApp: IIlionaPackagesAbbreviated) => (
             <AppCard 
-                key={ packageApp?.Title } 
-                title={ packageApp?.Title }
-                imageUrl={ packageApp?.IconUrl }
+                key={ packageApp?.rowKey } 
+                title={ packageApp?.displayName }
+                imageUrl={ packageApp?.imageUrl }
+                summary={packageApp?.summary }
+                category={packageApp?.category}
+                requiresLicense={packageApp?.requiresLicense}
             />
         ));
     }

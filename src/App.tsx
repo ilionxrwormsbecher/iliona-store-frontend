@@ -32,7 +32,7 @@ function App() {
     const [theme, setTheme] = useState(ilionxTheme);
     
     useEffect(() => {
-        setTheme(themeSelector("ggd"));
+        setTheme(themeSelector("ilionx"));
     }, []);
     
     return (
@@ -43,7 +43,7 @@ function App() {
             >
 
                 <ThemeProvider theme={ theme }>
-                    <IntlProvider locale={'nl'} messages={translationSets['nl']}>
+                    <IntlProvider locale={'nl'} messages={translationSets['en']}>
                         <Router history={ history }>
                             <Wrapper>
                                 <HeaderBar />
