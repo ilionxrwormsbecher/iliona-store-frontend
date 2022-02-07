@@ -35,17 +35,16 @@ export const Home = () => {
     if (packages.ilionaPackages.length > 0) {
         packageCards = packages.ilionaPackages.map((packageApp: IIlionaPackagesAbbreviated) => (
             <AppCard 
-                key={ packageApp?.rowKey } 
+                key={packageApp?.rowKey}
                 title={ packageApp?.displayName }
                 imageUrl={ packageApp?.imageUrl }
                 summary={packageApp?.summary }
                 category={packageApp?.category}
                 requiresLicense={packageApp?.requiresLicense}
+                rowkey={packageApp?.rowKey}
             />
         ));
     }
-
-    console.log("packages", packages);
 
     return (
         <MainContent>

@@ -14,6 +14,7 @@ import { IntlProvider } from "react-intl"
 import { ilionxTheme } from "./themes/ilionx";
 import { themeSelector } from "./themes/themeSelector";
 import { translationSets } from "./i18n/translations";
+import { PackageDetail } from "./pages/PackageDetail";
 
 const Main = styled.main`
     width: 100%;
@@ -51,6 +52,7 @@ function App() {
                                 <Nav />
                                 <Main>
                                     <Routes>
+                                        <Route path="/detail/:rowkey" element={ <PackageDetail /> } />
                                         <Route path="/" element={ <Home /> } />
                                     </Routes>
                                 </Main>

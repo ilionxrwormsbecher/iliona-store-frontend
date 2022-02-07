@@ -7,7 +7,7 @@ const H1 =  styled.h1`
     font-weight: normal;
     font-size: 28px;
     line-height: 39px;
-    margin-bottom: 1.6rem;
+    margin-bottom: .8rem;
 `;
 
 const H2 =  styled.h2`
@@ -15,7 +15,15 @@ const H2 =  styled.h2`
     font-weight: normal;
     font-size: 24px;
     line-height: 32px;
-    margin-bottom: 1.6rem;
+    margin-bottom: .8rem;
+`;
+
+const H3 =  styled.h3`
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 23px;
+    margin-bottom: .4rem;
 `;
 
 export const Header1: FC<{}> = ({ children, ...props }) => {
@@ -24,10 +32,18 @@ export const Header1: FC<{}> = ({ children, ...props }) => {
     );
 };
 
-export const Header2: FC<{}> = ({ children, ...props }) => {
+export const Header2: FC<any> = ({ children, ...props }) => {
     return (
         <H2 { ...props }>{ children }</H2>
     );
 };
+
+
+export const Header3: FC<{}> = ({ children, ...props }) => {
+    return (
+        <H3 { ...props }>{ children }</H3>
+    );
+};
+
 
 

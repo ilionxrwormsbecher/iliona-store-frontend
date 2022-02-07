@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 interface IAppCardProps extends HTMLAttributes<HTMLElement> {
@@ -9,6 +10,7 @@ interface IAppCardProps extends HTMLAttributes<HTMLElement> {
     backgroundColor?: string;
     summary?: string;
     requiresLicense?: boolean;
+    rowkey: string;
 }
 
 const CardContainer = styled.div`
@@ -52,32 +54,27 @@ const PackageLicense = styled.div`
     .positive {
         color: #0f5132;
     }
-
-
 `;
 
 
 
-
-
-
-
-export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, ...props }: IAppCardProps) => {
-    console.log('license needed', requiresLicense)
+export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, rowkey, ...props }: IAppCardProps) => {
     const licenseIndication = requiresLicense ? <span className="negative">licensie vereist</span> : <span className="positive">Gratis</span>
 
     return (
-        <CardContainer { ...props }>
-            <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
-            </ImageContainer>
+        <NavLink to={`/detail/${rowkey}`}>
+            <CardContainer { ...props }>
+                <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
+                </ImageContainer>
 
 
-            <PackageContentContainer>
-                <PackageHeader>{ title }</PackageHeader>
-                <PackageCategory>{ category }</PackageCategory>
-                <PackageLicense>{licenseIndication}</PackageLicense>
-            </PackageContentContainer>
+                <PackageContentContainer>
+                    <PackageHeader>{ title }</PackageHeader>
+                    <PackageCategory>{ category }</PackageCategory>
+                    <PackageLicense>{licenseIndication}</PackageLicense>
+                </PackageContentContainer>
 
-        </CardContainer>
+            </CardContainer>
+        </NavLink>
     );
 };
