@@ -1,11 +1,31 @@
 import React, { useEffect } from 'react';
+import { Spinner } from '../components/spinner/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header1, Header2, Header3 } from '../components/html/header/Header';
 import { IReduxApplicationState } from '../models/redux/IReduxApplicationState';
-import { fetchIlionaPackageDetails } from '../store/slices/packagesActions';
+import { fetchIlionaPackageDetails, InstallPackage } from '../store/slices/packagesActions';
 import { screenSize } from '../themes/global';
+import { Alert } from 'react-bootstrap';
+
+
+const ErrorWrapper = styled.div`
+    display: flex;
+    grid-row: 6 / 7;
+    grid-column: 1 / 13;
+    flex-direction: column;
+    margin-top:32px;
+
+
+    @media ${screenSize.tablet} {
+        grid-column: 2 / 12;
+    }
+
+    @media ${screenSize.desktop} {
+        grid-column: 4 / 10;
+    }
+`;
 
 const DetailPageWrapper = styled.div`
     display: flex;
@@ -161,74 +181,110 @@ export const PackageDetail = () => {
 
     const dispatch = useDispatch();
     const packageDetails = useSelector((state: IReduxApplicationState) => state.packagesSlice);
+    let showSpinner = false;
+    let showError = false;
 
     useEffect(() => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
     }, [dispatch]);
 
 
+    if (packageDetails?.isFetching) {
+        showSpinner = true
+    }
+
+    if (packageDetails?.errorMessage) {
+        showError = true;
+    }
+
+    const errorMessage = (
+        <ErrorWrapper>
+            <Alert variant='danger'>
+                Er is iets fout gegaan,probeer het later opnieuw
+            </Alert>
+
+        </ErrorWrapper>
+    )
+
     const licenseElement = packageDetails?.selectedPackageDetail[0]?.RequiresLicense ? 
         <span className='license-required'>{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>:
         <span className='license-not-required'>{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>;
+        
 
+    const handleInstall = (displayName: string) => {
+        console.log('display name', displayName)
+        dispatch(InstallPackage(displayName))
+    }
+    
     return (
+        <>
+            {showError && errorMessage}
+            <DetailPageWrapper>
 
-        <DetailPageWrapper>
-            <HeaderWrapper>
-                <HeaderLeftSection>
-                    <div style={ { backgroundImage: `url(${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`, maxWidth: '204px;', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}} >
+                {showSpinner && <Spinner /> }    
+                
+                
+                {!showSpinner  && (
+                    <>
+                        <HeaderWrapper>
+                            <HeaderLeftSection>
+                                <div style={ { backgroundImage: `url(${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`, maxWidth: '204px', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}} >
 
-                    </div>
-                </HeaderLeftSection>
+                                </div>
+                            </HeaderLeftSection>
 
-                <HeaderRightSection>
-                    <Header1>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header1>
-                    <div className='license-text'>Categorie: <i>{packageDetails?.selectedPackageDetail[0]?.Category}</i></div>
-                    <div className='license-text'>
-                        Licentie: <i>{licenseElement}</i>
-                    </div>
+                            <HeaderRightSection>
+                                <Header1>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header1>
+                                <div className='license-text'>Categorie: <i>{packageDetails?.selectedPackageDetail[0]?.Category}</i></div>
+                                <div className='license-text'>
+                                    Licentie: <i>{licenseElement}</i>
+                                </div>
 
-                    <InstallButtonWrapper>
-                        <InstallButton>
-                            Install
-                        </InstallButton>
-                    </InstallButtonWrapper>
+                                <InstallButtonWrapper>
+                                    <InstallButton onClick={() => handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)}>
+                                        Install
+                                    </InstallButton>
+                                </InstallButtonWrapper>
 
-                </HeaderRightSection>
-            </HeaderWrapper>
+                            </HeaderRightSection>
+                        </HeaderWrapper>
 
-            <DescriptionArea>
-                <Header3>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header3>
-                <p>
-                    {packageDetails?.selectedPackageDetail[0]?.Description}
-                </p>
-            </DescriptionArea>
+                        <DescriptionArea>
+                            <Header3>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header3>
+                            <p>
+                                {packageDetails?.selectedPackageDetail[0]?.Description}
+                            </p>
+                        </DescriptionArea>
 
-            <AdditionalInfoHeader>
-                Overige informatie
-            </AdditionalInfoHeader>
-            <AdditionalDetailsWrapper>
-                <div className='item'>
-                    <p>Tags</p>
-                    <p><i>{packageDetails?.selectedPackageDetail[0]?.Tags}</i></p>    
-                </div>
+                        <AdditionalInfoHeader>
+                            Overige informatie
+                        </AdditionalInfoHeader>
+                        <AdditionalDetailsWrapper>
+                            <div className='item'>
+                                <p>Tags</p>
+                                <p><i>{packageDetails?.selectedPackageDetail[0]?.Tags}</i></p>    
+                            </div>
 
-                <div className='item'>
-                    <p>Benodigheden</p>
-                    <p><i>{packageDetails?.selectedPackageDetail[0]?.Dependencies}</i></p>    
-                </div>
+                            <div className='item'>
+                                <p>Benodigheden</p>
+                                <p><i>{packageDetails?.selectedPackageDetail[0]?.Dependencies}</i></p>    
+                            </div>
 
-                <div className='item'>
-                    <p>Installatietijd</p>
-                    <p><i>{packageDetails?.selectedPackageDetail[0]?.InstallationTime}</i></p>    
-                </div>
+                            <div className='item'>
+                                <p>Installatietijd</p>
+                                <p><i>{packageDetails?.selectedPackageDetail[0]?.InstallationTime}</i></p>    
+                            </div>
 
-                <div className='item'>
-                    <p>Herstart benodigd</p>
-                    <p><i>{packageDetails?.selectedPackageDetail[0]?.NeedToRestart ? "ja" : "nee"}</i></p>    
-                </div>
-            
-            </AdditionalDetailsWrapper>
-        </DetailPageWrapper>
+                            <div className='item'>
+                                <p>Herstart benodigd</p>
+                                <p><i>{packageDetails?.selectedPackageDetail[0]?.NeedToRestart ? "ja" : "nee"}</i></p>    
+                            </div>
+                        
+                        </AdditionalDetailsWrapper>
+                    </>
+                )}
+            </DetailPageWrapper>
+        
+        </>
     );
 };

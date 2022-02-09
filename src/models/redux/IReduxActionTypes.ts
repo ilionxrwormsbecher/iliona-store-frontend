@@ -15,6 +15,8 @@ export type RequestSuccessDispatchType = {
 
 export type RequestFailedDispatchType = {
     type: string,
-    errorMessage: any
+    payload: {
+        errorMessage: any
+    }
 }
 

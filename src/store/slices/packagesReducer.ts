@@ -25,9 +25,10 @@ export function PackagesReducer(
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE:
+            console.log('reducer', action)
             return {
                 ...state,
-                errorMessage: action.payload.errorMessage,
+                errorMessage: action?.payload?.errorMessage,
                 isFetching: false
             };
 
@@ -35,48 +36,53 @@ export function PackagesReducer(
             return {
                 ...state,
                 ilionaPackages: action.payload.packages,
+                errorMessage: '',
                 isFetching: false
             };
 
-            case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_STARTED:
-                return {
-                    ...state,
-                    isFetching: true
-                };
-    
-            case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_FAILURE:
-                return {
-                    ...state,
-                    errorMessage: action.payload.errorMessage,
-                    isFetching: false
-                };
-    
-            case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_SUCCESS:
-                return {
-                    ...state,
-                    selectedPackageDetail: action.payload.packageDetails,
-                    isFetching: false
-                };
-        // case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_STARTED:
-        //     return {
-        //         ...state,
-        //         isFetching: true
-        //     };
+        case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_STARTED:
+            return {
+                ...state,
+                isFetching: true
+            };
 
-        // case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE:
-        //     return {
-        //         ...state,
-        //         errorMessage: action.payload.errorMessage,
-        //         isFetching: false,
-        //         packageInstallFailed: true
-        //     };
+        case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_FAILURE:
+            return {
+                ...state,
+                errorMessage: action.payload.errorMessage,
+                isFetching: false
+            };
 
-        // case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS:
-        //     return {
-        //         ...state,
-        //         isFetching: false,
-        //         packageInstallSuccessful: action.payload.installed
-        //     };
+        case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_SUCCESS:
+            return {
+                ...state,
+                selectedPackageDetail: action.payload.packageDetails,
+                errorMessage: '',
+                isFetching: false
+            };
+            
+        case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_STARTED:
+            return {
+                ...state,
+                isFetching: true
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE:
+            return {
+                ...state,
+                errorMessage: action.payload.errorMessage,
+                isFetching: false,
+                packageInstallFailed: true
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: "",
+                packageInstallSuccessful: action.payload.installed
+            };
         default: {
             return state;
         }
