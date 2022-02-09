@@ -60,7 +60,7 @@ jobs:
 
     - run: |
         docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-fe:${{ steps.date.outputs.date }}
-        docker tag  ${{secrets.ACR_SERVER}}/iliona/store-packages:${{ steps.date.outputs.date }} ${{secrets.ACR_SERVER}/iliona/store-packages:latest 
+        docker tag  ${{secrets.ACR_SERVER}}/iliona/store-packages:${{ steps.date.outputs.date }} ${{secrets.ACR_SERVER}}/iliona/store-packages:latest 
         
         docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:${{ steps.date.outputs.date }}
         docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
