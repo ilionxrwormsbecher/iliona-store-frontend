@@ -37,14 +37,24 @@ jobs:
     needs: [build_react]
     
     steps:
-      - uses: actions/checkout@v2
-      
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+    - uses: actions/checkout@v2
 
-      - run: |
-          docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
-          docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
+    # create the date suffix ":yyyyMMddhhmm"
+    - name: Current Time 2
+      id: date
+      uses: srfrnk/current-time@v1.1.0
+      with:
+        format: YYYYMMDDHHmm
+        run: echo ${{ steps.date.outputs.date }}
+        
+
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - run: |
+        docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
+        docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
