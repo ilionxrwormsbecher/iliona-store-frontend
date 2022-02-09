@@ -2,7 +2,6 @@ import { ActionCreator, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { IlionaPackagesTypes, PackagesState } from "./packageTypes";
 import { RequestFailedDispatchType, RequestStartedDispatchType, RequestSuccessDispatchType } from "../../models/redux/IReduxActionTypes";
-import { apikey } from "../../secrets/apikey";
 
 export const fetchIlionaPackages = () => {
     return (dispatch: Dispatch<any>) => {
@@ -20,7 +19,7 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", apikey);
+            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
             const response: Response = await fetch(
                 "https://api.iliona.cloud/store-packages/list/",
                 {
@@ -63,7 +62,7 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", apikey);
+            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
             const response: Response = await fetch(
                 `https://api.iliona.cloud/store-packages/get_by_id/${id}`,
                 {
@@ -104,7 +103,7 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", apikey);
+            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
             const response: Response = await fetch(
                 `http://127.0.0.1:8882/install?package_name="${packageName}"&arguments=""'`,
                 {
