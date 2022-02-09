@@ -30,7 +30,7 @@ jobs:
       
     - name: Build app
       run: |
-        npm run build
+        CI='' npm run build
         
   push_to_azure_container_registry:
     runs-on: ubuntu-latest
