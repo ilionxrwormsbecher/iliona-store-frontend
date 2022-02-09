@@ -54,7 +54,7 @@ const LoggedInContainer = styled.div`
 
 export const HeaderBar = () => {
 
-    const { keycloak } = useKeycloak();
+    // const { keycloak } = useKeycloak();
     return (
         <TopbarSection>
             <Brand>
@@ -62,7 +62,9 @@ export const HeaderBar = () => {
             </Brand>
 
             <LoggedInContainer  role="region">
-                <p className="logged-in-username " >{ keycloak?.tokenParsed?.preferred_username }</p>
+                <p className="logged-in-username " >
+                    {/* { keycloak?.tokenParsed?.preferred_username } */}
+                </p>
                 <div  className="login-avatar">
                 </div>
             </LoggedInContainer>

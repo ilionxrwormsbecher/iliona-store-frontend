@@ -38,29 +38,29 @@ function App() {
     
     return (
         <>
-            <ReactKeycloakProvider
+            {/* <ReactKeycloakProvider
                 authClient={ keycloak }
                 initOptions={ { onLoad: "login-required" } }
-            >
+            > */}
 
-                <ThemeProvider theme={ theme }>
-                    <IntlProvider locale={'nl'} messages={translationSets['en']}>
-                        <Router history={ history }>
-                            <Wrapper>
-                                <HeaderBar />
-                                <Header background="/assets/img/logo_ggd.jpg" />
-                                <Nav />
-                                <Main>
-                                    <Routes>
-                                        <Route path="/detail/:rowkey" element={ <PackageDetail /> } />
-                                        <Route path="/" element={ <Home /> } />
-                                    </Routes>
-                                </Main>
-                            </Wrapper>
-                        </Router>
-                    </IntlProvider>
-                </ThemeProvider>
-            </ReactKeycloakProvider>
+            <ThemeProvider theme={ theme }>
+                <IntlProvider locale={'nl'} messages={translationSets['en']}>
+                    <Router history={ history }>
+                        <Wrapper>
+                            <HeaderBar />
+                            <Header background="/assets/img/logo_ggd.jpg" />
+                            <Nav />
+                            <Main>
+                                <Routes>
+                                    <Route path="/detail/:rowkey" element={ <PackageDetail /> } />
+                                    <Route path="/" element={ <Home /> } />
+                                </Routes>
+                            </Main>
+                        </Wrapper>
+                    </Router>
+                </IntlProvider>
+            </ThemeProvider>
+            {/* </ReactKeycloakProvider> */}
         </>
     );
 }
