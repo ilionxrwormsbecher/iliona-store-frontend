@@ -45,8 +45,9 @@ jobs:
       uses: srfrnk/current-time@v1.1.0
       with:
         format: YYYYMMDDHHmm
-        run: echo ${{ steps.date.outputs.date }}
-        
+   
+    - name: show date suffix
+      run: echo ${{ steps.date.outputs.date }}
 
 
     - uses: azure/docker-login@v1
