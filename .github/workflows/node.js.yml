@@ -43,14 +43,6 @@ jobs:
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
-      
-    - name: Test with environment variables
-      run: echo $TAG_NAME - $RELEASE_NAME
-      env:
-        TAG_NAME: test-${{ steps.date.outputs.date }}
-    - name: show date suffix
-      run: echo ${{ steps.date.outputs.date }}
-
 
     - uses: azure/docker-login@v1
       with:
@@ -59,8 +51,8 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - run: |
-        docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-fe:${{ steps.date.outputs.date }}
-        docker tag  ${{secrets.ACR_SERVER}}/iliona-store-fe:${{ steps.date.outputs.date }} ${{secrets.ACR_SERVER}}/iliona-store-fe:latest 
+        docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-frontend:${{ steps.date.outputs.date }}
+        docker tag  ${{secrets.ACR_SERVER}}/iliona-store-frontend:${{ steps.date.outputs.date }} ${{secrets.ACR_SERVER}}/iliona-store-frontend:latest 
         
-        docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:${{ steps.date.outputs.date }}
-        docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
+        docker push ${{secrets.ACR_SERVER}}/iliona-store-frontend:${{ steps.date.outputs.date }}
+        docker push ${{secrets.ACR_SERVER}}/iliona-store-frontend:latest
