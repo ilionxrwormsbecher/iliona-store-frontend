@@ -40,12 +40,14 @@ jobs:
     - uses: actions/checkout@v2
 
     # create the date suffix ":yyyyMMddhhmm"
-    - name: Current Time 2
+    - name: Get current date
       id: date
-      uses: srfrnk/current-time@v1.1.0
-      with:
-        format: YYYYMMDDHHmm
-   
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
+    - name: Test with environment variables
+      run: echo $TAG_NAME - $RELEASE_NAME
+      env:
+        TAG_NAME: test-${{ steps.date.outputs.date }}
     - name: show date suffix
       run: echo ${{ steps.date.outputs.date }}
 
