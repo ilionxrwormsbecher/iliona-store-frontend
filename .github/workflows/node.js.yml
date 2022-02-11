@@ -37,14 +37,22 @@ jobs:
     needs: [build_react]
     
     steps:
-      - uses: actions/checkout@v2
-      
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+    - uses: actions/checkout@v2
 
-      - run: |
-          docker build . -t ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
-          docker push ${{secrets.ACR_SERVER}}/iliona-store-fe:latest
+    # create the date suffix ":yyyyMMddhhmm"
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - run: |
+        docker build . -t ${{secrets.ACR_SERVER}}/iliona/store-packages-frontend:${{ steps.date.outputs.date }}
+        docker tag  ${{secrets.ACR_SERVER}}/iliona/store-packages-frontend:${{ steps.date.outputs.date }} ${{secrets.ACR_SERVER}}/iliona/store-packages-frontend:latest 
+        
+        docker push ${{secrets.ACR_SERVER}}/iliona/store-packages-frontend:${{ steps.date.outputs.date }}
+        docker push ${{secrets.ACR_SERVER}}/iliona/store-packages-frontend:latest
