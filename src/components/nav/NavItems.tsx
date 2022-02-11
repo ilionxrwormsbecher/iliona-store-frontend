@@ -4,22 +4,20 @@ import styled from "styled-components";
 import { screenSize } from "../../themes/global";
 import  NavDropdown from "../navDropdown/NavDropdown";
 import { FormattedMessage } from "react-intl"
+import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
+import { useSelector } from "react-redux";
+import { IIlionaCategory } from "../../models/Ilionacategory";
 
 const NavItemsContainer = styled.nav`
     display: flex;
     flex-direction: row;
     height: 100%;
-    border-left: 1px solid ${p => p.theme.borderContentSeperator};
-    margin-left: 2.4rem;
+
 
     ul {
         width: 100%;
         height: 100%;
         margin-left: 0;
-
-        @media ${screenSize.tablet} {
-            margin-left: 3.2rem;
-        }
 
         li { 
             display: inline-flex;
@@ -35,6 +33,11 @@ const NavItemsContainer = styled.nav`
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
+
+                @media ${screenSize.tablet} {
+                    padding: 0 16px;
+                }
+
             }
 
             .active {
@@ -48,30 +51,29 @@ const NavItemsContainer = styled.nav`
 
 const NavItems = () => {
 
-    const items = [
-        "Apps", 
-        "Security", 
-        "tools"
-    ];
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
+
+    const categoryLinks = categories?.categories.map((category: IIlionaCategory) => {
+        return (
+            <li key={category.Name}>
+                <NavLink to={`/${category.Name.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
+                    {/* <FormattedMessage id="navigation.home.text" defaultMessage="Patches"></FormattedMessage> */}
+                    {category.Name}
+                </NavLink>
+            </li>
+        )
+    });
 
     return (
         <>
-            <NavDropdown items={ items }  />
-
             <NavItemsContainer>
                 <ul>
-                    <li>
+                    <li key="home"> 
                         <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>
-                            <FormattedMessage id="navigation.home.text" defaultMessage="Patches"></FormattedMessage>
+                            <FormattedMessage id="navigation.home.text" defaultMessage="Home"></FormattedMessage>
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink 
-                            to="/patches" 
-                            className={ ({ isActive }) => (isActive ? "active" : "") }>
-                            <FormattedMessage id="navigation.patches.text" defaultMessage="Patches"></FormattedMessage>
-                        </NavLink>
-                    </li>
+                    {categoryLinks}
                 </ul>
             </NavItemsContainer>
         </>

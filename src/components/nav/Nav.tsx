@@ -3,6 +3,8 @@ import styled from "styled-components";
 import NavItems from "./NavItems";
 import { screenSize } from "../../themes/global";
 
+
+
 const NavigationContainer = styled.div`
     width: 100%;
     grid-row: 4 / 5;

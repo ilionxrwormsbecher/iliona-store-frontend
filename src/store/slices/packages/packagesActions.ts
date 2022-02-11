@@ -1,7 +1,7 @@
 import { ActionCreator, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { IlionaPackagesTypes, PackagesState } from "./packageTypes";
-import { RequestFailedDispatchType, RequestStartedDispatchType, RequestSuccessDispatchType } from "../../models/redux/IReduxActionTypes";
+import { RequestFailedDispatchType, RequestStartedDispatchType, RequestSuccessDispatchType } from "../../../models/redux/IReduxActionTypes";
 
 export const fetchIlionaPackages = () => {
     return (dispatch: Dispatch<any>) => {

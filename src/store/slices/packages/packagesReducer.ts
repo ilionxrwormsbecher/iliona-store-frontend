@@ -1,8 +1,8 @@
 import { fetchIlionaPackageDetails } from './packagesActions';
-import { IIlionaPackagesAbbreviated } from './../../models/IIlionaPackage';
+import { IIlionaPackagesAbbreviated } from './../../../models/IIlionaPackage';
 /* eslint-disable indent */
 import { IlionaPackagesTypes, PackagesState } from "./packageTypes";
-import { IIlionaPackages } from "../../models/IIlionaPackage";
+import { IIlionaPackages } from "../../../models/IIlionaPackage";
 
 const initialState: PackagesState = {
     errorMessage: "",

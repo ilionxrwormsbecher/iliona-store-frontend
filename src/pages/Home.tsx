@@ -6,7 +6,7 @@ import { AppCard } from "../components/appCard/AppCard";
 import { Header1 } from "../components/html/header/Header";
 import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../models/IIlionaPackage";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { fetchIlionaPackages } from "../store/slices/packagesActions";
+import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
 
 const MainContent = styled.main`

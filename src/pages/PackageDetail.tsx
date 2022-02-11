@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header1, Header2, Header3 } from '../components/html/header/Header';
 import { IReduxApplicationState } from '../models/redux/IReduxApplicationState';
-import { fetchIlionaPackageDetails, InstallPackage } from '../store/slices/packagesActions';
+import { fetchIlionaPackageDetails, InstallPackage } from '../store/slices/packages/packagesActions';
 import { screenSize } from '../themes/global';
 import { Alert } from 'react-bootstrap';
 

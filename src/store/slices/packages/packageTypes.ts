@@ -1,4 +1,4 @@
-import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../../models/IIlionaPackage";
+import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../../../models/IIlionaPackage";
 
 export enum IlionaPackagesTypes {
     FETCH_ILIONA_PACKAGES_STARTED = "@@FETCH_ILIONA_PACKAGES_STARTED",
