@@ -1,5 +1,6 @@
 
 export interface IIlionaCategory {
     Name: string;
-    rowKey: string;
+    RowKey: string;
+    RouteFriendlyName: string;
 }

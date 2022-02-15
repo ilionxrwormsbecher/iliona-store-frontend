@@ -1,8 +1,13 @@
 import React, { HTMLAttributes } from "react";
+import { IntlShape } from "react-intl";
+import injectIntl, { WrappedComponentProps } from "react-intl/src/components/injectIntl";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { translateRoutePaths } from "../../i18n/CategoryTranslations";
+import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
 
-interface IAppCardProps extends HTMLAttributes<HTMLElement> {
+interface IAppCardProps {
     title: string;
     category?: string;
     imageUrl?: string;
@@ -11,6 +16,7 @@ interface IAppCardProps extends HTMLAttributes<HTMLElement> {
     summary?: string;
     requiresLicense?: boolean;
     rowkey: string;
+    intl: IntlShape;
 }
 
 const CardContainer = styled.div`
@@ -24,7 +30,6 @@ const CardContainer = styled.div`
 
 const ImageContainer = styled.div`
     width: 100%;
-
 `;
 
 const PackageContentContainer = styled.div`
@@ -41,6 +46,7 @@ const PackageHeader = styled.div`
 
 const PackageCategory = styled.div`
     font-size: 1.4rem;
+    color: ${p => p.theme.primaryColor};
 `;
 const PackageLicense = styled.div`
     font-size: 1.4rem;
@@ -58,8 +64,11 @@ const PackageLicense = styled.div`
 
 
 
-export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, rowkey, ...props }: IAppCardProps) => {
+const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, rowkey, intl, ...props }: IAppCardProps ) => {
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const licenseIndication = requiresLicense ? <span className="negative">licensie vereist</span> : <span className="positive">Gratis</span>
+
+    const categoryObject = categories?.categories.filter(cat => cat.RowKey === category);
 
     return (
         <NavLink to={`/detail/${rowkey}`}>
@@ -67,10 +76,9 @@ export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, r
                 <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
                 </ImageContainer>
 
-
                 <PackageContentContainer>
                     <PackageHeader>{ title }</PackageHeader>
-                    <PackageCategory>{ category }</PackageCategory>
+                    <PackageCategory>{  translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
                     <PackageLicense>{licenseIndication}</PackageLicense>
                 </PackageContentContainer>
 
@@ -78,3 +86,5 @@ export const AppCard = ({ title, category, imageUrl, backgroundColor, summary, r
         </NavLink>
     );
 };
+
+export default  AppCard;

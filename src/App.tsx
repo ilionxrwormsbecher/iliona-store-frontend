@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { HeaderComponent as Header } from "./components/header/Header";
 import { HeaderBar } from "./components/headerBar/HeaderBar";
 import Nav from "./components/nav/Nav";
-import { Home } from "./pages/Home";
+import Home from "./pages/Home";
 import { history } from "./store/store";
 import { IntlProvider } from "react-intl"
 
@@ -18,6 +18,8 @@ import { fetchIlionaCategories } from "./store/slices/categories/categoryActions
 import { Alert } from "react-bootstrap";
 import { IReduxApplicationState } from "./models/redux/IReduxApplicationState";
 import { Spinner } from "./components/spinner/Spinner";
+import { IIlionaCategory } from "./models/Ilionacategory";
+import { CategoryPackages } from "./pages/CategoryPackages";
 
 const Main = styled.main`
     width: 100%;
@@ -60,65 +62,42 @@ function App() {
         showError = true;
     }
 
-    // const multiRoute = (element: JSX.Element, paths: string[] , ...rest: any) =>  {
-    //     return (
-    //         <>
-    //             {Array.isArray(paths) ? paths.map((path) =>
-    //                 <Route path={path} {...rest} element={(props: any)  => <Element {...props} />} />
-    //             ) :
-    //                 <Route path={paths} {...rest} element={props => <Element {...props} />} />
-    //             }
-    //         </>
-    //     );
-    // }
+    const convertCategoriesToArrayOfStrings = () => {
+        if (categories && categories?.categories) {
+            const categoryArray: string[] = [];
 
-// parent route elements. See the note about <Outlet> below. */}
-// <Routes>
-//   <Route path="/" element={<Layout />}>
-//     {['a', 'b', 'c'].map((path) => (
-//       <Route key="Home" path={path} element={<Home testing={path} />} />
-//     ))}
-//     <Route index element={<Home />} />
-//     <Route path="about" element={<About />} />
-//     <Route path="dashboard" element={<Dashboard />} />
+            categories?.categories.forEach((category: IIlionaCategory) => {
+                categoryArray.push(category?.RouteFriendlyName.toLowerCase());
+            });
 
-//     {/* Using path="*"" means "match anything", so this route
-//           acts like a catch-all for URLs that we don't have explicit
-//           routes for. */}
-//     <Route path="*" element={<NoMatch />} />
-//   </Route>
-// </Routes>
+            return categoryArray;
+        }
+        return [];
+    }
 
     
     return (
-        <>
-            {/* <ReactKeycloakProvider
-                authClient={ keycloak }
-                initOptions={ { onLoad: "login-required" } }
-            > */}
-
+        <IntlProvider locale={'nl'} messages={translationSets['en']}>
             <ThemeProvider theme={ theme }>
-                <IntlProvider locale={'nl'} messages={translationSets['en']}>
-                    <Router history={ history }>
-                        <Wrapper>
-                            <HeaderBar />
-                            <Header background="/assets/img/logo_ggd.jpg" />
-                            <Nav />
-                            <Main>
-                                { categories.isFetching ? <MainContent><Spinner /></MainContent>  : ''}
-                                { showError && !categories.isFetching ? <MainContent>{errorMessage}</MainContent> : (
-                                    <Routes>
-                                        <Route path="/detail/:rowkey" element={ <PackageDetail /> } />
-                                        <Route path="/" element={ <Home /> } />
-                                    </Routes>
-                                )}
-                            </Main>
-                        </Wrapper>
-                    </Router>
-                </IntlProvider>
+                <Router history={ history }>
+                    <Wrapper>
+                        <HeaderBar />
+                        <Header background="/assets/img/logo_ggd.jpg" />
+                        <Nav />
+                        <Main>
+                            { categories.isFetching ? <MainContent><Spinner /></MainContent>  : ''}
+                            { showError && !categories.isFetching ? <MainContent>{errorMessage}</MainContent> : (
+                                <Routes>
+                                    <Route path={`"${convertCategoriesToArrayOfStrings()}"`} element={CategoryPackages} />
+                                    <Route path="/detail/:rowkey" element={ <PackageDetail /> } />
+                                    <Route path="/" element={ <Home /> } />
+                                </Routes>
+                            )}
+                        </Main>
+                    </Wrapper>
+                </Router>
             </ThemeProvider>
-            {/* </ReactKeycloakProvider> */}
-        </>
+        </IntlProvider>
     );
 }
 

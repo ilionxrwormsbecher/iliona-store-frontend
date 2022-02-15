@@ -1,12 +1,13 @@
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { screenSize } from "../../themes/global";
 import  NavDropdown from "../navDropdown/NavDropdown";
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, injectIntl, IntlShape, WrappedComponentProps } from "react-intl"
 import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
 import { useSelector } from "react-redux";
 import { IIlionaCategory } from "../../models/Ilionacategory";
+import { translateRoutePaths } from "../../i18n/CategoryTranslations";
 
 const NavItemsContainer = styled.nav`
     display: flex;
@@ -25,6 +26,10 @@ const NavItemsContainer = styled.nav`
             height: 100%;
             align-items: center;
             font-size: 1.4rem;
+
+            .hide-small-screen {
+                display: none;
+            }
 
             & a {
                 color: ${ p => p.theme.primaryNavigationTextColor};
@@ -49,16 +54,16 @@ const NavItemsContainer = styled.nav`
 `;
 
 
-const NavItems = () => {
+
+const NavItems = ({intl }: WrappedComponentProps) => {
 
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
 
     const categoryLinks = categories?.categories.map((category: IIlionaCategory) => {
         return (
-            <li key={category.Name}>
-                <NavLink to={`/${category.Name.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
-                    {/* <FormattedMessage id="navigation.home.text" defaultMessage="Patches"></FormattedMessage> */}
-                    {category.Name}
+            <li className="hide-small-screen" key={category.Name}>
+                <NavLink to={`/${category.RouteFriendlyName.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
+                    {translateRoutePaths(category.Name, intl)}
                 </NavLink>
             </li>
         )
@@ -80,4 +85,4 @@ const NavItems = () => {
     );
 };
 
-export default NavItems;
+export default injectIntl(NavItems);

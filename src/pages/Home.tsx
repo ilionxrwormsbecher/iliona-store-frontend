@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { AppCard } from "../components/appCard/AppCard";
+import AppCard from "../components/appCard/AppCard";
 import { Header1 } from "../components/html/header/Header";
 import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../models/IIlionaPackage";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
+import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const MainContent = styled.main`
     display: flex;
@@ -24,7 +25,7 @@ const ContentArea = styled.div`
 `;
 
 
-export const Home = () => {
+const Home = ({intl}: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const dispatch = useDispatch();
     let packageCards = [] as JSX.Element[];
@@ -50,6 +51,7 @@ export const Home = () => {
                 category={packageApp?.category}
                 requiresLicense={packageApp?.requiresLicense}
                 rowkey={packageApp?.rowKey}
+                intl={intl}
             />
         ));
     }
@@ -82,3 +84,5 @@ export const Home = () => {
         </MainContent>
     );
 };
+
+export default injectIntl(Home)
