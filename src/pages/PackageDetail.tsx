@@ -8,11 +8,12 @@ import { IReduxApplicationState } from '../models/redux/IReduxApplicationState';
 import { fetchIlionaPackageDetails, InstallPackage } from '../store/slices/packages/packagesActions';
 import { screenSize } from '../themes/global';
 import { Alert } from 'react-bootstrap';
+import { FormattedMessage, injectIntl, WrappedComponentProps } from 'react-intl';
 
 
 const ErrorWrapper = styled.div`
     display: flex;
-    grid-row: 6 / 7;
+    grid-row: 5 / 6;
     grid-column: 1 / 13;
     flex-direction: column;
     margin-top:32px;
@@ -176,7 +177,7 @@ const AdditionalDetailsWrapper = styled.div`
     }
 `;
 
-export const PackageDetail = () => {
+const PackageDetail = ({intl}: WrappedComponentProps) => {
     let { rowkey } = useParams();
 
     const dispatch = useDispatch();
@@ -197,14 +198,21 @@ export const PackageDetail = () => {
         showError = true;
     }
 
+    const errorText = intl.formatMessage({
+        id: "errormessages.general",
+        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw."
+    })
+    
     const errorMessage = (
         <ErrorWrapper>
             <Alert variant='danger'>
-                Er is iets fout gegaan,probeer het later opnieuw
+                {errorText}
             </Alert>
 
         </ErrorWrapper>
     )
+
+
 
     const licenseElement = packageDetails?.selectedPackageDetail[0]?.RequiresLicense ? 
         <span className='license-required'>{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>:
@@ -212,7 +220,6 @@ export const PackageDetail = () => {
         
 
     const handleInstall = (displayName: string) => {
-        console.log('display name', displayName)
         dispatch(InstallPackage(displayName))
     }
     
@@ -235,14 +242,18 @@ export const PackageDetail = () => {
 
                             <HeaderRightSection>
                                 <Header1>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header1>
-                                <div className='license-text'>Categorie: <i>{packageDetails?.selectedPackageDetail[0]?.Category}</i></div>
                                 <div className='license-text'>
-                                    Licentie: <i>{licenseElement}</i>
+                                    <FormattedMessage id="details.title.category" defaultMessage="Categorie"></FormattedMessage>: 
+                                    <i> {packageDetails?.selectedPackageDetail[0]?.Category}</i>
+                                </div>
+                                <div className='license-text'>
+                                    <FormattedMessage id="details.title.license" defaultMessage="Licentie"></FormattedMessage>: 
+                                    <i> {licenseElement}</i>
                                 </div>
 
                                 <InstallButtonWrapper>
                                     <InstallButton onClick={() => handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)}>
-                                        Install
+                                        <FormattedMessage id="details.title.installtext" defaultMessage="Installeren"></FormattedMessage>
                                     </InstallButton>
                                 </InstallButtonWrapper>
 
@@ -257,26 +268,26 @@ export const PackageDetail = () => {
                         </DescriptionArea>
 
                         <AdditionalInfoHeader>
-                            Overige informatie
+                            <FormattedMessage id="details.header.otherinfo" defaultMessage="Overige informatie"></FormattedMessage>
                         </AdditionalInfoHeader>
                         <AdditionalDetailsWrapper>
                             <div className='item'>
-                                <p>Tags</p>
+                                <p><FormattedMessage id="details.title.tags" defaultMessage="Tags"></FormattedMessage></p>
                                 <p><i>{packageDetails?.selectedPackageDetail[0]?.Tags}</i></p>    
                             </div>
 
                             <div className='item'>
-                                <p>Benodigheden</p>
+                                <p><FormattedMessage id="details.title.requirements" defaultMessage="Benodigheden"></FormattedMessage></p>
                                 <p><i>{packageDetails?.selectedPackageDetail[0]?.Dependencies}</i></p>    
                             </div>
 
                             <div className='item'>
-                                <p>Installatietijd</p>
+                                <p><FormattedMessage id="details.title.installationtime" defaultMessage="Installatietijd"></FormattedMessage></p>
                                 <p><i>{packageDetails?.selectedPackageDetail[0]?.InstallationTime}</i></p>    
                             </div>
 
                             <div className='item'>
-                                <p>Herstart benodigd</p>
+                                <p><FormattedMessage id="details.title.restartrequired" defaultMessage="Herstart nodig"></FormattedMessage></p>
                                 <p><i>{packageDetails?.selectedPackageDetail[0]?.NeedToRestart ? "ja" : "nee"}</i></p>    
                             </div>
                         
@@ -288,3 +299,6 @@ export const PackageDetail = () => {
         </>
     );
 };
+
+
+export default injectIntl(PackageDetail);

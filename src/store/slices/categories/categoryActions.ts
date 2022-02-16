@@ -28,7 +28,6 @@ const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, Cate
             );
 
             if (response && response.status !== 200 && response.status !== 201 && response.status !== 204 ) {
-                console.log('kom ik hier')
                 const requestFailedAction: RequestFailedDispatchType = { type: IlionaCategoryTypes.FETCH_ILIONA_CATEGORIES_FAILURE,  payload: {errorMessage: 'Something went wrong' } };
                 dispatch(requestFailedAction);
             }

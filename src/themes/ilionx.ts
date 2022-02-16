@@ -14,5 +14,5 @@ export const ilionxTheme: IThemeModel = {
     primaryNavigationTextColor: "#737373",
 
     // header
-    headerBackgroundColor: "yellow"
-}
+    headerBackgroundColor: "#73a7e3"
+};

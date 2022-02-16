@@ -71,7 +71,7 @@ const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requires
     const categoryObject = categories?.categories.filter(cat => cat.RowKey === category);
 
     return (
-        <NavLink to={`/detail/${rowkey}`}>
+        <NavLink to={`/details/${rowkey}`}>
             <CardContainer { ...props }>
                 <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
                 </ImageContainer>

@@ -19,6 +19,16 @@ const NavItemsContainer = styled.nav`
         width: 100%;
         height: 100%;
         margin-left: 0;
+     
+        .hide-small-screen {
+            display: none;
+
+            @media ${screenSize.tablet} {
+                display: inline-block;
+            }
+
+        }
+
 
         li { 
             display: inline-flex;
@@ -27,9 +37,6 @@ const NavItemsContainer = styled.nav`
             align-items: center;
             font-size: 1.4rem;
 
-            .hide-small-screen {
-                display: none;
-            }
 
             & a {
                 color: ${ p => p.theme.primaryNavigationTextColor};
@@ -62,7 +69,7 @@ const NavItems = ({intl }: WrappedComponentProps) => {
     const categoryLinks = categories?.categories.map((category: IIlionaCategory) => {
         return (
             <li className="hide-small-screen" key={category.Name}>
-                <NavLink to={`/${category.RouteFriendlyName.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
+                <NavLink to={`/categorie/${category.RouteFriendlyName.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
                     {translateRoutePaths(category.Name, intl)}
                 </NavLink>
             </li>

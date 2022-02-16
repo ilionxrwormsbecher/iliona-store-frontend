@@ -7,12 +7,16 @@ import store from "./store/store";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/default.scss";
+import { IntlProvider } from "react-intl";
+import { translationSets } from "./i18n/translations";
 
 ReactDOM.render(
 
-    <Provider store={ store }>
-        <App />
-    </Provider>
+    <IntlProvider locale={'nl'} messages={translationSets['en']}>
+        <Provider store={ store }>
+            <App />
+        </Provider>
+    </IntlProvider>
     ,
     document.getElementById("root")
 );

@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import AppCard from "../components/appCard/AppCard";
-import { Header1 } from "../components/html/header/Header";
-import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../models/IIlionaPackage";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
+import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
+import CategoriesPackages from "../components/categoryPackages/CategoriesPackages";
+import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const MainContent = styled.main`
@@ -18,42 +18,33 @@ const MainContent = styled.main`
     flex-direction: column;
 `;
 
-const ContentArea = styled.div`
-    display: flex;
-    flex-flow: row wrap;
-    width: 100%;
-`;
-
-
 const Home = ({intl}: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
+    const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
-    let packageCards = [] as JSX.Element[];
+
     let showSpinner = false;
     let showError = false;
+
+    const errorText = intl.formatMessage({
+        id: "errormessages.general",
+        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw."
+    })
+    
 
     useEffect(() => {
         dispatch(fetchIlionaPackages());
     }, [dispatch]);
 
+    useEffect(() => {
+        if (packages?.ilionaPackages.length > 0 && categories?.categories.length > 0) {
+            filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages, setCategoriesWithPackages);
+        }
+    }, [packages.ilionaPackages, categories.categories]);
+
     if (packages?.isFetching) {
         showSpinner = true
-    }
-
-
-    if (packages.ilionaPackages.length > 0) {
-        packageCards = packages.ilionaPackages.map((packageApp: IIlionaPackagesAbbreviated) => (
-            <AppCard 
-                key={packageApp?.rowKey}
-                title={ packageApp?.displayName }
-                imageUrl={ packageApp?.imageUrl }
-                summary={packageApp?.summary }
-                category={packageApp?.category}
-                requiresLicense={packageApp?.requiresLicense}
-                rowkey={packageApp?.rowKey}
-                intl={intl}
-            />
-        ));
     }
 
     if (packages?.errorMessage) {
@@ -62,27 +53,21 @@ const Home = ({intl}: WrappedComponentProps) => {
 
     const errorMessage = (
         <Alert variant='danger'>
-            Er is iets fout gegaan,probeer het later opnieuw
+            {errorText}
         </Alert>
     )
 
     const content = (
-        <>
-            <Header1>Applications</Header1>
-            <ContentArea>
-                { packageCards }
-            </ContentArea>
-        </>
+        <CategoriesPackages packagesByCategory={categoriesWithPackages}></CategoriesPackages>
     )
 
     return (
         <MainContent>
             {showSpinner && <Spinner />}
             {showError && errorMessage}
-
             {!showSpinner && content }
         </MainContent>
     );
 };
 
-export default injectIntl(Home)
+export default injectIntl(Home);

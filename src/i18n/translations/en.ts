@@ -7,4 +7,15 @@ export default {
     "navigation.category.productivityTools": "Productivity tools",
     "navigation.category.officesoftware": "Office software",
     "navigation.category.internet": "Internet",
+
+    "errormessages.general": "Something has gone wrong, please try again later.",
+
+    "details.title.category": "Category",
+    "details.title.license": "License",
+    "details.title.tags": "Tags",
+    "details.title.requirements": "Requirements",
+    "details.title.installationtime": "Instalation time",
+    "details.title.restartrequired": "Restart required",
+    "details.title.installtext": "Install",
+    "details.header.otherinfo": "Information"
 };
