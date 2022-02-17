@@ -29,10 +29,10 @@ jobs:
         npm install
       
     - name: Build app
-      env:
-        REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
       run: |
         CI='' npm run build
+      env:
+        REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
         
   push_to_azure_container_registry:
     runs-on: ubuntu-latest
