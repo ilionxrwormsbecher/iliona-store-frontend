@@ -23,7 +23,7 @@ const NavItemsContainer = styled.nav`
         .hide-small-screen {
             display: none;
 
-            @media ${screenSize.tablet} {
+            @media ${screenSize.normalSizeTable} {
                 display: inline-block;
             }
 
@@ -82,7 +82,7 @@ const NavItems = ({intl }: WrappedComponentProps) => {
                 <ul>
                     <li key="home"> 
                         <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>
-                            <FormattedMessage id="navigation.home.text" defaultMessage="Home"></FormattedMessage>
+                            <FormattedMessage id="navigation.home.text" defaultMessage="Alle applicaties"></FormattedMessage>
                         </NavLink>
                     </li>
                     {categoryLinks}
