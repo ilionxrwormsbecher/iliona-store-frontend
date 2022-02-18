@@ -27,6 +27,10 @@ jobs:
     - name: Install dependencies
       run: |
         npm install
+
+    - name: Get api key value
+      id: apikey 
+      run: echo ${{secrets.REACT_APP_API_KEY}}
       
     - name: Build app
       run: |

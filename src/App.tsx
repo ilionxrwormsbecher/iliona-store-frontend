@@ -74,6 +74,7 @@ function App({intl}: WrappedComponentProps) {
                     <Header background="/assets/img/logo_ggd.jpg" />
                     <Nav />
                     <Main>
+                        key: { process.env.REACT_APP_API_KEY}
                         { categories.isFetching ? <MainContent><Spinner /></MainContent>  : ''}
                         { showError && !categories.isFetching ? <MainContent>{errorMessage}</MainContent> : (
                             <Routes>
