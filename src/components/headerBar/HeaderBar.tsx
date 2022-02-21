@@ -61,11 +61,11 @@ export const HeaderBar = () => {
                 <img src="/assets/img/logo.png" alt="ilionx logo" />
             </Brand>
 
-            <LoggedInContainer  role="region">
-                <p className="logged-in-username " >
+            <LoggedInContainer role="region">
+                <p className="logged-in-username" >
                     {/* { keycloak?.tokenParsed?.preferred_username } */}
                 </p>
-                <div  className="login-avatar">
+                <div  className="login-avatar" data-testid="login-avatar">
                 </div>
             </LoggedInContainer>
         </TopbarSection>

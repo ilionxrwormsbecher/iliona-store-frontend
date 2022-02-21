@@ -2,6 +2,9 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { HeaderBar } from "./HeaderBar";
 import App from "../../App";
+import { IntlProvider } from "react-intl";
+import { translationSets } from "../../i18n/translations";
+import { debug } from "console";
 
 
 test("renders the ilionx logo", async () => {
@@ -13,8 +16,12 @@ test("renders the ilionx logo", async () => {
 
 
 test("renders the avatar and username", async () => {
-    render(<App />);
-    render(<HeaderBar />);
-    const loggedInUseravatar = screen.getByRole("region");
-    expect(loggedInUseravatar).toHaveClass("login-avatar");
+    render(
+        <IntlProvider locale={'nl'} messages={translationSets['nl']}>
+            <HeaderBar />
+        </IntlProvider>
+    );
+
+    const loggedInUseravatar = screen.getByTestId("login-avatar");
+    expect(loggedInUseravatar).not.toBeNull()
 });

@@ -14,7 +14,7 @@ const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHisto
     //other options if needed 
 });
 
-const rootReducer = () =>
+export const rootReducer = () =>
     combineReducers<IReduxApplicationState>({
         packagesSlice: PackagesReducer,
         categorySlice: CategoriesReducer,

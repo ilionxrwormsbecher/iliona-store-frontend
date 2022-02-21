@@ -78,7 +78,7 @@ const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requires
 
                 <PackageContentContainer>
                     <PackageHeader>{ title }</PackageHeader>
-                    <PackageCategory>{  translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
+                    <PackageCategory>{ categoryObject && categoryObject.length > 0 && translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
                     <PackageLicense>{licenseIndication}</PackageLicense>
                 </PackageContentContainer>
 
