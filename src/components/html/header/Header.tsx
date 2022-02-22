@@ -25,7 +25,7 @@ const H3 =  styled.h3`
     line-height: 23px;
     margin-bottom: .4rem;
 `;
-
+ 
 export const Header1: FC<any> = ({ children, ...props }) => {
     return (
         <H1 { ...props }>{ children }</H1>
