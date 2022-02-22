@@ -71,13 +71,13 @@ const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requires
     const categoryObject = categories?.categories.filter(cat => cat.RowKey === category);
 
     return (
-        <NavLink to={`/details/${rowkey}`}>
+        <NavLink to={`/details/${rowkey}`} role="link">
             <CardContainer { ...props }>
-                <ImageContainer style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
+                <ImageContainer data-testid="packageImage" style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
                 </ImageContainer>
 
                 <PackageContentContainer>
-                    <PackageHeader>{ title }</PackageHeader>
+                    <PackageHeader data-testid="packageName">{ title }</PackageHeader>
                     <PackageCategory>{ categoryObject && categoryObject.length > 0 && translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
                     <PackageLicense>{licenseIndication}</PackageLicense>
                 </PackageContentContainer>
