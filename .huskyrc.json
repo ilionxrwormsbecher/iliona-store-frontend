@@ -1,7 +1,5 @@
 {
     "hooks": {
-
-        "pre-commit": "eslint .",
         "commit": "npm run test -- --watchAll=false"
     }
 }
