@@ -7,6 +7,8 @@ import { reduxCategoriesFilled } from '../../utils/tests/mockRedux'
 import { render } from "../../utils/tests/customRender";
 import { intlDutch, intlEnglish, intlChinese } from "../../utils/tests/mockTranslations";
 
+
+
 function setupTest(intlLanguage: IntlShape, reducer: any) {
   const {getByRole, getByTestId,  getByText, debug, store} = render(
     <BrowserRouter>
@@ -56,7 +58,7 @@ test('should render the category in Dutch, when language is set to missing langu
 });
 
 test("should render the name of the product correctly and show a product image", () => {
-  const component = setupTest(intlDutch, CategoriesReducer);
+    const component = setupTest(intlDutch, CategoriesReducer);
     const imageNode = component.getByTestId("packageImage");
     const packageTitleNode = component.getByTestId("packageName")
 

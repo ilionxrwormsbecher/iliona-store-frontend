@@ -100,7 +100,7 @@ export const Spinner = () => {
     return (
         <SpinnerWrapper>
             <SpinnerComponent>
-                <div className="lds-spinner">
+                <div className="lds-spinner" data-testid="spinner">
                     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
             </SpinnerComponent>

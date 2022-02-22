@@ -26,7 +26,7 @@ const H3 =  styled.h3`
     margin-bottom: .4rem;
 `;
 
-export const Header1: FC<{}> = ({ children, ...props }) => {
+export const Header1: FC<any> = ({ children, ...props }) => {
     return (
         <H1 { ...props }>{ children }</H1>
     );
@@ -39,7 +39,7 @@ export const Header2: FC<any> = ({ children, ...props }) => {
 };
 
 
-export const Header3: FC<{}> = ({ children, ...props }) => {
+export const Header3: FC<any> = ({ children, ...props }) => {
     return (
         <H3 { ...props }>{ children }</H3>
     );

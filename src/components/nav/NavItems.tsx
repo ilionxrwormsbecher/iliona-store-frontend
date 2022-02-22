@@ -2,7 +2,6 @@ import React, { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { screenSize } from "../../themes/global";
-import  NavDropdown from "../navDropdown/NavDropdown";
 import { FormattedMessage, injectIntl, IntlShape, WrappedComponentProps } from "react-intl"
 import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
 import { useSelector } from "react-redux";
@@ -19,16 +18,14 @@ const NavItemsContainer = styled.nav`
         width: 100%;
         height: 100%;
         margin-left: 0;
-     
+
         .hide-small-screen {
             display: none;
 
             @media ${screenSize.normalSizeTable} {
                 display: inline-block;
             }
-
         }
-
 
         li { 
             display: inline-flex;
@@ -36,7 +33,6 @@ const NavItemsContainer = styled.nav`
             height: 100%;
             align-items: center;
             font-size: 1.4rem;
-
 
             & a {
                 color: ${ p => p.theme.primaryNavigationTextColor};
@@ -49,7 +45,6 @@ const NavItemsContainer = styled.nav`
                 @media ${screenSize.tablet} {
                     padding: 0 16px;
                 }
-
             }
 
             .active {
@@ -69,7 +64,7 @@ const NavItems = ({intl }: WrappedComponentProps) => {
     const categoryLinks = categories?.categories.map((category: IIlionaCategory) => {
         return (
             <li className="hide-small-screen" key={category.Name}>
-                <NavLink to={`/categorie/${category.RouteFriendlyName.toLowerCase()}`} className={ ({ isActive }) => (isActive ? "active" : "") }>
+                <NavLink to={`/categorie/${category.RouteFriendlyName.toLowerCase()}`} data-testid="dynamicLink" className={ ({ isActive }) => (isActive ? "active" : "") }>
                     {translateRoutePaths(category.Name, intl)}
                 </NavLink>
             </li>
@@ -79,9 +74,9 @@ const NavItems = ({intl }: WrappedComponentProps) => {
     return (
         <>
             <NavItemsContainer>
-                <ul>
+                <ul data-testid="links">
                     <li key="home"> 
-                        <NavLink to="/" className={ ({ isActive }) => (isActive ? "active" : "") }>
+                        <NavLink to="/" data-testid="homeLink" className={ ({ isActive }) => (isActive ? "active" : "") }>
                             <FormattedMessage id="navigation.home.text" defaultMessage="Alle applicaties"></FormattedMessage>
                         </NavLink>
                     </li>
