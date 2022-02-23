@@ -23,14 +23,18 @@ const MainContent = styled.main`
 const CategoryPackages = ({intl}: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
-    const routerState = useSelector((state: IReduxApplicationState) => state.router.location.pathname);
+    const routerState = useSelector((state: IReduxApplicationState) => state.router?.location?.pathname);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
 
+    let routeUrlFriendlyName = "";
+
     let showSpinner = false;
     let showError = false;
-    const pathNameAsArray = routerState.split("/");
-    const routeUrlFriendlyName = pathNameAsArray[pathNameAsArray.length  -1];
+    if (routerState) {
+        const pathNameAsArray = routerState.split("/");
+        routeUrlFriendlyName = pathNameAsArray[pathNameAsArray.length  -1];
+    }
 
     useEffect(() => {
         if (checkObjectIsEmpty(packages?.ilionaPackages)) {
