@@ -2,7 +2,7 @@ import { IThemeModel } from "../models/IThemeModel";
 
 //@ts-ignore sort-keys
 export const ggdTheme: IThemeModel = {
-    primaryColor: "#0957B9",
+    primaryColor: "red",
     secondaryColor: "black",
 
     // borders

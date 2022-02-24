@@ -12,7 +12,7 @@ import { translationSets } from "./i18n/translations";
 
 ReactDOM.render(
 
-    <IntlProvider locale={'nl'} messages={translationSets['nl']}>
+    <IntlProvider locale={'nl'} messages={translationSets['en']}>
         <Provider store={ store }>
             <App />
         </Provider>

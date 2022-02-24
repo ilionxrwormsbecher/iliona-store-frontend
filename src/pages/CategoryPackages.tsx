@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert} from 'react-bootstrap';
-import { injectIntl, WrappedComponentProps } from 'react-intl';
+import { FormattedMessage, injectIntl, WrappedComponentProps } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import CategoriesPackages from '../components/categoryPackages/CategoriesPackages';
@@ -73,13 +73,17 @@ const CategoryPackages = ({intl}: WrappedComponentProps) => {
             return cat;
     })
 
-    const content = <CategoriesPackages packagesByCategory={packagesForCurrentRoute}></CategoriesPackages>
+    const content = packagesForCurrentRoute.length > 0 ? 
+        <CategoriesPackages packagesByCategory={packagesForCurrentRoute}></CategoriesPackages> : 
+        <div data-testid="noPackagesAvailble">
+            {errorText}
+        </div>
 
     return (
         <MainContent>
             {showSpinner && <Spinner />}
             {showError && errorMessage}
-            {!showSpinner && content }
+            {!showSpinner && !showError && content }
         </MainContent>
     )
 }

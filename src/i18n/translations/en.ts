@@ -17,5 +17,7 @@ export default {
     "details.title.installationtime": "Instalation time",
     "details.title.restartrequired": "Restart required",
     "details.title.installtext": "Install",
-    "details.header.otherinfo": "Information"
+    "details.header.otherinfo": "Information",
+
+    "packages.nopackages-available": "Sorry, there are no packages available"
 };

@@ -17,5 +17,7 @@ export default {
     "details.title.installationtime": "Installatietijd",
     "details.title.restartrequired": "Herstart nodig",
     "details.title.installtext": "Installeren",
-    "details.header.otherinfo": "Overige informatie"
+    "details.header.otherinfo": "Overige informatie",
+
+    "packages.nopackages-available": "Er zijn geen applicaties beschikbaar"
 };
