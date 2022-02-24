@@ -1,7 +1,7 @@
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import React from 'react'
 import { IntlProvider } from 'react-intl';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { createReduxHistoryContext } from 'redux-first-history';
 import { translationSets } from '../i18n/translations';
 import { IReduxApplicationState } from '../models/redux/IReduxApplicationState';
@@ -25,13 +25,12 @@ const rootReducer = () =>
 
 
 function setupTest(reducer: any, reduxStoreObject: any) {
-    const history = createMemoryHistory()
 
     const {getByRole, getByTestId,  getByText, debug, getAllByTestId, store} = render(
         <IntlProvider locale={'nl'} messages={translationSets['nl']}>
-            <Router location={history.location} navigator={history} >
+            <BrowserRouter>
                 <CategoryPackages />
-            </Router>
+            </BrowserRouter>
         </IntlProvider>,
         reducer,
         reduxStoreObject

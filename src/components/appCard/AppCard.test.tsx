@@ -6,6 +6,7 @@ import { CategoriesReducer } from '../../store/slices/categories/categoryReducer
 import { reduxCategoriesFilled } from '../../utils/tests/mockRedux'
 import { render } from "../../utils/tests/customRender";
 import { intlDutch, intlEnglish, intlChinese } from "../../utils/tests/mockTranslations";
+import  userEvent  from "@testing-library/user-event"
 
 
 
@@ -30,10 +31,14 @@ function setupTest(intlLanguage: IntlShape, reducer: any) {
   return { getByRole, getByTestId, getByText, debug, store};
 }
 
-test('should render the link to the product page succesfully', async () => { 
+test.only('should render the link to the product page succesfully', async () => { 
   const component = setupTest(intlDutch, CategoriesReducer)
   const linkToDetailPage = component.getByRole("link");
+
+  userEvent.click(linkToDetailPage);
+  
   expect(linkToDetailPage).toHaveAttribute('href', "/details/22afc55f-b02c-434b-8441-da96023094b7");
+  expect(window.location.pathname).toMatchInlineSnapshot(`"/details/22afc55f-b02c-434b-8441-da96023094b7"`);
 });
 
 test('should render the category in Dutch', async () => { 
