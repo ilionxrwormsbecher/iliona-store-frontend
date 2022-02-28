@@ -19,6 +19,7 @@ import { Alert } from "react-bootstrap";
 import { IReduxApplicationState } from "./models/redux/IReduxApplicationState";
 import { Spinner } from "./components/spinner/Spinner";
 import CategoryPackages from "./pages/CategoryPackages";
+import { AddPackage } from "./pages/AddPackage";
 
 const Main = styled.main`
     width: 100%;
@@ -79,6 +80,7 @@ function App({intl}: WrappedComponentProps) {
                             <Routes>
                                 <Route path="/categorie/:catName" element={ <CategoryPackages /> } />
                                 <Route path="/details/:rowkey" element={ <PackageDetail /> } />
+                                {/* <Route path="/packages/add" element={ <AddPackage /> } /> */}
                                 <Route path="/" element={ <Home /> } />
                             </Routes>
                         )}

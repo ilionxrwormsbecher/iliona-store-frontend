@@ -42,6 +42,8 @@ const PackageContentContainer = styled.div`
 const PackageHeader = styled.div`
     font-size: 1.6rem;
     color: ${ p => p.theme.primaryTextColor};
+    height: 20px;
+    overflow: hidden;
 `;
 
 const PackageCategory = styled.div`
@@ -77,7 +79,7 @@ const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requires
                 </ImageContainer>
 
                 <PackageContentContainer>
-                    <PackageHeader data-testid="packageName">{ title }</PackageHeader>
+                    <PackageHeader data-testid="packageName" title={title}>{ title }</PackageHeader>
                     <PackageCategory>{ categoryObject && categoryObject.length > 0 && translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
                     <PackageLicense>{licenseIndication}</PackageLicense>
                 </PackageContentContainer>
