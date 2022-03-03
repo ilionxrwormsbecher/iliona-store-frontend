@@ -1,14 +1,30 @@
-import React from 'react'
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components'
-import { screenSize } from '../themes/global';
-import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useEffect, useState } from "react";
+import { Controller, ErrorOption, useForm } from "react-hook-form";
+import styled from "styled-components";
+import { screenSize } from "../themes/global";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Header1 } from "../components/html/header/Header";
+import { useSelector } from "react-redux";
+import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
+import { IIlionaCategory } from "../models/Ilionacategory";
+import { checkFileMimetype, checkObjectIsEmpty } from "../utils/general";
 
-const schema = yup.object({
-    packageName: yup.string().required(),
-    installationTime: yup.number().positive().integer().required(),
-}).required();
+const schema = yup
+    .object({
+        packageName: yup.string().required(),
+        installationTime: yup.number().positive().integer().required(),
+        category: yup.string().required(),
+        dependencies: yup.string(),
+        description: yup.string().required(),
+        displayName: yup.string().required(),
+        isVisible: yup.boolean().required(),
+        licenseMessage: yup.string().required(),
+        summary: yup.string().required(),
+        publishDate: yup.string(),
+        weight: yup.number().positive().integer().required(),
+    })
+    .required();
 
 const AddPackageWrapper = styled.div`
     display: flex;
@@ -28,6 +44,21 @@ const AddPackageWrapper = styled.div`
     }
 `;
 
+const Label = styled.label`
+    display: block;
+    margin-bottom: 4px;
+`;
+
+const ErrorLine = styled.p`
+    color: darkred;
+    font-style: italic;
+    margin-bottom: 4px;
+`;
+
+const TitleWrapper = styled.div`
+    margin: 32px 32px 0 32px; ;
+`;
+
 const Textbox = styled.input`
     display: block;
     width: 100%;
@@ -35,51 +66,374 @@ const Textbox = styled.input`
     font-size: 1.6rem;
     font-weight: 400;
     line-height: 1.5;
-    color: ${p => p.theme.primaryTextColor};
+    color: ${(p) => p.theme.primaryTextColor};
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ced4da;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border-radius:  0;;
-    transition: border-color .15s ease-in-out,
-    box-shadow .15s ease-in-out;
-    margin-bottom: 16px;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 24px;
 
     &:focus-visible {
-    outline: -webkit-focus-ring-color 1px;
-    outline-color: ${p => p.theme.primaryColor};
-    outline-style: auto;
-    outline-width: 1px;
-}
-`
+        outline: -webkit-focus-ring-color 1px;
+        outline-color: ${(p) => p.theme.primaryColor};
+        outline-style: auto;
+        outline-width: 1px;
+    }
+    &::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #999;
+        opacity: 1; /* Firefox */
+    }
 
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #999;
+    }
+
+    &::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: #999;
+    }
+`;
+
+const TextArea = styled.textarea`
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: ${(p) => p.theme.primaryTextColor};
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 24px;
+    height: 130px;
+
+    &:focus-visible {
+        outline: -webkit-focus-ring-color 1px;
+        outline-color: ${(p) => p.theme.primaryColor};
+        outline-style: auto;
+        outline-width: 1px;
+    }
+
+    &::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #999;
+        opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #999;
+    }
+
+    &::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: #999;
+    }
+`;
+
+const Select = styled.select`
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: ${(p) => p.theme.primaryTextColor};
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 24px;
+
+    &:focus-visible {
+        outline: -webkit-focus-ring-color 1px;
+        outline-color: ${(p) => p.theme.primaryColor};
+        outline-style: auto;
+        outline-width: 1px;
+    }
+
+    &::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #999;
+        opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #999;
+    }
+
+    &::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: #999;
+    }
+`;
+
+const FormContent = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
+const FormWrapper = styled.div`
+    display: inline-flex;
+    width: calc(60% - 64px);
+    padding: 32px;
+    flex-direction: column;
+`;
+
+const ImageWrapper = styled.div`
+    display: inline-flex;
+    width: 40%;
+    margin-top: 60px;
+    flex-direction: column;
+`;
+
+const ImageContainer = styled.div`
+    display: block;
+    background: salmon;
+    border: 1px solid hotpink;
+    width: 100%;
+    height: 170px;
+`;
+
+const FormItemsHalfSizeWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 50% 50%;
+`;
+
+const SubmitButton = styled.input.attrs({
+    type: "submit",
+    value: "Submit",
+})`
+    padding: 4px 64px;
+    background-color: ${(p) => p.theme.primaryColor};
+    color: white;
+    outline: none;
+    border: none;
+    font-size: 14px;
+
+    &:disabled {
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+    }
+`;
 
 export const AddPackage = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const [image, setImage] = useState<File | undefined>(undefined);
+    const [imageError, setimageError] = useState<string>("");
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        setError,
+        watch,
+        formState: { errors },
+    } = useForm({
         resolver: yupResolver(schema),
-        mode: 'onBlur',
+        mode: "onBlur",
     });
     const onSubmit = (data: any) => console.log(data);
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice.categories);
 
+    useEffect(() => {
+        if (categories.length > 0) setValue("category", categories[0].RowKey);
+    }, [categories]);
 
-    console.log('errors', errors)
+    useEffect(() => {
+        if (imageError && imageError !== "") {
+            setimageError("error");
+        }
+    }, [imageError]);
+
+    // useEffect(() => {
+    //     if (image) {
+    //         setValue("imageUrl", image?.name);
+    //     } else {
+    //         setError("imageUrl", { message: "a" });
+    //     }
+    // }, [image]);
+
+    console.log("---", image);
 
     return (
-        <>
-            <AddPackageWrapper>
+        <AddPackageWrapper>
+            <TitleWrapper>
+                <Header1>Add a package</Header1>
+            </TitleWrapper>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormContent>
+                    <FormWrapper>
+                        <Label htmlFor="displayName">Display name</Label>
+                        {errors.displayName && <ErrorLine>The display name is required</ErrorLine>}
+                        <Textbox
+                            {...register("displayName")}
+                            id="displayName"
+                            name="displayName"
+                            placeholder="Name of the package"
+                            autoFocus
+                        />
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Textbox {...register("packageName")} />
-                    {errors.packageName && <p>Packagename is required</p> }
-                    
-                    <Textbox {...register("installationTime")} />
-                    {/* { errors && console.log(errors)}               */}
-                    <input type="submit" />
-                </form>
+                        <Label htmlFor="category">Category</Label>
+                        {errors.category && <ErrorLine>Category is required</ErrorLine>}
 
-            </AddPackageWrapper>
-        </>
-    )
-}
+                        <Select {...register("category")}>
+                            {categories.map((cat: IIlionaCategory) => {
+                                return (
+                                    <option key={cat?.RowKey} value={cat?.RowKey}>
+                                        {cat?.RouteFriendlyName}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+
+                        <FormItemsHalfSizeWrapper>
+                            <div>
+                                <Label htmlFor="installationTime">Installation time</Label>
+                                {errors.installationTime && (
+                                    <ErrorLine>Installation is required and should be a number</ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("installationTime")}
+                                    id="installationTime"
+                                    name="installationTime"
+                                    style={{
+                                        display: "inline-block",
+                                        width: "calc(100% - 16px)",
+                                    }}
+                                    placeholder="The time in minutes the package needs to isntall"
+                                />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="weight">Weight</Label>
+                                {errors.weight && <ErrorLine>The weight is required</ErrorLine>}
+                                <Textbox
+                                    {...register("weight")}
+                                    id="weight"
+                                    name="weight"
+                                    style={{ display: "inline-block" }}
+                                    placeholder="The weight of the package"
+                                />
+                            </div>
+                        </FormItemsHalfSizeWrapper>
+
+                        <Label htmlFor="summary">Summary</Label>
+                        {errors.summary && <ErrorLine>The summary is required</ErrorLine>}
+                        <Textbox
+                            {...register("summary")}
+                            id="summary"
+                            name="summary"
+                            placeholder="The summary of the package"
+                        />
+
+                        <Label htmlFor="description">Description</Label>
+                        {errors.description && <ErrorLine>description must be a string</ErrorLine>}
+                        <TextArea
+                            {...register("description")}
+                            id="description"
+                            name="description"
+                            placeholder="If the package has any description please state them here."
+                        />
+
+                        <Label htmlFor="packageName">Package name</Label>
+                        {errors.packageName && <ErrorLine>Packagename is required</ErrorLine>}
+                        <Textbox
+                            {...register("packageName")}
+                            id="packageName"
+                            name="packageName"
+                            placeholder="The name of the package"
+                        />
+
+                        <Label htmlFor="dependencies">Dependencies</Label>
+                        {errors.dependencies && <ErrorLine>Dependencies must be a string</ErrorLine>}
+                        <Textbox
+                            {...register("dependencies")}
+                            id="dependencies"
+                            name="dependencies"
+                            placeholder="If the package has any dependencies please state them here."
+                        />
+
+                        <Label htmlFor="licenseMessage">License message</Label>
+                        {errors.licenseMessage && <ErrorLine>The display name is required</ErrorLine>}
+                        <Textbox
+                            {...register("licenseMessage")}
+                            id="licenseMessage"
+                            name="licenseMessage"
+                            placeholder="The license message of the package"
+                        />
+
+                        <Label htmlFor="isVisible">Visible</Label>
+                        {errors.isVisible && <ErrorLine>Visible is required</ErrorLine>}
+
+                        <Label
+                            htmlFor="isVisible-yes"
+                            style={{
+                                display: "inline-block",
+                                marginRight: "32px",
+                            }}
+                        >
+                            <input
+                                {...register("isVisible")}
+                                type="radio"
+                                name="isVisible"
+                                value="true"
+                                id="isVisible-yes"
+                            />
+                            &nbsp; Yes
+                        </Label>
+                        <Label
+                            htmlFor="isVisible-no"
+                            style={{
+                                display: "inline-block",
+                                marginRight: "32px",
+                            }}
+                        >
+                            <input
+                                {...register("isVisible")}
+                                type="radio"
+                                name="isVisible"
+                                value="false"
+                                id="isVisible-no"
+                            />
+                            &nbsp; No
+                        </Label>
+
+                        <SubmitButton
+                            disabled={!checkObjectIsEmpty(errors) || imageError !== "" || image === undefined}
+                        />
+                    </FormWrapper>
+                    <ImageWrapper>
+                        <ImageContainer></ImageContainer>
+                        <Label htmlFor="imageUrl" style={{ marginTop: "24px" }}>
+                            Image{" "}
+                        </Label>
+                        {imageError && <ErrorLine>{imageError}</ErrorLine>}
+                        <input
+                            id="imageUrl"
+                            type="file"
+                            accept="image/x-png,image/gif,image/jpeg"
+                            {...register("imageUrl")}
+                            onChange={(event) => {
+                                if (event?.currentTarget?.files) {
+                                    checkFileMimetype(event.currentTarget.files[0], setImage, setimageError);
+                                }
+                            }}
+                        />
+                    </ImageWrapper>
+                </FormContent>
+            </form>
+        </AddPackageWrapper>
+    );
+};

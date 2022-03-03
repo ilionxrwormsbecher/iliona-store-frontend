@@ -1,6 +1,8 @@
 import React, { HTMLAttributes } from "react";
 import { IntlShape } from "react-intl";
-import injectIntl, { WrappedComponentProps } from "react-intl/src/components/injectIntl";
+import injectIntl, {
+    WrappedComponentProps,
+} from "react-intl/src/components/injectIntl";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -22,7 +24,7 @@ interface IAppCardProps {
 const CardContainer = styled.div`
     width: 204px;
     height: 330px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     margin-right: 3.2rem;
     margin-bottom: 3.2rem;
@@ -41,14 +43,14 @@ const PackageContentContainer = styled.div`
 
 const PackageHeader = styled.div`
     font-size: 1.6rem;
-    color: ${ p => p.theme.primaryTextColor};
+    color: ${(p) => p.theme.primaryTextColor};
     height: 20px;
     overflow: hidden;
 `;
 
 const PackageCategory = styled.div`
     font-size: 1.4rem;
-    color: ${p => p.theme.primaryColor};
+    color: ${(p) => p.theme.primaryColor};
 `;
 const PackageLicense = styled.div`
     font-size: 1.4rem;
@@ -64,29 +66,63 @@ const PackageLicense = styled.div`
     }
 `;
 
+const AppCard = ({
+    title,
+    category,
+    imageUrl,
+    backgroundColor,
+    summary,
+    requiresLicense,
+    rowkey,
+    intl,
+    ...props
+}: IAppCardProps) => {
+    const categories = useSelector(
+        (state: IReduxApplicationState) => state.categorySlice
+    );
+    const licenseIndication = requiresLicense ? (
+        <span className="negative">Licensie vereist</span>
+    ) : (
+        <span className="positive">Gratis</span>
+    );
 
-
-const AppCard = ({ title, category, imageUrl, backgroundColor, summary, requiresLicense, rowkey, intl, ...props }: IAppCardProps ) => {
-    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
-    const licenseIndication = requiresLicense ? <span className="negative">licensie vereist</span> : <span className="positive">Gratis</span>
-
-    const categoryObject = categories?.categories.filter(cat => cat.RowKey === category);
+    const categoryObject = categories?.categories.filter(
+        (cat) => cat.RowKey === category
+    );
 
     return (
-        <NavLink to={`/details/${rowkey}`} role="link" data-testid="appCardWrapper">
-            <CardContainer { ...props }>
-                <ImageContainer data-testid="packageImage" style={ { backgroundImage: `url(${imageUrl})`, width: '100%', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}}>
-                </ImageContainer>
+        <NavLink
+            to={`/details/${rowkey}`}
+            role="link"
+            data-testid="appCardWrapper"
+        >
+            <CardContainer {...props}>
+                <ImageContainer
+                    data-testid="packageImage"
+                    style={{
+                        backgroundImage: `url(${imageUrl})`,
+                        width: "100%",
+                        height: "230px",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        padding: "8px",
+                    }}
+                ></ImageContainer>
 
                 <PackageContentContainer>
-                    <PackageHeader data-testid="packageName" title={title}>{ title }</PackageHeader>
-                    <PackageCategory>{ categoryObject && categoryObject.length > 0 && translateRoutePaths(categoryObject[0]?.Name, intl) }</PackageCategory>
+                    <PackageHeader data-testid="packageName" title={title}>
+                        {title}
+                    </PackageHeader>
+                    <PackageCategory>
+                        {categoryObject &&
+                            categoryObject.length > 0 &&
+                            translateRoutePaths(categoryObject[0]?.Name, intl)}
+                    </PackageCategory>
                     <PackageLicense>{licenseIndication}</PackageLicense>
                 </PackageContentContainer>
-
             </CardContainer>
         </NavLink>
     );
 };
 
-export default  AppCard;
+export default AppCard;

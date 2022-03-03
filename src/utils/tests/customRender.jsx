@@ -1,7 +1,7 @@
-
-import {render as rtlRender} from '@testing-library/react'
-import {createStore} from 'redux'
-import {Provider} from 'react-redux'
+import { render as rtlRender } from "@testing-library/react";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
 export function render(
     ui,
@@ -10,16 +10,22 @@ export function render(
         initialState,
         store = createStore(injectedReducer, initialState),
         ...renderOptions
-        } = {},
-    ) {
-        function Wrapper({children}) {
-        return <Provider store={store}>{children}</Provider>
-        }
-        return {
+    } = {}
+) {
+    function Wrapper({ children }) {
+        return (
+            <Provider store={store}>
+                <BrowserRouter>{children}</BrowserRouter>
+            </Provider>
+        );
+    }
+    return {
         ...rtlRender(ui, {
             wrapper: Wrapper,
             ...renderOptions,
         }),
         store,
-        }
-    }
+    };
+}
+
+export * from "@testing-library/react";

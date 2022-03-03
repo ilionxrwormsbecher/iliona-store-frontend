@@ -2,7 +2,12 @@ import React, { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { screenSize } from "../../themes/global";
-import { FormattedMessage, injectIntl, IntlShape, WrappedComponentProps } from "react-intl"
+import {
+    FormattedMessage,
+    injectIntl,
+    IntlShape,
+    WrappedComponentProps,
+} from "react-intl";
 import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
 import { useSelector } from "react-redux";
 import { IIlionaCategory } from "../../models/Ilionacategory";
@@ -12,7 +17,6 @@ const NavItemsContainer = styled.nav`
     display: flex;
     flex-direction: row;
     height: 100%;
-
 
     ul {
         width: 100%;
@@ -27,7 +31,7 @@ const NavItemsContainer = styled.nav`
             }
         }
 
-        li { 
+        li {
             display: inline-flex;
             list-style-type: none;
             height: 100%;
@@ -35,7 +39,7 @@ const NavItemsContainer = styled.nav`
             font-size: 1.4rem;
 
             & a {
-                color: ${ p => p.theme.primaryNavigationTextColor};
+                color: ${(p) => p.theme.primaryNavigationTextColor};
                 padding: 0 8px;
                 height: 100%;
                 display: inline-flex;
@@ -49,35 +53,49 @@ const NavItemsContainer = styled.nav`
 
             .active {
                 color: $primary-color;
-                background-color: #f7f7f7;
-            }       
-        }   
+                background-color: red;
+            }
+        }
     }
 `;
 
+const NavItems = ({ intl }: WrappedComponentProps) => {
+    const categories = useSelector(
+        (state: IReduxApplicationState) => state.categorySlice
+    );
 
-
-const NavItems = ({intl }: WrappedComponentProps) => {
-
-    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
-
-    const categoryLinks = categories?.categories.map((category: IIlionaCategory) => {
-        return (
-            <li className="hide-small-screen" key={category.Name}>
-                <NavLink to={`/categorie/${category.RouteFriendlyName.toLowerCase()}`} data-testid="dynamicLink" className={ ({ isActive }) => (isActive ? "active" : "") }>
-                    {translateRoutePaths(category.Name, intl)}
-                </NavLink>
-            </li>
-        )
-    });
+    const categoryLinks = categories?.categories.map(
+        (category: IIlionaCategory) => {
+            return (
+                <li className="hide-small-screen" key={category.Name}>
+                    <NavLink
+                        to={`/categorie/${category.RouteFriendlyName.toLowerCase()}`}
+                        data-testid="dynamicLink"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                    >
+                        {translateRoutePaths(category.Name, intl)}
+                    </NavLink>
+                </li>
+            );
+        }
+    );
 
     return (
         <>
             <NavItemsContainer>
                 <ul data-testid="links">
-                    <li key="home"> 
-                        <NavLink to="/" data-testid="homeLink" className={ ({ isActive }) => (isActive ? "active" : "") }>
-                            <FormattedMessage id="navigation.home.text" defaultMessage="Alle applicaties"></FormattedMessage>
+                    <li key="home">
+                        <NavLink
+                            to="/"
+                            data-testid="homeLink"
+                            className={({ isActive }) =>
+                                isActive ? "active" : ""
+                            }
+                        >
+                            <FormattedMessage
+                                id="navigation.home.text"
+                                defaultMessage="Alle applicaties"
+                            ></FormattedMessage>
                         </NavLink>
                     </li>
                     {categoryLinks}
