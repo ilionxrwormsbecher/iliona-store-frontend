@@ -2,10 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import NavItems from "./NavItems";
 import { screenSize } from "../../themes/global";
+import { IIlionaCategory } from "../../models/Ilionacategory";
 
-
-
-const NavigationContainer = styled.div`
+const NavigationContainer = styled.nav`
     width: 100%;
     grid-row: 4 / 5;
     grid-column: 1 / 13;
@@ -13,8 +12,8 @@ const NavigationContainer = styled.div`
     display: grid;
     grid-template-columns: 1.6rem repeat(10, 1fr) 1.6rem;
     background: white;
-    border-bottom: 1px solid ${ p => p.theme.borderNeutral};
-    border-top: 1px solid  ${ p => p.theme.borderNeutral};
+    border-bottom: 1px solid ${(p) => p.theme.borderNeutral};
+    border-top: 1px solid ${(p) => p.theme.borderNeutral};
     font-size: 1.4rem;
 
     @media ${screenSize.tablet} {
@@ -24,7 +23,7 @@ const NavigationContainer = styled.div`
 
 const CategoryContainer = styled.div`
     display: flex;
-    grid-column:  2/12;
+    grid-column: 2/12;
     height: 100%;
     align-items: center;
     position: relative;
@@ -35,7 +34,7 @@ const CategoryContainer = styled.div`
     .btn-primary:hover {
         background-color: white;
         border-color: white;
-        color:  ${ p => p.theme.primaryNavigationTextColor};
+        color: ${(p) => p.theme.primaryNavigationTextColor};
         font-size: 1.4rem;
         box-shadow: none;
         padding: 0;
@@ -50,11 +49,15 @@ const CategoryContainer = styled.div`
     }
 `;
 
-const Nav = () => {
+interface NavProps {
+    categories: IIlionaCategory[];
+}
+
+const Nav = ({ categories }: NavProps) => {
     return (
         <NavigationContainer>
             <CategoryContainer>
-                <NavItems />
+                <NavItems categories={categories} />
             </CategoryContainer>
         </NavigationContainer>
     );

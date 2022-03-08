@@ -9,8 +9,9 @@ import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
 import CategoriesPackages from "../components/categoryPackages/CategoriesPackages";
 import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
 
-const MainContent = styled.main`
+const MainContent = styled.div`
     display: flex;
     grid-row: 6 / 7;
     grid-column: 2 / 12;
@@ -18,7 +19,7 @@ const MainContent = styled.main`
     flex-direction: column;
 `;
 
-const Home = ({intl}: WrappedComponentProps) => {
+const Home = ({ intl }: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
@@ -26,46 +27,43 @@ const Home = ({intl}: WrappedComponentProps) => {
 
     let showSpinner = false;
     let showError = false;
+    let content;
 
     const errorText = intl.formatMessage({
         id: "errormessages.general",
-        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw."
-    })
-    
+        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw.",
+    });
 
     useEffect(() => {
         dispatch(fetchIlionaPackages());
+        if (categories.categories.length === 0) {
+            dispatch(fetchIlionaCategories());
+        }
     }, [dispatch]);
 
     useEffect(() => {
-        if (packages?.ilionaPackages.length > 0 && categories?.categories.length > 0) {
-            filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages, setCategoriesWithPackages);
+        if (packages && packages?.ilionaPackages.length > 0 && categories && categories?.categories.length > 0) {
+            setCategoriesWithPackages(filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages));
         }
-    }, [packages.ilionaPackages, categories.categories]);
+    }, [packages?.ilionaPackages, categories?.categories]);
 
     if (packages?.isFetching) {
-        showSpinner = true
+        showSpinner = true;
     }
 
     if (packages?.errorMessage) {
         showError = true;
     }
 
-    const errorMessage = (
-        <Alert variant='danger'>
-            {errorText}
-        </Alert>
-    )
+    const errorMessage = <Alert variant="danger">{errorText}</Alert>;
 
-    const content = (
-        <CategoriesPackages packagesByCategory={categoriesWithPackages}></CategoriesPackages>
-    )
+    content = <CategoriesPackages packagesByCategory={categoriesWithPackages}></CategoriesPackages>;
 
     return (
-        <MainContent>
+        <MainContent data-testid="wrapper">
             {showSpinner && <Spinner />}
             {showError && errorMessage}
-            {!showSpinner && content }
+            {!showSpinner && content}
         </MainContent>
     );
 };

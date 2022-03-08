@@ -31,7 +31,7 @@ const Main = styled.main`
     grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
 `;
 
-const MainContent = styled.main`
+const MainContent = styled.section`
     display: flex;
     grid-row: 6 / 7;
     grid-column: 2 / 12;
@@ -45,9 +45,7 @@ const Wrapper = styled.div`
 
 function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
-    const categories = useSelector(
-        (state: IReduxApplicationState) => state.categorySlice
-    );
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const dispatch = useDispatch();
 
     let showError = false;
@@ -77,31 +75,20 @@ function App({ intl }: WrappedComponentProps) {
                 <Wrapper>
                     <HeaderBar />
                     <Header background="/assets/img/logo_ggd.jpg" />
-                    <Nav />
+                    <Nav categories={categories.categories} />
                     <Main>
-                        {categories.isFetching ? (
-                            <MainContent>
+                        {categories.isFetching && (
+                            <MainContent data-testid="app-spinner">
                                 <Spinner />
                             </MainContent>
-                        ) : (
-                            ""
                         )}
                         {showError && !categories.isFetching ? (
                             <MainContent>{errorMessage}</MainContent>
                         ) : (
                             <Routes>
-                                <Route
-                                    path="/categorie/:catName"
-                                    element={<CategoryPackages />}
-                                />
-                                <Route
-                                    path="/details/:rowkey"
-                                    element={<PackageDetail />}
-                                />
-                                <Route
-                                    path="/packages/add"
-                                    element={<AddPackage />}
-                                />
+                                <Route path="/categorie/:catName" element={<CategoryPackages />} />
+                                <Route path="/details/:rowkey" element={<PackageDetail />} />
+                                <Route path="/packages/add" element={<AddPackage />} />
                                 <Route path="/" element={<Home />} />
                             </Routes>
                         )}

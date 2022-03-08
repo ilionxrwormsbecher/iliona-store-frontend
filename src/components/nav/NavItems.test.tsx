@@ -1,47 +1,39 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
 import { IntlProvider, IntlShape } from "react-intl";
 import { CategoriesReducer } from "../../store/slices/categories/categoryReducer";
 import { reduxCategoriesFilled } from "../../utils/tests/mockRedux";
 import {
     render,
+    renderWithoutReducer,
     screen,
     waitFor,
+    waitForElementToBeRemoved,
     within,
 } from "../../utils/tests/customRender";
-import {
-    intlDutch,
-    intlEnglish,
-    intlChinese,
-} from "../../utils/tests/mockTranslations";
 import NavItems from "./NavItems";
 import { translationSets } from "../../i18n/translations";
 import userEvent from "@testing-library/user-event";
+import { server } from "../../mock/server";
+import { rest } from "msw";
+import { categoriesMOCK } from "../../mock/mockData";
 
-function setupTest(reducer: any) {
-    const { store } = render(
+function setupTest() {
+    renderWithoutReducer(
         <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
-            <NavItems />
-        </IntlProvider>,
-        reducer,
-        reduxCategoriesFilled
+            <NavItems categories={categoriesMOCK} />
+        </IntlProvider>
     );
-
-    return {
-        store,
-    };
 }
 
 test("Should render all links", async () => {
-    setupTest(CategoriesReducer);
+    setupTest();
     const list = screen.getByRole("list");
-    // screen.logTestingPlaygroundURL();
 
     const linksArray = within(list).getAllByRole("link");
     const linksTextarray = linksArray.map((link) => {
         return link.textContent;
     });
-    // expect(linksTextarray[1]).toBe("Multimedia");
+    expect(linksTextarray[1]).toBe("Multimedia");
     expect(linksTextarray).toMatchInlineSnapshot(`
 Array [
   "Alle Applicaties",
@@ -55,7 +47,7 @@ Array [
 });
 
 test("Links should have their href attribute filled", async () => {
-    setupTest(CategoriesReducer);
+    setupTest();
     const links = screen.getAllByTestId("dynamicLink");
     const homeLink = screen.getByTestId("homeLink");
 
@@ -67,7 +59,7 @@ test("Links should have their href attribute filled", async () => {
 });
 
 test("Should test active classname on an current link", async () => {
-    setupTest(CategoriesReducer);
+    setupTest();
     const list = screen.getByRole("list");
 
     const homeLink = within(list).getByRole("link", {

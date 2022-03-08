@@ -1,23 +1,22 @@
-import React, { useEffect } from 'react';
-import { Spinner } from '../components/spinner/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { Header1, Header2, Header3 } from '../components/html/header/Header';
-import { IReduxApplicationState } from '../models/redux/IReduxApplicationState';
-import { fetchIlionaPackageDetails, InstallPackage } from '../store/slices/packages/packagesActions';
-import { screenSize } from '../themes/global';
-import { Alert } from 'react-bootstrap';
-import { FormattedMessage, injectIntl, WrappedComponentProps } from 'react-intl';
-
+import React, { useEffect } from "react";
+import { Spinner } from "../components/spinner/Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { Header1, Header2, Header3 } from "../components/html/header/Header";
+import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
+import { fetchIlionaPackageDetails, InstallPackage } from "../store/slices/packages/packagesActions";
+import { screenSize } from "../themes/global";
+import { Alert } from "react-bootstrap";
+import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
+import { translateRoutePaths } from "../i18n/CategoryTranslations";
 
 const ErrorWrapper = styled.div`
     display: flex;
     grid-row: 5 / 6;
     grid-column: 1 / 13;
     flex-direction: column;
-    margin-top:32px;
-
+    margin-top: 32px;
 
     @media ${screenSize.tablet} {
         grid-column: 2 / 12;
@@ -53,7 +52,7 @@ const HeaderWrapper = styled.div`
 
     @media ${screenSize.tablet} {
         flex-direction: row;
-        height: 230px;;
+        height: 230px;
     }
 `;
 
@@ -77,7 +76,6 @@ const HeaderRightSection = styled.div`
         padding: 16px 32px;
         width: calc(100% - 204px);
     }
-
 
     .license-text {
         font-size: 1.4rem;
@@ -104,23 +102,20 @@ const InstallButtonWrapper = styled.div`
     margin: 32px 0;
     align-items: flex-end;
 
-    
     @media ${screenSize.tablet} {
         justify-content: flex-end;
         margin: 0;
- 
     }
-
 `;
 
 const InstallButton = styled.button`
     padding: 4px 64px;
-    background-color: ${p => p.theme.primaryColor};
+    background-color: ${(p) => p.theme.primaryColor};
     color: white;
     outline: none;
     border: none;
-    font-size:14px;
-`; 
+    font-size: 14px;
+`;
 
 const DescriptionArea = styled.div`
     display: flex;
@@ -129,7 +124,7 @@ const DescriptionArea = styled.div`
     width: calc(100% - 32px);
 
     margin: 32px 0 32px 16px;
-    border-bottom: 1px solid ${p => p.theme.borderNeutral};
+    border-bottom: 1px solid ${(p) => p.theme.borderNeutral};
 
     @media ${screenSize.tablet} {
         margin: 32px 0 32px 32px;
@@ -142,7 +137,7 @@ const DescriptionArea = styled.div`
 `;
 
 const AdditionalInfoHeader = styled.div`
-    color: ${p => p.theme.primaryColor};
+    color: ${(p) => p.theme.primaryColor};
     font-size: 20px;
     margin-left: 16px;
 
@@ -170,14 +165,13 @@ const AdditionalDetailsWrapper = styled.div`
         flex-direction: column;
         font-size: 14px;
 
-    i {
-        font-style: italic;
-    }
-
+        i {
+            font-style: italic;
+        }
     }
 `;
 
-const PackageDetail = ({intl}: WrappedComponentProps) => {
+const PackageDetail = ({ intl }: WrappedComponentProps) => {
     let { rowkey } = useParams();
 
     const dispatch = useDispatch();
@@ -189,9 +183,8 @@ const PackageDetail = ({intl}: WrappedComponentProps) => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
     }, [dispatch]);
 
-
     if (packageDetails?.isFetching) {
-        showSpinner = true
+        showSpinner = true;
     }
 
     if (packageDetails?.errorMessage) {
@@ -200,105 +193,144 @@ const PackageDetail = ({intl}: WrappedComponentProps) => {
 
     const errorText = intl.formatMessage({
         id: "errormessages.general",
-        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw."
-    })
-    
+        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw.",
+    });
+
     const errorMessage = (
         <ErrorWrapper>
-            <Alert variant='danger'>
-                {errorText}
-            </Alert>
-
+            <Alert variant="danger">{errorText}</Alert>
         </ErrorWrapper>
-    )
+    );
 
-
-
-    const licenseElement = packageDetails?.selectedPackageDetail[0]?.RequiresLicense ? 
-        <span className='license-required'>{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>:
-        <span className='license-not-required'>{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>;
-        
+    const licenseElement = packageDetails?.selectedPackageDetail[0]?.RequiresLicense ? (
+        <span className="license-required">{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>
+    ) : (
+        <span className="license-not-required">{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>
+    );
 
     const handleInstall = (displayName: string) => {
-        dispatch(InstallPackage(displayName))
-    }
-    
+        dispatch(InstallPackage(displayName));
+    };
+
     return (
         <>
             {showError && errorMessage}
             <DetailPageWrapper>
+                {showSpinner && <Spinner />}
 
-                {showSpinner && <Spinner /> }    
-                
-                
-                {!showSpinner  && (
-                    <>
+                {!showSpinner && (
+                    <section data-testid="body">
                         <HeaderWrapper>
                             <HeaderLeftSection>
-                                <div style={ { backgroundImage: `url(${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`, maxWidth: '204px', height: '230px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', padding: '8px'}} >
-
-                                </div>
+                                <div
+                                    style={{
+                                        backgroundImage: `url(${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`,
+                                        maxWidth: "204px",
+                                        height: "230px",
+                                        backgroundPosition: "center",
+                                        backgroundRepeat: "no-repeat",
+                                        padding: "8px",
+                                    }}
+                                ></div>
                             </HeaderLeftSection>
 
                             <HeaderRightSection>
                                 <Header1>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header1>
-                                <div className='license-text'>
-                                    <FormattedMessage id="details.title.category" defaultMessage="Categorie"></FormattedMessage>: 
-                                    <i> {packageDetails?.selectedPackageDetail[0]?.Category}</i>
+                                <div className="license-text">
+                                    <FormattedMessage
+                                        id="details.title.category"
+                                        defaultMessage="Categorie"
+                                    ></FormattedMessage>
+                                    :
+                                    <i>
+                                        {translateRoutePaths(packageDetails?.selectedPackageDetail[0]?.Category, intl)}
+                                    </i>
                                 </div>
-                                <div className='license-text'>
-                                    <FormattedMessage id="details.title.license" defaultMessage="Licentie"></FormattedMessage>: 
-                                    <i> {licenseElement}</i>
+                                <div className="license-text">
+                                    <FormattedMessage
+                                        id="details.title.license"
+                                        defaultMessage="Licentie"
+                                    ></FormattedMessage>
+                                    :<i> {licenseElement}</i>
                                 </div>
 
                                 <InstallButtonWrapper>
-                                    <InstallButton onClick={() => handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)}>
-                                        <FormattedMessage id="details.title.installtext" defaultMessage="Installeren"></FormattedMessage>
+                                    <InstallButton
+                                        onClick={() =>
+                                            handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)
+                                        }
+                                    >
+                                        <FormattedMessage
+                                            id="details.title.installtext"
+                                            defaultMessage="Installeren"
+                                        ></FormattedMessage>
                                     </InstallButton>
                                 </InstallButtonWrapper>
-
                             </HeaderRightSection>
                         </HeaderWrapper>
 
                         <DescriptionArea>
                             <Header3>{packageDetails?.selectedPackageDetail[0]?.DisplayName}</Header3>
-                            <p>
-                                {packageDetails?.selectedPackageDetail[0]?.Description}
-                            </p>
+                            <p>{packageDetails?.selectedPackageDetail[0]?.Description}</p>
                         </DescriptionArea>
 
                         <AdditionalInfoHeader>
-                            <FormattedMessage id="details.header.otherinfo" defaultMessage="Overige informatie"></FormattedMessage>
+                            <FormattedMessage
+                                id="details.header.otherinfo"
+                                defaultMessage="Overige informatie"
+                            ></FormattedMessage>
                         </AdditionalInfoHeader>
                         <AdditionalDetailsWrapper>
-                            <div className='item'>
-                                <p><FormattedMessage id="details.title.tags" defaultMessage="Tags"></FormattedMessage></p>
-                                <p><i>{packageDetails?.selectedPackageDetail[0]?.Tags}</i></p>    
+                            <div className="item">
+                                <p>
+                                    <FormattedMessage id="details.title.tags" defaultMessage="Tags"></FormattedMessage>
+                                </p>
+                                <p>
+                                    <i>{packageDetails?.selectedPackageDetail[0]?.Tags}</i>
+                                </p>
                             </div>
 
-                            <div className='item'>
-                                <p><FormattedMessage id="details.title.requirements" defaultMessage="Benodigheden"></FormattedMessage></p>
-                                <p><i>{packageDetails?.selectedPackageDetail[0]?.Dependencies}</i></p>    
+                            <div className="item">
+                                <p>
+                                    <FormattedMessage
+                                        id="details.title.requirements"
+                                        defaultMessage="Benodigheden"
+                                    ></FormattedMessage>
+                                </p>
+                                <p>
+                                    <i>{packageDetails?.selectedPackageDetail[0]?.Dependencies}</i>
+                                </p>
                             </div>
 
-                            <div className='item'>
-                                <p><FormattedMessage id="details.title.installationtime" defaultMessage="Installatietijd"></FormattedMessage></p>
-                                <p><i>{packageDetails?.selectedPackageDetail[0]?.InstallationTime}</i></p>    
+                            <div className="item">
+                                <p>
+                                    <FormattedMessage
+                                        id="details.title.installationtime"
+                                        defaultMessage="Installatietijd"
+                                    ></FormattedMessage>
+                                </p>
+                                <p>
+                                    <i>{packageDetails?.selectedPackageDetail[0]?.InstallationTime}</i>
+                                </p>
                             </div>
 
-                            <div className='item'>
-                                <p><FormattedMessage id="details.title.restartrequired" defaultMessage="Herstart nodig"></FormattedMessage></p>
-                                <p><i>{packageDetails?.selectedPackageDetail[0]?.NeedToRestart ? "ja" : "nee"}</i></p>    
+                            <div className="item">
+                                <p>
+                                    <FormattedMessage
+                                        id="details.title.restartrequired"
+                                        defaultMessage="Herstart nodig"
+                                    ></FormattedMessage>
+                                </p>
+                                <p>
+                                    <i>{packageDetails?.selectedPackageDetail[0]?.NeedToRestart ? "ja" : "nee"}</i>
+                                </p>
                             </div>
-                        
                         </AdditionalDetailsWrapper>
-                    </>
+                    </section>
                 )}
             </DetailPageWrapper>
-        
         </>
     );
 };
-
 
 export default injectIntl(PackageDetail);

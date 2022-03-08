@@ -1,19 +1,12 @@
-import React, { HTMLAttributes } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { screenSize } from "../../themes/global";
-import {
-    FormattedMessage,
-    injectIntl,
-    IntlShape,
-    WrappedComponentProps,
-} from "react-intl";
-import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
-import { useSelector } from "react-redux";
+import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { IIlionaCategory } from "../../models/Ilionacategory";
 import { translateRoutePaths } from "../../i18n/CategoryTranslations";
 
-const NavItemsContainer = styled.nav`
+const NavItemsContainer = styled.div`
     display: flex;
     flex-direction: row;
     height: 100%;
@@ -59,13 +52,15 @@ const NavItemsContainer = styled.nav`
     }
 `;
 
-const NavItems = ({ intl }: WrappedComponentProps) => {
-    const categories = useSelector(
-        (state: IReduxApplicationState) => state.categorySlice
-    );
+interface NavProps {
+    categories: IIlionaCategory[];
+}
 
-    const categoryLinks = categories?.categories.map(
-        (category: IIlionaCategory) => {
+const NavItems = ({ intl, categories }: NavProps & WrappedComponentProps) => {
+    let categoryLinks;
+
+    if (categories && categories.length > 0) {
+        categoryLinks = categories.map((category: IIlionaCategory) => {
             return (
                 <li className="hide-small-screen" key={category.Name}>
                     <NavLink
@@ -77,21 +72,15 @@ const NavItems = ({ intl }: WrappedComponentProps) => {
                     </NavLink>
                 </li>
             );
-        }
-    );
+        });
+    }
 
     return (
         <>
             <NavItemsContainer>
                 <ul data-testid="links">
                     <li key="home">
-                        <NavLink
-                            to="/"
-                            data-testid="homeLink"
-                            className={({ isActive }) =>
-                                isActive ? "active" : ""
-                            }
-                        >
+                        <NavLink to="/" data-testid="homeLink" className={({ isActive }) => (isActive ? "active" : "")}>
                             <FormattedMessage
                                 id="navigation.home.text"
                                 defaultMessage="Alle applicaties"
