@@ -82,6 +82,13 @@ export function PackagesReducer(
                 errorMessage: "",
                 packageInstallSuccessful: action.payload.installed,
             };
+
+        case IlionaPackagesTypes.CLOSE_TOAST_MESSAGE:
+            console.log("entering reducer");
+            return {
+                ...state,
+                packageInstallSuccessful: false,
+            };
         default: {
             return state;
         }

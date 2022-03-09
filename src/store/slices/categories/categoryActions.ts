@@ -35,9 +35,8 @@ const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, Cate
                     type: IlionaCategoryTypes.FETCH_ILIONA_CATEGORIES_FAILURE,
                     payload: { errorMessage: "Something went wrong" },
                 };
-                dispatch(requestFailedAction);
+                return dispatch(requestFailedAction);
             }
-
             const result = await response.json();
 
             const requestSuccessAction: RequestSuccessDispatchType = {

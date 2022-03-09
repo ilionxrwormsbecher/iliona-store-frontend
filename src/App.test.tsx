@@ -1,19 +1,20 @@
-import { screen, waitForElementToBeRemoved, within } from "@testing-library/react";
+import { screen, waitFor, waitForElementToBeRemoved, within } from "@testing-library/react";
 import { rest } from "msw";
 import React from "react";
 import { IntlProvider } from "react-intl";
 
 import App from "./App";
 import { translationSets } from "./i18n/translations";
-import { abbreviatedPackagesMOCK, categoriesMOCK } from "./mock/mockData";
-import { server } from "./mock/server";
-import { renderWithoutRouter } from "./utils/tests/customRender";
+import { abbreviatedPackagesMOCK, categoriesMOCK } from "./mocks/mockData";
+import { server } from "./mocks/server";
+import { renderWithoutReducer } from "./utils/tests/customRender";
 
 function setupTest() {
-    renderWithoutRouter(
+    renderWithoutReducer(
         <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
             <App />
-        </IntlProvider>
+        </IntlProvider>,
+        false
     );
 }
 
@@ -25,10 +26,7 @@ test("Should render a spinner when the categories are loading", async () => {
                     data: categoriesMOCK,
                 })
             );
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/list`, (req, res, ctx) => {
             return res(
                 ctx.json({
@@ -53,10 +51,7 @@ test("Should render routes when there is no error and the page isn't loading.", 
                     data: categoriesMOCK,
                 })
             );
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/list/`, (req, res, ctx) => {
             return res(
                 ctx.json({
@@ -83,10 +78,7 @@ test("Should render an error when categories could not be fetched", async () => 
                     errorMessage: `Unexpected error`,
                 })
             );
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/list`, (req, res, ctx) => {
             return res(
                 ctx.json({
@@ -99,11 +91,7 @@ test("Should render an error when categories could not be fetched", async () => 
     setupTest();
 
     await waitForElementToBeRemoved(() => screen.getAllByTestId("spinner"));
-    // // const appContainer = screen.getByTestId("app-spinner");
-    // // const globalSpinner = within(appContainer).getByTestId("spinner");
-    screen.logTestingPlaygroundURL();
-
-    const alert = screen.getByRole("alert");
+    const alert = await screen.getByRole("alert");
     expect(alert).toBeInTheDocument();
     expect(alert.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw."`);
 });

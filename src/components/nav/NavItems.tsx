@@ -45,8 +45,8 @@ const NavItemsContainer = styled.div`
             }
 
             .active {
-                color: $primary-color;
-                background-color: red;
+                color: ${(p) => p.theme.primaryNavigationTextColor};
+                background-color: #eee;
             }
         }
     }

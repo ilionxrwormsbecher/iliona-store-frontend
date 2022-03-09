@@ -83,7 +83,7 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
                     type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE,
                     payload: { errorMessage: "Something went wrong" },
                 };
-                dispatch(requestFailedAction);
+                return dispatch(requestFailedAction);
             }
             const result = await response.json();
 
@@ -109,6 +109,10 @@ export const InstallPackage = (packageName: string) => {
     };
 };
 
+export function closeSuccessInstalledMessage() {
+    return { type: IlionaPackagesTypes.CLOSE_TOAST_MESSAGE, payload: { test: "test" } };
+}
+
 const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
     packageName: string
 ) => {
@@ -122,12 +126,14 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
-            const response: Response = await fetch(
-                `http://127.0.0.1:8882/install?package_name="${packageName}"&arguments=""'`,
-                {
-                    headers: requestHeaders,
-                }
-            );
+            const response: Response = await fetch(`https://api.iliona.cloud/store-packages/install-package`, {
+                method: "POST",
+                headers: requestHeaders,
+                body: JSON.stringify({
+                    packageName: packageName,
+                    clientIdentification: "dummyData",
+                }),
+            });
 
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
                 const requestFailedAction: RequestFailedDispatchType = {
@@ -137,11 +143,8 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
                 dispatch(requestFailedAction);
             }
 
-            const result = await response.json();
-            const parsedResult = JSON.parse(result);
-
             const requestSuccessAction: RequestSuccessDispatchType = {
-                payload: { packageDetails: parsedResult },
+                payload: { installed: true },
                 type: IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS,
             };
             dispatch(requestSuccessAction);

@@ -36,13 +36,18 @@ const Home = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         dispatch(fetchIlionaPackages());
-        if (categories.categories.length === 0) {
+        if (categories?.categories && categories.categories.length === 0) {
             dispatch(fetchIlionaCategories());
         }
     }, [dispatch]);
 
     useEffect(() => {
-        if (packages && packages?.ilionaPackages.length > 0 && categories && categories?.categories.length > 0) {
+        if (
+            packages?.ilionaPackages &&
+            packages?.ilionaPackages.length > 0 &&
+            categories?.categories &&
+            categories?.categories.length > 0
+        ) {
             setCategoriesWithPackages(filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages));
         }
     }, [packages?.ilionaPackages, categories?.categories]);
@@ -63,6 +68,10 @@ const Home = ({ intl }: WrappedComponentProps) => {
             categories={categories?.categories}
         ></CategoriesPackages>
     );
+
+    {
+        console.log(showError);
+    }
 
     return (
         <MainContent data-testid="wrapper">

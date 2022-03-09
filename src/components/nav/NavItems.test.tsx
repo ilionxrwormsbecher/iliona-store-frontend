@@ -1,21 +1,12 @@
 import React from "react";
-import { IntlProvider, IntlShape } from "react-intl";
-import { CategoriesReducer } from "../../store/slices/categories/categoryReducer";
-import { reduxCategoriesFilled } from "../../utils/tests/mockRedux";
-import {
-    render,
-    renderWithoutReducer,
-    screen,
-    waitFor,
-    waitForElementToBeRemoved,
-    within,
-} from "../../utils/tests/customRender";
+import { IntlProvider } from "react-intl";
+import { renderWithoutReducer, screen, waitFor, within } from "../../utils/tests/customRender";
 import NavItems from "./NavItems";
 import { translationSets } from "../../i18n/translations";
 import userEvent from "@testing-library/user-event";
-import { server } from "../../mock/server";
+import { server } from "../../mocks/server";
 import { rest } from "msw";
-import { categoriesMOCK } from "../../mock/mockData";
+import { categoriesMOCK } from "../../mocks/mockData";
 
 function setupTest() {
     renderWithoutReducer(

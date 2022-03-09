@@ -5,13 +5,17 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Header1, Header2, Header3 } from "../components/html/header/Header";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { fetchIlionaPackageDetails, InstallPackage } from "../store/slices/packages/packagesActions";
+import {
+    closeSuccessInstalledMessage,
+    fetchIlionaPackageDetails,
+    InstallPackage,
+} from "../store/slices/packages/packagesActions";
 import { screenSize } from "../themes/global";
 import { Alert } from "react-bootstrap";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { translateRoutePaths } from "../i18n/CategoryTranslations";
 
-const ErrorWrapper = styled.div`
+const ToastWrapper = styled.div`
     display: flex;
     grid-row: 5 / 6;
     grid-column: 1 / 13;
@@ -183,7 +187,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
     }, [dispatch]);
 
-    if (packageDetails?.isFetching) {
+    if (packageDetails?.isFetching && !packageDetails?.packageInstallSuccessful) {
         showSpinner = true;
     }
 
@@ -197,9 +201,16 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     });
 
     const errorMessage = (
-        <ErrorWrapper>
+        <ToastWrapper>
             <Alert variant="danger">{errorText}</Alert>
-        </ErrorWrapper>
+        </ToastWrapper>
+    );
+    const succesfullyInstalled = (
+        <ToastWrapper>
+            <Alert onClose={() => dispatch(closeSuccessInstalledMessage())} dismissible variant="success">
+                Package has succesfully installed
+            </Alert>
+        </ToastWrapper>
     );
 
     const licenseElement = packageDetails?.selectedPackageDetail[0]?.RequiresLicense ? (
@@ -208,6 +219,8 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         <span className="license-not-required">{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>
     );
 
+    console.log("the slice of packages", packageDetails);
+
     const handleInstall = (displayName: string) => {
         dispatch(InstallPackage(displayName));
     };
@@ -215,6 +228,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     return (
         <>
             {showError && errorMessage}
+            {packageDetails?.packageInstallSuccessful && succesfullyInstalled}
             <DetailPageWrapper>
                 {showSpinner && <Spinner />}
 
@@ -256,6 +270,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
                                 <InstallButtonWrapper>
                                     <InstallButton
+                                        disabled={packageDetails?.isFetching}
                                         onClick={() =>
                                             handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)
                                         }

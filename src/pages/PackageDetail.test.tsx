@@ -4,21 +4,9 @@ import React from "react";
 import { IntlProvider } from "react-intl";
 import { createReduxHistoryContext } from "redux-first-history";
 import { translationSets } from "../i18n/translations";
-import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { CategoriesReducer } from "../store/slices/categories/categoryReducer";
-import { PackagesReducer } from "../store/slices/packages/packagesReducer";
 import { render, renderWithoutReducer, waitForElementToBeRemoved } from "../utils/tests/customRender";
-import {
-    reduxFullStoreButNoSelectedPackage,
-    reduxFullStoreWithoutPackages,
-    reduxFullStoreWithPackagesAndCategories,
-} from "../utils/tests/mockRedux";
-import { combineReducers } from "redux";
-
 import PackageDetail from "./PackageDetail";
-import CategoryPackages from "./CategoryPackages";
-import store from "../store/store";
-import { server } from "../mock/server";
+import { server } from "../mocks/server";
 import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
 

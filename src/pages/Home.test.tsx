@@ -4,9 +4,9 @@ import { IntlProvider } from "react-intl";
 import { translationSets } from "../i18n/translations";
 import { renderWithoutReducer } from "../utils/tests/customRender";
 import Home from "./Home";
-import { server } from "../mock/server";
+import { server } from "../mocks/server";
 import { rest } from "msw";
-import { abbreviatedPackagesMOCK, categoriesMOCK } from "../mock/mockData";
+import { abbreviatedPackagesMOCK, categoriesMOCK } from "../mocks/mockData";
 
 function setupTest() {
     renderWithoutReducer(
@@ -24,10 +24,7 @@ test("Should render nothing when packages and categories are not loaded", async 
                     data: [],
                 })
             );
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(ctx.json({ data: [] }));
         })
@@ -94,10 +91,7 @@ test("Should render Appcards under the related categories when packages and cate
                     data: abbreviatedPackagesMOCK,
                 })
             );
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(
                 ctx.json({

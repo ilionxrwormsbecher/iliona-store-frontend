@@ -5,10 +5,14 @@ import { screenSize } from "../themes/global";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Header1 } from "../components/html/header/Header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { IIlionaCategory } from "../models/Ilionacategory";
 import { checkFileMimetype, checkObjectIsEmpty } from "../utils/general";
+import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
+import { Spinner } from "../components/spinner/Spinner";
+import { Alert } from "react-bootstrap";
+import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const schema = yup
     .object({
@@ -229,26 +233,25 @@ const SubmitButton = styled.input.attrs({
     }
 `;
 
-export const AddPackage = () => {
+const AddPackage = ({ intl }: WrappedComponentProps) => {
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const [image, setImage] = useState<File | undefined>(undefined);
     const [imageError, setimageError] = useState<string>("");
-
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        setError,
-        watch,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(schema),
-        mode: "onBlur",
-    });
-    const onSubmit = (data: any) => console.log(data);
-    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice.categories);
+    const dispatch = useDispatch();
+    let showSpinner = false;
+    let showError = false;
 
     useEffect(() => {
-        if (categories.length > 0) setValue("category", categories[0].RowKey);
+        if (categories?.categories && categories?.categories.length === 0) {
+            console.log("1");
+            dispatch(fetchIlionaCategories());
+        }
+    }, []);
+
+    useEffect(() => {
+        if (categories?.categories && categories?.categories.length > 0) {
+            setValue("category", categories.categories[0].RowKey);
+        }
     }, [categories]);
 
     useEffect(() => {
@@ -257,183 +260,249 @@ export const AddPackage = () => {
         }
     }, [imageError]);
 
-    // useEffect(() => {
-    //     if (image) {
-    //         setValue("imageUrl", image?.name);
-    //     } else {
-    //         setError("imageUrl", { message: "a" });
-    //     }
-    // }, [image]);
+    console.log("is fetching?", categories?.isFetching);
 
-    console.log("---", image);
+    const errorText = intl.formatMessage({
+        id: "errormessages.general",
+        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw.",
+    });
+
+    if (categories?.isFetching) {
+        showSpinner = true;
+    }
+
+    if (categories?.errorMessage) {
+        showError = true;
+    }
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+        mode: "onBlur",
+    });
+    const onSubmit = (data: any) => console.log(data);
 
     return (
-        <AddPackageWrapper>
-            <TitleWrapper>
-                <Header1>Add a package</Header1>
-            </TitleWrapper>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <FormContent>
-                    <FormWrapper>
-                        <Label htmlFor="displayName">Display name</Label>
-                        {errors.displayName && <ErrorLine>The display name is required</ErrorLine>}
-                        <Textbox
-                            {...register("displayName")}
-                            id="displayName"
-                            name="displayName"
-                            placeholder="Name of the package"
-                            autoFocus
-                        />
-
-                        <Label htmlFor="category">Category</Label>
-                        {errors.category && <ErrorLine>Category is required</ErrorLine>}
-
-                        <Select {...register("category")}>
-                            {categories.map((cat: IIlionaCategory) => {
-                                return (
-                                    <option key={cat?.RowKey} value={cat?.RowKey}>
-                                        {cat?.RouteFriendlyName}
-                                    </option>
-                                );
-                            })}
-                        </Select>
-
-                        <FormItemsHalfSizeWrapper>
-                            <div>
-                                <Label htmlFor="installationTime">Installation time</Label>
-                                {errors.installationTime && (
-                                    <ErrorLine>Installation is required and should be a number</ErrorLine>
+        <>
+            {showSpinner && <p data-testid="fake-spinner"></p>}
+            {showError && <Alert variant="danger">{errorText}</Alert>}
+            {!showSpinner && (
+                <AddPackageWrapper>
+                    <TitleWrapper>
+                        <Header1>Add a package</Header1>
+                    </TitleWrapper>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <FormContent>
+                            <FormWrapper>
+                                <Label htmlFor="displayName">Display name</Label>
+                                {errors.displayName && (
+                                    <ErrorLine role="alert" aria-label="display name">
+                                        The display name is required
+                                    </ErrorLine>
                                 )}
                                 <Textbox
-                                    {...register("installationTime")}
-                                    id="installationTime"
-                                    name="installationTime"
+                                    {...register("displayName")}
+                                    id="displayName"
+                                    name="displayName"
+                                    placeholder="Name of the package"
+                                    autoFocus
+                                />
+
+                                <Label htmlFor="category">Category</Label>
+                                {errors.category && (
+                                    <ErrorLine role="alert" aria-label="category">
+                                        Category is required
+                                    </ErrorLine>
+                                )}
+
+                                <Select {...register("category")} id="category">
+                                    {categories?.categories.map((cat: IIlionaCategory) => {
+                                        return (
+                                            <option key={cat?.RowKey} value={cat?.RowKey}>
+                                                {cat?.RouteFriendlyName}
+                                            </option>
+                                        );
+                                    })}
+                                </Select>
+
+                                <FormItemsHalfSizeWrapper>
+                                    <div>
+                                        <Label htmlFor="installationTime">Installation time</Label>
+                                        {errors.installationTime && (
+                                            <ErrorLine role="alert" aria-label="installation">
+                                                Installation is required and should be a number
+                                            </ErrorLine>
+                                        )}
+                                        <Textbox
+                                            {...register("installationTime")}
+                                            id="installationTime"
+                                            name="installationTime"
+                                            style={{
+                                                display: "inline-block",
+                                                width: "calc(100% - 16px)",
+                                            }}
+                                            placeholder="The time in minutes the package needs to isntall"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="weight">Weight</Label>
+                                        {errors.weight && (
+                                            <ErrorLine role="alert" aria-label="weight">
+                                                The weight is required
+                                            </ErrorLine>
+                                        )}
+                                        <Textbox
+                                            {...register("weight")}
+                                            id="weight"
+                                            name="weight"
+                                            style={{ display: "inline-block" }}
+                                            placeholder="The weight of the package"
+                                        />
+                                    </div>
+                                </FormItemsHalfSizeWrapper>
+
+                                <Label htmlFor="summary">Summary</Label>
+                                {errors.summary && (
+                                    <ErrorLine role="alert" aria-label="summary">
+                                        The summary is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("summary")}
+                                    id="summary"
+                                    name="summary"
+                                    placeholder="The summary of the package"
+                                />
+
+                                <Label htmlFor="description">Description</Label>
+                                {errors.description && (
+                                    <ErrorLine role="alert" aria-label="description">
+                                        description must be a string
+                                    </ErrorLine>
+                                )}
+                                <TextArea
+                                    {...register("description")}
+                                    id="description"
+                                    name="description"
+                                    placeholder="If the package has any description please state them here."
+                                />
+
+                                <Label htmlFor="packageName">Package name</Label>
+                                {errors.packageName && (
+                                    <ErrorLine role="alert" aria-label="package name">
+                                        Package name is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("packageName")}
+                                    id="packageName"
+                                    name="packageName"
+                                    placeholder="The name of the package"
+                                />
+
+                                <Label htmlFor="dependencies">Dependencies</Label>
+                                {errors.dependencies && (
+                                    <ErrorLine role="alert" aria-label="dependencies">
+                                        Dependencies must be a string
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("dependencies")}
+                                    id="dependencies"
+                                    name="dependencies"
+                                    placeholder="If the package has any dependencies please state them here."
+                                />
+
+                                <Label htmlFor="licenseMessage">License message</Label>
+                                {errors.licenseMessage && (
+                                    <ErrorLine role="alert" aria-label="license">
+                                        The license is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("licenseMessage")}
+                                    id="licenseMessage"
+                                    name="licenseMessage"
+                                    placeholder="The license message of the package"
+                                />
+
+                                <Label htmlFor="isVisible">Visible</Label>
+                                {errors.isVisible && (
+                                    <ErrorLine role="alert" aria-label="visibility">
+                                        Visible is required
+                                    </ErrorLine>
+                                )}
+
+                                <Label
+                                    htmlFor="isVisible-yes"
                                     style={{
                                         display: "inline-block",
-                                        width: "calc(100% - 16px)",
+                                        marginRight: "32px",
                                     }}
-                                    placeholder="The time in minutes the package needs to isntall"
+                                >
+                                    <input
+                                        {...register("isVisible")}
+                                        type="radio"
+                                        name="isVisible"
+                                        value="true"
+                                        id="isVisible-yes"
+                                    />
+                                    &nbsp; Yes
+                                </Label>
+                                <Label
+                                    htmlFor="isVisible-no"
+                                    style={{
+                                        display: "inline-block",
+                                        marginRight: "32px",
+                                    }}
+                                >
+                                    <input
+                                        {...register("isVisible")}
+                                        type="radio"
+                                        name="isVisible"
+                                        value="false"
+                                        id="isVisible-no"
+                                    />
+                                    &nbsp; No
+                                </Label>
+
+                                <SubmitButton
+                                // disabled={!checkObjectIsEmpty(errors) || imageError !== "" || image === undefined}
                                 />
-                            </div>
-
-                            <div>
-                                <Label htmlFor="weight">Weight</Label>
-                                {errors.weight && <ErrorLine>The weight is required</ErrorLine>}
-                                <Textbox
-                                    {...register("weight")}
-                                    id="weight"
-                                    name="weight"
-                                    style={{ display: "inline-block" }}
-                                    placeholder="The weight of the package"
+                            </FormWrapper>
+                            <ImageWrapper>
+                                <ImageContainer></ImageContainer>
+                                <Label htmlFor="imageUrl" style={{ marginTop: "24px" }}>
+                                    Image{" "}
+                                </Label>
+                                {imageError && (
+                                    <ErrorLine role="alert" aria-label="image">
+                                        {imageError}
+                                    </ErrorLine>
+                                )}
+                                <input
+                                    id="imageUrl"
+                                    type="file"
+                                    accept="image/x-png,image/gif,image/jpeg"
+                                    {...register("imageUrl")}
+                                    onChange={(event) => {
+                                        if (event?.currentTarget?.files) {
+                                            checkFileMimetype(event.currentTarget.files[0], setImage, setimageError);
+                                        }
+                                    }}
                                 />
-                            </div>
-                        </FormItemsHalfSizeWrapper>
-
-                        <Label htmlFor="summary">Summary</Label>
-                        {errors.summary && <ErrorLine>The summary is required</ErrorLine>}
-                        <Textbox
-                            {...register("summary")}
-                            id="summary"
-                            name="summary"
-                            placeholder="The summary of the package"
-                        />
-
-                        <Label htmlFor="description">Description</Label>
-                        {errors.description && <ErrorLine>description must be a string</ErrorLine>}
-                        <TextArea
-                            {...register("description")}
-                            id="description"
-                            name="description"
-                            placeholder="If the package has any description please state them here."
-                        />
-
-                        <Label htmlFor="packageName">Package name</Label>
-                        {errors.packageName && <ErrorLine>Packagename is required</ErrorLine>}
-                        <Textbox
-                            {...register("packageName")}
-                            id="packageName"
-                            name="packageName"
-                            placeholder="The name of the package"
-                        />
-
-                        <Label htmlFor="dependencies">Dependencies</Label>
-                        {errors.dependencies && <ErrorLine>Dependencies must be a string</ErrorLine>}
-                        <Textbox
-                            {...register("dependencies")}
-                            id="dependencies"
-                            name="dependencies"
-                            placeholder="If the package has any dependencies please state them here."
-                        />
-
-                        <Label htmlFor="licenseMessage">License message</Label>
-                        {errors.licenseMessage && <ErrorLine>The display name is required</ErrorLine>}
-                        <Textbox
-                            {...register("licenseMessage")}
-                            id="licenseMessage"
-                            name="licenseMessage"
-                            placeholder="The license message of the package"
-                        />
-
-                        <Label htmlFor="isVisible">Visible</Label>
-                        {errors.isVisible && <ErrorLine>Visible is required</ErrorLine>}
-
-                        <Label
-                            htmlFor="isVisible-yes"
-                            style={{
-                                display: "inline-block",
-                                marginRight: "32px",
-                            }}
-                        >
-                            <input
-                                {...register("isVisible")}
-                                type="radio"
-                                name="isVisible"
-                                value="true"
-                                id="isVisible-yes"
-                            />
-                            &nbsp; Yes
-                        </Label>
-                        <Label
-                            htmlFor="isVisible-no"
-                            style={{
-                                display: "inline-block",
-                                marginRight: "32px",
-                            }}
-                        >
-                            <input
-                                {...register("isVisible")}
-                                type="radio"
-                                name="isVisible"
-                                value="false"
-                                id="isVisible-no"
-                            />
-                            &nbsp; No
-                        </Label>
-
-                        <SubmitButton
-                            disabled={!checkObjectIsEmpty(errors) || imageError !== "" || image === undefined}
-                        />
-                    </FormWrapper>
-                    <ImageWrapper>
-                        <ImageContainer></ImageContainer>
-                        <Label htmlFor="imageUrl" style={{ marginTop: "24px" }}>
-                            Image{" "}
-                        </Label>
-                        {imageError && <ErrorLine>{imageError}</ErrorLine>}
-                        <input
-                            id="imageUrl"
-                            type="file"
-                            accept="image/x-png,image/gif,image/jpeg"
-                            {...register("imageUrl")}
-                            onChange={(event) => {
-                                if (event?.currentTarget?.files) {
-                                    checkFileMimetype(event.currentTarget.files[0], setImage, setimageError);
-                                }
-                            }}
-                        />
-                    </ImageWrapper>
-                </FormContent>
-            </form>
-        </AddPackageWrapper>
+                            </ImageWrapper>
+                        </FormContent>
+                    </form>
+                </AddPackageWrapper>
+            )}
+        </>
     );
 };
+
+export default injectIntl(AddPackage);

@@ -3,9 +3,9 @@ import { IntlProvider } from "react-intl";
 import { translationSets } from "../i18n/translations";
 import { renderWithoutReducer, screen, waitForElementToBeRemoved } from "../utils/tests/customRender";
 import CategoryPackages from "./CategoryPackages";
-import { server } from "../mock/server";
+import { server } from "../mocks/server";
 import { rest } from "msw";
-import { abbreviatedPackagesMOCK, categoriesMOCK } from "../mock/mockData";
+import { abbreviatedPackagesMOCK, categoriesMOCK } from "../mocks/mockData";
 
 const mockHistoryPush = jest.fn();
 jest.mock("react-router-dom", () => ({

@@ -1,16 +1,12 @@
 import React from "react";
 import AppCard from "./AppCard";
 import { IntlProvider, IntlShape } from "react-intl";
-import { CategoriesReducer } from "../../store/slices/categories/categoryReducer";
-import { reduxCategoriesFilled } from "../../utils/tests/mockRedux";
-import { render, renderWithoutReducer } from "../../utils/tests/customRender";
+import { renderWithoutReducer } from "../../utils/tests/customRender";
 import { intlDutch, intlEnglish, intlChinese } from "../../utils/tests/mockTranslations";
 import userEvent from "@testing-library/user-event";
-import { screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { translationSets } from "../../i18n/translations";
-import { server } from "../../mock/server";
-import { rest } from "msw";
-import { categoriesMOCK } from "../../mock/mockData";
+import { categoriesMOCK } from "../../mocks/mockData";
 
 function setupTest(language: IntlShape, requiredLicense: boolean = false) {
     renderWithoutReducer(
@@ -56,10 +52,13 @@ test("should render the category in English", async () => {
 });
 
 test("should render the category in Dutch, when language is set to missing language", async () => {
+    const errorMock = jest.spyOn(console, "error").mockImplementation(() => {});
     setupTest(intlChinese);
 
     const categoryNode = screen.getByText(/productiviteitstools/i);
     expect(categoryNode.innerHTML).toContain("Productiviteitstools");
+    expect(console.error).toHaveBeenCalledTimes(1);
+    errorMock.mockRestore();
 });
 
 test("should render the name of the product correctly and show a product image", async () => {

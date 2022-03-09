@@ -12,6 +12,8 @@ export enum IlionaPackagesTypes {
     FETCH_ILIONA_INSTALL_PACKAGE_FAILURE = "@@FETCH_ILIONA_INSTALL_PACKAGE_FAILURE",
     FETCH_ILIONA_INSTALL_PACKAGE_STARTED = "@@FETCH_ILIONA_INSTALL_PACKAGE_STARTED",
     FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS = "@@FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS",
+
+    CLOSE_TOAST_MESSAGE = "@@CLOSE_TOAST_MESSAGE",
 }
 
 export type PackagesState = Readonly<{
@@ -21,4 +23,4 @@ export type PackagesState = Readonly<{
     isFetching: boolean;
     packageInstallSuccessful: boolean;
     packageInstallFailed: boolean;
-}>
+}>;

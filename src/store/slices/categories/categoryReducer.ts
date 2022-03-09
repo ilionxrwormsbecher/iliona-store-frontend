@@ -26,6 +26,7 @@ export function CategoriesReducer(
             };
 
         case IlionaCategoryTypes.FETCH_ILIONA_CATEGORIES_SUCCESS:
+            console.log("what is being onjected?", action.payload);
             return {
                 ...state,
                 categories: action.payload.categories.data,

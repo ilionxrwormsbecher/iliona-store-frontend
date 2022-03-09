@@ -7,11 +7,10 @@ import { HeaderBar } from "./components/headerBar/HeaderBar";
 import Nav from "./components/nav/Nav";
 import Home from "./pages/Home";
 import { history } from "./store/store";
-import { injectIntl, IntlProvider, WrappedComponentProps } from "react-intl";
+import { injectIntl, WrappedComponentProps } from "react-intl";
 
 import { ilionxTheme } from "./themes/ilionx";
 import { themeSelector } from "./themes/themeSelector";
-import { translationSets } from "./i18n/translations";
 import PackageDetail from "./pages/PackageDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIlionaCategories } from "./store/slices/categories/categoryActions";
@@ -19,7 +18,7 @@ import { Alert } from "react-bootstrap";
 import { IReduxApplicationState } from "./models/redux/IReduxApplicationState";
 import { Spinner } from "./components/spinner/Spinner";
 import CategoryPackages from "./pages/CategoryPackages";
-import { AddPackage } from "./pages/AddPackage";
+import AddPackage from "./pages/AddPackage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
 

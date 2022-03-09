@@ -10,15 +10,13 @@ const SpinnerWrapper = styled.div`
 `;
 
 const SpinnerComponent = styled.div`
-
     .lds-spinner {
-        color: ${(p) => p.theme.primaryColor}
+        color: ${(p) => p.theme.primaryColor};
         display: inline-block;
         position: relative;
         width: 80px;
         height: 80px;
     }
-
 
     .lds-spinner div {
         transform-origin: 36px 25px;
@@ -33,7 +31,7 @@ const SpinnerComponent = styled.div`
         width: 4px;
         height: 10px;
         border-radius: 20%;
-        background:  ${(p) => p.theme.primaryColor}
+        background: ${(p) => p.theme.primaryColor};
     }
     .lds-spinner div:nth-child(1) {
         transform: rotate(0deg);
@@ -44,7 +42,7 @@ const SpinnerComponent = styled.div`
         animation-delay: -1s;
     }
     .lds-spinner div:nth-child(3) {
-    transform: rotate(60deg);
+        transform: rotate(60deg);
         animation-delay: -0.9s;
     }
     .lds-spinner div:nth-child(4) {
@@ -76,8 +74,8 @@ const SpinnerComponent = styled.div`
         animation-delay: -0.2s;
     }
     .lds-spinner div:nth-child(11) {
-    transform: rotate(300deg);
-    animation-delay: -0.1s;
+        transform: rotate(300deg);
+        animation-delay: -0.1s;
     }
     .lds-spinner div:nth-child(12) {
         transform: rotate(330deg);
