@@ -57,7 +57,12 @@ const Home = ({ intl }: WrappedComponentProps) => {
 
     const errorMessage = <Alert variant="danger">{errorText}</Alert>;
 
-    content = <CategoriesPackages packagesByCategory={categoriesWithPackages}></CategoriesPackages>;
+    content = (
+        <CategoriesPackages
+            packagesByCategory={categoriesWithPackages}
+            categories={categories?.categories}
+        ></CategoriesPackages>
+    );
 
     return (
         <MainContent data-testid="wrapper">

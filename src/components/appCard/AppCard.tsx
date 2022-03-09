@@ -1,13 +1,16 @@
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, useEffect } from "react";
+import { Alert } from "react-bootstrap";
 import { IntlShape } from "react-intl";
-import injectIntl, {
-    WrappedComponentProps,
-} from "react-intl/src/components/injectIntl";
-import { useSelector } from "react-redux";
+import injectIntl, { WrappedComponentProps } from "react-intl/src/components/injectIntl";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { translateRoutePaths } from "../../i18n/CategoryTranslations";
+import { IIlionaCategory } from "../../models/Ilionacategory";
 import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
+import { fetchIlionaCategories } from "../../store/slices/categories/categoryActions";
+import { fetchIlionaPackages } from "../../store/slices/packages/packagesActions";
+import { Spinner } from "../spinner/Spinner";
 
 interface IAppCardProps {
     title: string;
@@ -19,6 +22,7 @@ interface IAppCardProps {
     requiresLicense?: boolean;
     rowkey: string;
     intl: IntlShape;
+    categories: IIlionaCategory[];
 }
 
 const CardContainer = styled.div`
@@ -75,27 +79,23 @@ const AppCard = ({
     requiresLicense,
     rowkey,
     intl,
+    categories,
     ...props
 }: IAppCardProps) => {
-    const categories = useSelector(
-        (state: IReduxApplicationState) => state.categorySlice
-    );
+    let categoryObject;
+
     const licenseIndication = requiresLicense ? (
         <span className="negative">Licensie vereist</span>
     ) : (
         <span className="positive">Gratis</span>
     );
 
-    const categoryObject = categories?.categories.filter(
-        (cat) => cat.RowKey === category
-    );
+    if (categories.length > 0) {
+        categoryObject = categories.filter((cat) => cat.RowKey === category);
+    }
 
     return (
-        <NavLink
-            to={`/details/${rowkey}`}
-            role="link"
-            data-testid="appCardWrapper"
-        >
+        <NavLink to={`/details/${rowkey}`} role="link" data-testid="appCardWrapper">
             <CardContainer {...props}>
                 <ImageContainer
                     data-testid="packageImage"

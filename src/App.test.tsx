@@ -101,6 +101,7 @@ test("Should render an error when categories could not be fetched", async () => 
     await waitForElementToBeRemoved(() => screen.getAllByTestId("spinner"));
     // // const appContainer = screen.getByTestId("app-spinner");
     // // const globalSpinner = within(appContainer).getByTestId("spinner");
+    screen.logTestingPlaygroundURL();
 
     const alert = screen.getByRole("alert");
     expect(alert).toBeInTheDocument();

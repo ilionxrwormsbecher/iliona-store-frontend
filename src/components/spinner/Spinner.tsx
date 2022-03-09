@@ -1,6 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-
+import React from "react";
+import styled from "styled-components";
 
 const SpinnerWrapper = styled.div`
     display: flex;
@@ -13,7 +12,7 @@ const SpinnerWrapper = styled.div`
 const SpinnerComponent = styled.div`
 
     .lds-spinner {
-        color: ${p => p.theme.primaryColor}
+        color: ${(p) => p.theme.primaryColor}
         display: inline-block;
         position: relative;
         width: 80px;
@@ -34,7 +33,7 @@ const SpinnerComponent = styled.div`
         width: 4px;
         height: 10px;
         border-radius: 20%;
-        background:  ${p => p.theme.primaryColor}
+        background:  ${(p) => p.theme.primaryColor}
     }
     .lds-spinner div:nth-child(1) {
         transform: rotate(0deg);
@@ -94,16 +93,25 @@ const SpinnerComponent = styled.div`
     }
 `;
 
-
-
 export const Spinner = () => {
     return (
         <SpinnerWrapper>
             <SpinnerComponent>
                 <div className="lds-spinner" data-testid="spinner">
-                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
             </SpinnerComponent>
         </SpinnerWrapper>
-    )
+    );
 };

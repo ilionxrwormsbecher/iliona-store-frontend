@@ -3,13 +3,14 @@ import { Alert } from "react-bootstrap";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import CategoriesPackages from "../components/categoryPackages/CategoriesPackages";
 import { Spinner } from "../components/spinner/Spinner";
 import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
-import { checkObjectIsEmpty } from "../utils/general";
 import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
+import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
 
 const MainContent = styled.main`
     display: flex;
@@ -22,27 +23,37 @@ const MainContent = styled.main`
 const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
-    const routerState = useSelector((state: IReduxApplicationState) => state.router?.location?.pathname);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
-
-    let routeUrlFriendlyName = "";
+    let location = useLocation();
 
     let showSpinner = false;
     let showError = false;
-    if (routerState) {
-        const pathNameAsArray = routerState.split("/");
-        routeUrlFriendlyName = pathNameAsArray[pathNameAsArray.length - 1];
-    }
+
+    const pathNameAsArray = location?.pathname.split("/");
+    const routeUrlFriendlyName = pathNameAsArray[pathNameAsArray.length - 1];
 
     useEffect(() => {
-        if (checkObjectIsEmpty(packages?.ilionaPackages)) {
+        if (packages.ilionaPackages && packages?.ilionaPackages.length === 0) {
             dispatch(fetchIlionaPackages());
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
-        if (packages?.ilionaPackages.length > 0 && categories?.categories.length > 0) {
+        if (categories?.categories && categories?.categories.length === 0) {
+            dispatch(fetchIlionaCategories());
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        console.log("kom ik in side effect?", packages?.ilionaPackages, categories?.categories);
+        if (
+            packages?.ilionaPackages &&
+            packages?.ilionaPackages.length > 0 &&
+            categories?.categories &&
+            categories?.categories.length > 0
+        ) {
+            console.log("en voert die een functie");
             setCategoriesWithPackages(filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages));
         }
     }, [packages?.ilionaPackages, categories?.categories]);
@@ -68,15 +79,18 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
 
     const content =
         packagesForCurrentRoute.length > 0 ? (
-            <CategoriesPackages packagesByCategory={packagesForCurrentRoute}></CategoriesPackages>
+            <CategoriesPackages
+                categories={categories?.categories}
+                packagesByCategory={packagesForCurrentRoute}
+            ></CategoriesPackages>
         ) : (
-            <div data-testid="noPackagesAvailble">{errorText}</div>
+            <div data-testid="noPackagesAvailable"></div>
         );
 
     return (
         <MainContent>
             {showSpinner && <Spinner />}
-            {showError && errorMessage}
+            {showError && <div data-testid="error">{errorMessage}</div>}
             {!showSpinner && !showError && content}
         </MainContent>
     );
