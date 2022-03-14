@@ -8,7 +8,9 @@ export default {
     "navigation.category.officesoftware": "Bedrijfssoftware",
     "navigation.category.internet": "Internet",
 
-    "errormessages.general": "Er is iets fout gegaan, probeer het later opnieuw.",
+    "errormessages.general": "Er is iets fout gegaan, probeer het later opnieuw",
+    "errormessages.deplicate":
+        "De applicatie staat momenteel in de wachtrij om geinstalleerd te worden, een ogenblik geduld alstublieft",
 
     "details.title.category": "Categorie",
     "details.title.license": "Licentie",
@@ -18,6 +20,7 @@ export default {
     "details.title.restartrequired": "Herstart nodig",
     "details.title.installtext": "Installeren",
     "details.header.otherinfo": "Overige informatie",
+    "details.header.intsalling.message": "De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden",
 
-    "packages.nopackages-available": "Er zijn geen applicaties beschikbaar"
+    "packages.nopackages-available": "Er zijn geen applicaties beschikbaar",
 };

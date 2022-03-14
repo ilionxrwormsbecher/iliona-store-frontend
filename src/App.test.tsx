@@ -93,5 +93,5 @@ test("Should render an error when categories could not be fetched", async () => 
     await waitForElementToBeRemoved(() => screen.getAllByTestId("spinner"));
     const alert = await screen.getByRole("alert");
     expect(alert).toBeInTheDocument();
-    expect(alert.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw."`);
+    expect(alert.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw"`);
 });

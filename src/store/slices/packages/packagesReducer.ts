@@ -72,6 +72,7 @@ export function PackagesReducer(
                 errorMessage: action.payload.errorMessage,
                 isFetching: false,
                 packageInstallFailed: true,
+                packageInstallSuccessful: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS:

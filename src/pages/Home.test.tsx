@@ -127,5 +127,5 @@ test("Should render an error if packages cannot be loaded ", async () => {
 
     const error = screen.getByRole("alert");
     expect(error).toBeInTheDocument();
-    expect(error.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw."`);
+    expect(error.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw"`);
 });

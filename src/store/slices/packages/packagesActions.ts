@@ -34,7 +34,7 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
                     type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE,
                     payload: { errorMessage: "Something went wrong" },
                 };
-                dispatch(requestFailedAction);
+                return dispatch(requestFailedAction);
             }
 
             const result = await response.json();
@@ -135,12 +135,21 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
                 }),
             });
 
+            console.log("status code", response.status);
+            if (response.status === 422) {
+                const requestFailedAction: RequestFailedDispatchType = {
+                    type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE,
+                    payload: { errorMessage: "duplicate entry" },
+                };
+                return dispatch(requestFailedAction);
+            }
+
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE,
                     payload: { errorMessage: "Something went wrong" },
                 };
-                dispatch(requestFailedAction);
+                return dispatch(requestFailedAction);
             }
 
             const requestSuccessAction: RequestSuccessDispatchType = {

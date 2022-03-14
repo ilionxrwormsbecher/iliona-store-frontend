@@ -9,6 +9,7 @@ import PackageDetail from "./PackageDetail";
 import { server } from "../mocks/server";
 import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
+import { status } from "msw/lib/types/context";
 
 const { routerReducer } = createReduxHistoryContext({
     history: createBrowserHistory(),
@@ -102,5 +103,68 @@ test("Should display an alert when the server returns an error", async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
 
     const alert = screen.getByRole("alert");
-    expect(alert.innerHTML).toBe("Er is iets fout gegaan, probeer het later opnieuw.");
+    expect(alert.innerHTML).toBe("Er is iets fout gegaan, probeer het later opnieuw");
+});
+
+test.each<[string, number, string]>([
+    ["success", 201, "De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden"],
+    [
+        "warning",
+        422,
+        "De applicatie staat momenteel in de wachtrij om geinstalleerd te worden, een ogenblik geduld alstublieft",
+    ],
+    ["error", 404, "Er is iets fout gegaan, probeer het later opnieuw"],
+    ["error", 500, "Er is iets fout gegaan, probeer het later opnieuw"],
+])("Should display a %s when the server returns a status of %s", async (resultType, statusCode, message) => {
+    server.use(
+        rest.get(`https://api.iliona.cloud/store-packages/get_by_id/${rowkey}`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    data: [
+                        {
+                            PartitionKey: "app",
+                            RowKey: "a2898a96-4247-4708-87f4-f3bf44cf351b",
+                            Category: "b78e9928-0b61-4c12-8c40-036668ef8241",
+                            Dependencies: "",
+                            Description:
+                                "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
+                            DisplayName: "Adobe Acrobat Pro",
+                            ImageUrl: "https://ilionaprod2001.blob.core.windows.net/app-store-logos/acrobat-172.png",
+                            InstallationTime: 10,
+                            IsAlreadyInstalled: false,
+                            IsVisible: true,
+                            LicenseMessage: "Licentie",
+                            NeedToRestart: false,
+                            PackageName: "ILX-AdobePro",
+                            RequiresLicense: false,
+                            Summary: "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
+                            Tags: "",
+                            Weight: 3,
+                            PublishDate: "2020-12-11T16:11:29.3221949Z",
+                        },
+                    ],
+                })
+            );
+        }),
+        rest.post(`https://api.iliona.cloud/store-packages/install-package`, (req, res, ctx) => {
+            return res(ctx.status(statusCode), ctx.json({ detail: "entry already exists" }));
+        })
+    );
+
+    window.history.pushState({}, "testpage", "/details/22f3046f-2caa-4108-90e4-61377450f3fa");
+    setupTest();
+
+    await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
+
+    const installButton = screen.getByRole("button", {
+        name: /install/i,
+    });
+
+    userEvent.click(installButton);
+
+    await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
+    screen.debug();
+
+    const alert = screen.getByRole("alert");
+    expect(alert.textContent).toBe(message);
 });

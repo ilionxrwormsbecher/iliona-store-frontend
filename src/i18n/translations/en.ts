@@ -9,6 +9,7 @@ export default {
     "navigation.category.internet": "Internet",
 
     "errormessages.general": "Something has gone wrong, please try again later.",
+    "errormessages.deplicate": "The application is currently queued, please wait a moment",
 
     "details.title.category": "Category",
     "details.title.license": "License",
@@ -18,6 +19,7 @@ export default {
     "details.title.restartrequired": "Restart required",
     "details.title.installtext": "Install",
     "details.header.otherinfo": "Information",
+    "details.header.intsalling.message": "The application is added to the installation queue",
 
-    "packages.nopackages-available": "Sorry, there are no packages available"
+    "packages.nopackages-available": "Sorry, there are no packages available",
 };

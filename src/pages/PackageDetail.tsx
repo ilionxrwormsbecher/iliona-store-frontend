@@ -200,15 +200,30 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw.",
     });
 
+    let warningText = intl.formatMessage({
+        id: "errormessages.deplicate",
+        defaultMessage:
+            "De applicatie staat momenteel in de wachtrij om geinstalleerd te worden, een ogenblik geduld alstublieft.",
+    });
+
     const errorMessage = (
         <ToastWrapper>
             <Alert variant="danger">{errorText}</Alert>
         </ToastWrapper>
     );
+    const warningMessage = (
+        <ToastWrapper>
+            <Alert variant="warning">{warningText}</Alert>
+        </ToastWrapper>
+    );
+
     const succesfullyInstalled = (
         <ToastWrapper>
             <Alert onClose={() => dispatch(closeSuccessInstalledMessage())} dismissible variant="success">
-                Package has succesfully installed
+                <FormattedMessage
+                    id="details.header.intsalling.message"
+                    defaultMessage="De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden"
+                ></FormattedMessage>
             </Alert>
         </ToastWrapper>
     );
@@ -219,16 +234,16 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         <span className="license-not-required">{packageDetails?.selectedPackageDetail[0]?.LicenseMessage}</span>
     );
 
-    console.log("the slice of packages", packageDetails);
-
     const handleInstall = (displayName: string) => {
+        console.log("1");
         dispatch(InstallPackage(displayName));
     };
 
     return (
         <>
-            {showError && errorMessage}
-            {packageDetails?.packageInstallSuccessful && succesfullyInstalled}
+            {showError && packageDetails?.errorMessage !== "duplicate entry" && errorMessage}
+            {showError && packageDetails?.errorMessage === "duplicate entry" && warningMessage}
+            {packageDetails?.packageInstallSuccessful && !packageDetails?.errorMessage && succesfullyInstalled}
             <DetailPageWrapper>
                 {showSpinner && <Spinner />}
 
