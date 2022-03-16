@@ -3,7 +3,7 @@ import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
+import { fetchIlionaPackages, removePackageError } from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
 import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
 import CategoriesPackages from "../components/categoryPackages/CategoriesPackages";
@@ -24,6 +24,12 @@ const Home = ({ intl }: WrappedComponentProps) => {
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (packages.errorMessage === "duplicate entry" || packages.packageInstallSuccessful) {
+            dispatch(removePackageError());
+        }
+    }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     let showSpinner = false;
     let showError = false;
@@ -76,7 +82,7 @@ const Home = ({ intl }: WrappedComponentProps) => {
     return (
         <MainContent data-testid="wrapper">
             {showSpinner && <Spinner />}
-            {showError && errorMessage}
+            {!showSpinner && showError && errorMessage}
             {!showSpinner && content}
         </MainContent>
     );

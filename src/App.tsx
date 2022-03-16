@@ -76,11 +76,11 @@ function App({ intl }: WrappedComponentProps) {
                     <Header background="/assets/img/logo_ggd.jpg" />
                     <Nav categories={categories.categories} />
                     <Main>
-                        {categories.isFetching && (
+                        {/* {categories.isFetching && (
                             <MainContent data-testid="app-spinner">
                                 <Spinner />
                             </MainContent>
-                        )}
+                        )} */}
                         {showError && !categories.isFetching ? (
                             <MainContent>{errorMessage}</MainContent>
                         ) : (

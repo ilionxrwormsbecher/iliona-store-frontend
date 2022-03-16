@@ -85,11 +85,19 @@ export function PackagesReducer(
             };
 
         case IlionaPackagesTypes.CLOSE_TOAST_MESSAGE:
-            console.log("entering reducer");
             return {
                 ...state,
                 packageInstallSuccessful: false,
             };
+
+        case IlionaPackagesTypes.REMOVE_PACKAGE_ERROR:
+            return {
+                ...state,
+                errorMessage: "",
+                packageInstallFailed: false,
+                packageInstallSuccessful: false,
+            };
+
         default: {
             return state;
         }

@@ -110,7 +110,12 @@ export const InstallPackage = (packageName: string) => {
 };
 
 export function closeSuccessInstalledMessage() {
-    return { type: IlionaPackagesTypes.CLOSE_TOAST_MESSAGE, payload: { test: "test" } };
+    return { type: IlionaPackagesTypes.CLOSE_TOAST_MESSAGE };
+}
+
+export function removePackageError() {
+    console.log(1);
+    return { type: IlionaPackagesTypes.REMOVE_PACKAGE_ERROR };
 }
 
 const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (

@@ -18,7 +18,7 @@ function setupTest() {
     );
 }
 
-test("Should render a spinner when the categories are loading", async () => {
+test("Should render the wrapper component within the page", async () => {
     server.use(
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(
@@ -37,10 +37,8 @@ test("Should render a spinner when the categories are loading", async () => {
     );
 
     setupTest();
-    const appContainer = screen.getByTestId("app-spinner");
-    const globalSpinner = within(appContainer).getByTestId("spinner");
-
-    expect(globalSpinner).toBeInTheDocument();
+    const appContainer = await screen.getByTestId("wrapper");
+    expect(appContainer).toBeInTheDocument();
 });
 
 test("Should render routes when there is no error and the page isn't loading.", async () => {

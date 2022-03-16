@@ -8,7 +8,7 @@ import CategoriesPackages from "../components/categoryPackages/CategoriesPackage
 import { Spinner } from "../components/spinner/Spinner";
 import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { fetchIlionaPackages } from "../store/slices/packages/packagesActions";
+import { fetchIlionaPackages, removePackageError } from "../store/slices/packages/packagesActions";
 import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
 import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
 
@@ -26,6 +26,12 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
     let location = useLocation();
+
+    useEffect(() => {
+        if (packages.errorMessage === "duplicate entry" || packages.packageInstallSuccessful) {
+            dispatch(removePackageError());
+        }
+    }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     let showSpinner = false;
     let showError = false;
