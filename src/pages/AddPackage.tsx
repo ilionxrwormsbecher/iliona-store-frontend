@@ -256,7 +256,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (imageError && imageError !== "") {
-            setimageError("error");
+            setimageError(imageError);
         }
     }, [imageError]);
 
@@ -478,21 +478,26 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                             <ImageWrapper>
                                 <ImageContainer></ImageContainer>
                                 <Label htmlFor="imageUrl" style={{ marginTop: "24px" }}>
-                                    Image{" "}
+                                    Image
                                 </Label>
                                 {imageError && (
                                     <ErrorLine role="alert" aria-label="image">
                                         {imageError}
                                     </ErrorLine>
                                 )}
+                                <p>{image?.name}</p>
                                 <input
                                     id="imageUrl"
                                     type="file"
                                     accept="image/x-png,image/gif,image/jpeg"
                                     {...register("imageUrl")}
-                                    onChange={(event) => {
+                                    onChange={async (event) => {
                                         if (event?.currentTarget?.files) {
-                                            checkFileMimetype(event.currentTarget.files[0], setImage, setimageError);
+                                            await checkFileMimetype(
+                                                event.currentTarget.files[0],
+                                                setImage,
+                                                setimageError
+                                            );
                                         }
                                     }}
                                 />

@@ -49,7 +49,6 @@ test("should render an message when there are no packages available.", async () 
 
     setupTest();
     await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
-    screen.debug();
     const noPackagesNode = screen.getByTestId("noPackagesAvailable");
     expect(noPackagesNode).toBeInTheDocument();
 });
@@ -109,7 +108,7 @@ test("should render the category title correctly", async () => {
 
 // //     setupTest();
 // //     await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
-// //     screen.debug();
+
 // //     const errorNode = screen.getByRole("alert");
 
 // //     expect(errorNode.innerHTML).toBe("Er is iets fout gegaan, probeer het later opnieuw.");

@@ -9,15 +9,25 @@ export const checkFileMimetype = async (file: File, setField: any, setimageError
     let blob = file;
     let fileReader = new FileReader();
     let type = "";
+
+    if (file) {
+        console.log("1");
+        fileReader.readAsArrayBuffer(blob);
+    }
+
     fileReader.onloadend = (e) => {
+        console.log("image", e?.target?.result);
         // @ts-ignore
         const arr = new Uint8Array(e.target.result).subarray(0, 4);
+        console.log("arr", arr);
         let header = "";
         for (var i = 0; i < arr.length; i++) {
             header += arr[i].toString(16);
         }
 
-        // Check the file signature against known types
+        console.log("header", header);
+
+        //Check the file signature against known types
         switch (header) {
             case "89504e47":
                 type = "image/png";
@@ -26,6 +36,7 @@ export const checkFileMimetype = async (file: File, setField: any, setimageError
                 type = "image/gif";
                 break;
             case "ffd8ffe0":
+            case "ffd8ffee":
             case "ffd8ffe1":
             case "ffd8ffe2":
             case "ffd8ffe3":
@@ -66,11 +77,4 @@ export const checkFileMimetype = async (file: File, setField: any, setimageError
             return;
         }
     };
-
-    if (file) {
-        await fileReader.readAsArrayBuffer(blob);
-        return type;
-    }
-
-    return;
 };
