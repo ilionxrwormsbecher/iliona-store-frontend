@@ -117,35 +117,40 @@ test.each<[string, number, string]>([
     ["error", 500, "Er is iets fout gegaan, probeer het later opnieuw"],
 ])("Should display a %s when the server returns a status of %s", async (resultType, statusCode, message) => {
     server.use(
-        rest.get(`https://api.iliona.cloud/store-packages/get_by_id/${rowkey}`, (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    data: [
-                        {
-                            PartitionKey: "app",
-                            RowKey: "a2898a96-4247-4708-87f4-f3bf44cf351b",
-                            Category: "b78e9928-0b61-4c12-8c40-036668ef8241",
-                            Dependencies: "",
-                            Description:
-                                "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
-                            DisplayName: "Adobe Acrobat Pro",
-                            ImageUrl: "https://ilionaprod2001.blob.core.windows.net/app-store-logos/acrobat-172.png",
-                            InstallationTime: 10,
-                            IsAlreadyInstalled: false,
-                            IsVisible: true,
-                            LicenseMessage: "Licentie",
-                            NeedToRestart: false,
-                            PackageName: "ILX-AdobePro",
-                            RequiresLicense: false,
-                            Summary: "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
-                            Tags: "",
-                            Weight: 3,
-                            PublishDate: "2020-12-11T16:11:29.3221949Z",
-                        },
-                    ],
-                })
-            );
-        }),
+        rest.get(
+            `https://api.iliona.cloud/store-packages/get_by_id/0f941bd9-9d1d-4617-8616-c6592be7a2ac`,
+            (req, res, ctx) => {
+                return res(
+                    ctx.json({
+                        data: [
+                            {
+                                PartitionKey: "app",
+                                RowKey: "a2898a96-4247-4708-87f4-f3bf44cf351b",
+                                Category: "b78e9928-0b61-4c12-8c40-036668ef8241",
+                                Dependencies: "",
+                                Description:
+                                    "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
+                                DisplayName: "Adobe Acrobat Pro",
+                                ImageUrl:
+                                    "https://ilionaprod2001.blob.core.windows.net/app-store-logos/acrobat-172.png",
+                                InstallationTime: 10,
+                                IsAlreadyInstalled: false,
+                                IsVisible: true,
+                                LicenseMessage: "Licentie",
+                                NeedToRestart: false,
+                                PackageName: "ILX-AdobePro",
+                                RequiresLicense: false,
+                                Summary:
+                                    "Alle tools die je nodig hebt om pdf's te converteren, bewerken, ondertekenen.",
+                                Tags: "",
+                                Weight: 3,
+                                PublishDate: "2020-12-11T16:11:29.3221949Z",
+                            },
+                        ],
+                    })
+                );
+            }
+        ),
         rest.post(`https://api.iliona.cloud/store-packages/install-package`, (req, res, ctx) => {
             return res(ctx.status(statusCode), ctx.json({ detail: "entry already exists" }));
         })
@@ -171,7 +176,7 @@ test.each<[string, number, string]>([
 test("Should return a succes alert when the install package button has been pressed.", async () => {
     server.use(
         rest.get(
-            `https://api.iliona.cloud/store-packages/get_by_id/a2898a96-4247-4708-87f4-f3bf44cf351b`,
+            `https://api.iliona.cloud/store-packages/get_by_id/0f941bd9-9d1d-4617-8616-c6592be7a2ac`,
             (req, res, ctx) => {
                 return res(
                     ctx.json({
@@ -225,7 +230,6 @@ test("Should return a succes alert when the install package button has been pres
     const alert = screen.getByRole("alert");
     expect(alert.textContent).toBe("De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden");
 
-    screen.logTestingPlaygroundURL(alert);
     const alertCloseButton = screen.getByRole("button", { name: /close alert/i });
     await userEvent.click(alertCloseButton);
     expect(alert).not.toBeInTheDocument();

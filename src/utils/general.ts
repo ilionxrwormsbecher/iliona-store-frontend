@@ -11,21 +11,16 @@ export const checkFileMimetype = async (file: File, setField: any, setimageError
     let type = "";
 
     if (file) {
-        console.log("1");
         fileReader.readAsArrayBuffer(blob);
     }
 
     fileReader.onloadend = (e) => {
-        console.log("image", e?.target?.result);
         // @ts-ignore
         const arr = new Uint8Array(e.target.result).subarray(0, 4);
-        console.log("arr", arr);
         let header = "";
         for (var i = 0; i < arr.length; i++) {
             header += arr[i].toString(16);
         }
-
-        console.log("header", header);
 
         //Check the file signature against known types
         switch (header) {

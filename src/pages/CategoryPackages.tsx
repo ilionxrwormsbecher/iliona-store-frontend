@@ -52,14 +52,12 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     }, [dispatch]);
 
     useEffect(() => {
-        console.log("kom ik in side effect?", packages?.ilionaPackages, categories?.categories);
         if (
             packages?.ilionaPackages &&
             packages?.ilionaPackages.length > 0 &&
             categories?.categories &&
             categories?.categories.length > 0
         ) {
-            console.log("en voert die een functie");
             setCategoriesWithPackages(filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages));
         }
     }, [packages?.ilionaPackages, categories?.categories]);

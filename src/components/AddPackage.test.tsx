@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { IntlProvider } from "react-intl";
 import { translationSets } from "../i18n/translations";
-import { dataBase64 } from "../mocks/fileMocks";
+import { byteArrayPdf, dataBase64 } from "../mocks/fileMocks";
 import { categoriesMOCK } from "../mocks/mockData";
 import { server } from "../mocks/server";
 import {
@@ -27,7 +27,6 @@ test("Should render spinner if categories are not loaded.", async () => {
     server.use(
         //   https://api.iliona.cloud/store-packages/categories
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
-            console.log("I am intercepting");
             return res(ctx.json({ data: [] }));
         })
     );
@@ -41,7 +40,6 @@ test("Should render spinner if categories are not loaded.", async () => {
 test("Should test form validation messages corectly", async () => {
     server.use(
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
-            console.log("I am intercepting");
             return res(ctx.json({ data: categoriesMOCK }));
         })
     );
@@ -93,7 +91,6 @@ test("Should let errormessage disappear when typing in textbox", async () => {
 
     setupTest();
     await waitForElementToBeRemoved(() => screen.getByTestId("fake-spinner"));
-    screen.logTestingPlaygroundURL();
 
     const packageName = screen.getByLabelText(/display name/i);
     expect(packageName).toHaveFocus();
@@ -112,10 +109,7 @@ test("Should let errormessage disappear when typing in textbox", async () => {
     expect(await screen.findByRole("alert", { name: /display name/i })).not.toBeInTheDocument();
 });
 
-test.only("Should be able to correctly upload a testfile", async () => {
-    // fs.open
-
-    // real jpg
+test("Should be able to correctly upload a testfile", async () => {
     server.use(
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(ctx.json({ data: categoriesMOCK }));
@@ -126,8 +120,6 @@ test.only("Should be able to correctly upload a testfile", async () => {
     const file = new File([arrayBuffer], "dummy.png", { type: "image/png" });
     Object.defineProperty(file, "size", { value: 1024 * 24 + 1 });
 
-    console.log("----", file.type);
-
     setupTest();
     await waitForElementToBeRemoved(() => screen.getByTestId("fake-spinner"));
 
@@ -137,8 +129,73 @@ test.only("Should be able to correctly upload a testfile", async () => {
     await waitFor(() => expect(imageUploader?.files).toHaveLength(1));
     const fileName = await screen.findByText("dummy.png");
     expect(fileName).toBeInTheDocument();
+});
 
-    // await waitFor(() => userEvent.upload(imageUploader, file));
+test("Should throw an error when the file size is too big.", async () => {
+    server.use(
+        rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
+            return res(ctx.json({ data: categoriesMOCK }));
+        })
+    );
 
-    // screen.debug();
+    const arrayBuffer = Uint8Array.from(window.atob(dataBase64), (c) => c.charCodeAt(0));
+    const file = new File([arrayBuffer], "dummy.png", { type: "image/png" });
+    Object.defineProperty(file, "size", { value: 1024 * 1024 + 1 });
+
+    setupTest();
+    await waitForElementToBeRemoved(() => screen.getByTestId("fake-spinner"));
+
+    const imageUploader = screen.getByLabelText(/image/i) as HTMLInputElement;
+    userEvent.upload(imageUploader, file);
+
+    await waitFor(() => expect(imageUploader?.files).toHaveLength(1));
+    const error = await screen.findByTestId("image-error");
+    expect(error).not.toBeNull();
+    expect(error.textContent).toBe("File size too big");
+});
+
+test("Should throw an error when the file extention is not allowed.", async () => {
+    server.use(
+        rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
+            return res(ctx.json({ data: categoriesMOCK }));
+        })
+    );
+
+    const arrayBuffer = Uint8Array.from(window.atob(byteArrayPdf), (c) => c.charCodeAt(0));
+    const file = new File([arrayBuffer], "dummy.pdf", { type: "image/pdf" });
+    Object.defineProperty(file, "size", { value: 1024 * 24 + 1 });
+
+    setupTest();
+    await waitForElementToBeRemoved(() => screen.getByTestId("fake-spinner"));
+
+    const imageUploader = screen.getByLabelText(/image/i) as HTMLInputElement;
+    userEvent.upload(imageUploader, file);
+
+    await waitFor(() => expect(imageUploader?.files).toHaveLength(1));
+    const error = await screen.findByTestId("image-error");
+    expect(error).not.toBeNull();
+    expect(error.textContent).toBe("File type not supported");
+});
+
+test("Should throw an error when the file extention is correct but mime type is incorrect.", async () => {
+    server.use(
+        rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
+            return res(ctx.json({ data: categoriesMOCK }));
+        })
+    );
+
+    const arrayBuffer = Uint8Array.from(window.atob(byteArrayPdf), (c) => c.charCodeAt(0));
+    const file = new File([arrayBuffer], "dummy.png", { type: "image/png" });
+    Object.defineProperty(file, "size", { value: 1024 * 24 + 1 });
+
+    setupTest();
+    await waitForElementToBeRemoved(() => screen.getByTestId("fake-spinner"));
+
+    const imageUploader = screen.getByLabelText(/image/i) as HTMLInputElement;
+    userEvent.upload(imageUploader, file);
+
+    await waitFor(() => expect(imageUploader?.files).toHaveLength(1));
+    const error = await screen.findByTestId("image-error");
+    expect(error).not.toBeNull();
+    expect(error.textContent).toBe("File type not supported");
 });

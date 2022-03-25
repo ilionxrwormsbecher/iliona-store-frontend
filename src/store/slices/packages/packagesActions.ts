@@ -114,7 +114,6 @@ export function closeSuccessInstalledMessage() {
 }
 
 export function removePackageError() {
-    console.log(1);
     return { type: IlionaPackagesTypes.REMOVE_PACKAGE_ERROR };
 }
 
@@ -140,7 +139,6 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
                 }),
             });
 
-            console.log("status code", response.status);
             if (response.status === 422) {
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE,

@@ -14,7 +14,8 @@
             "!**/src/useKeycloak.ts",
             "!**/src/Keycloak.ts",
             "!**/src/react-app-env.d.ts",
-            "!**/src/index.tsx"
+            "!**/src/index.tsx",
+            "!**/mocks/**"
         ]
     },
     "dependencies": {
@@ -32,6 +33,10 @@
         "@types/react-dom": "^17.0.11",
         "@types/styled-components": "^5.1.21",
         "bootstrap": "^5.1.3",
+        "cross": "^1.0.0",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.0.0",
+        "env": "^0.0.2",
         "node-sass": "^7.0.1",
         "react": "^17.0.2",
         "react-bootstrap": "^2.1.1",
@@ -52,13 +57,23 @@
         "yup": "^0.32.11"
     },
     "scripts": {
+        "start:cy": "cross-env REACT_APP_USE_MSW=true react-scripts -r @cypress/instrument-cra start",
         "start": "react-scripts start",
+        "start:msw": "cross-env REACT_APP_USE_MSW=true react-scripts start",
+        "cy:open": "cypress open",
+        "test:e2e:dev": "start-server-and-test start:cy http://localhost:3000 cy:open",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "test-coverage": "npm test -- --coverage --watchAll=false",
         "eject": "react-scripts eject",
         "lint": "eslint -c .eslintrc.js --ext .js,.jsx,.ts,.tsx .",
-        "lint:fix": "npm run lint -- --fix"
+        "lint:fix": "npm run lint -- --fix",
+        "log:coverage": "nyc report",
+        "log:coverage:summary": "nyc report --reporter=text-summary"
+    },
+    "nyc": {
+        "all": true,
+        "include": "src/pages/*.tsx"
     },
     "browserslist": {
         "production": [
@@ -74,7 +89,17 @@
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.16.5",
+        "@cypress/code-coverage": "^3.9.12",
+        "@cypress/instrument-cra": "^1.4.0",
+        "@testing-library/cypress": "^8.0.2",
+        "cypress": "^9.5.2",
+        "eslint-plugin-cypress": "^2.12.1",
         "husky": "^4.3.8",
-        "msw": "^0.38.2"
+        "msw": "^0.38.2",
+        "nyc": "^15.1.0",
+        "start-server-and-test": "^1.14.0"
+    },
+    "msw": {
+        "workerDirectory": "public"
     }
 }

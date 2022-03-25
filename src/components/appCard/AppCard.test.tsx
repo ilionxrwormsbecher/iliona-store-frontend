@@ -26,61 +26,63 @@ function setupTest(language: IntlShape, requiredLicense: boolean = false) {
     );
 }
 
-test("should render the link to the product page succesfully", async () => {
-    setupTest(intlDutch);
+describe("App card tests", () => {
+    test("should render the link to the product page succesfully", async () => {
+        setupTest(intlDutch);
 
-    const linkToDetailPage = screen.getByRole("link");
+        const linkToDetailPage = screen.getByRole("link");
 
-    userEvent.click(linkToDetailPage);
+        userEvent.click(linkToDetailPage);
 
-    expect(linkToDetailPage).toHaveAttribute("href", "/details/22afc55f-b02c-434b-8441-da96023094b7");
-    expect(window.location.pathname).toMatchInlineSnapshot(`"/details/22afc55f-b02c-434b-8441-da96023094b7"`);
-});
+        expect(linkToDetailPage).toHaveAttribute("href", "/details/22afc55f-b02c-434b-8441-da96023094b7");
+        expect(window.location.pathname).toMatchInlineSnapshot(`"/details/22afc55f-b02c-434b-8441-da96023094b7"`);
+    });
 
-test("should render the category in Dutch", async () => {
-    setupTest(intlDutch);
+    test("should render the category in Dutch", async () => {
+        setupTest(intlDutch);
 
-    const categoryNode = screen.getByText(/productiviteitstools/i);
-    expect(categoryNode.innerHTML).toContain("Productiviteitstools");
-});
+        const categoryNode = screen.getByText(/productiviteitstools/i);
+        expect(categoryNode.innerHTML).toContain("Productiviteitstools");
+    });
 
-test("should render the category in English", async () => {
-    setupTest(intlEnglish);
+    test("should render the category in English", async () => {
+        setupTest(intlEnglish);
 
-    const categoryNode = screen.getByText(/productivity tools/i);
-    expect(categoryNode.innerHTML).toContain("Productivity tools");
-});
+        const categoryNode = screen.getByText(/productivity tools/i);
+        expect(categoryNode.innerHTML).toContain("Productivity tools");
+    });
 
-test("should render the category in Dutch, when language is set to missing language", async () => {
-    const errorMock = jest.spyOn(console, "error").mockImplementation(() => {});
-    setupTest(intlChinese);
+    test("should render the category in Dutch, when language is set to missing language", async () => {
+        const errorMock = jest.spyOn(console, "error").mockImplementation(() => {});
+        setupTest(intlChinese);
 
-    const categoryNode = screen.getByText(/productiviteitstools/i);
-    expect(categoryNode.innerHTML).toContain("Productiviteitstools");
-    expect(console.error).toHaveBeenCalledTimes(1);
-    errorMock.mockRestore();
-});
+        const categoryNode = screen.getByText(/productiviteitstools/i);
+        expect(categoryNode.innerHTML).toContain("Productiviteitstools");
+        expect(console.error).toHaveBeenCalledTimes(1);
+        errorMock.mockRestore();
+    });
 
-test("should render the name of the product correctly and show a product image", async () => {
-    setupTest(intlDutch);
+    test("should render the name of the product correctly and show a product image", async () => {
+        setupTest(intlDutch);
 
-    const imageNode = screen.getByTestId("packageImage");
-    const packageTitleNode = screen.getByTestId("packageName");
+        const imageNode = screen.getByTestId("packageImage");
+        const packageTitleNode = screen.getByTestId("packageName");
 
-    expect(imageNode.style).toContain("background-image");
-    expect(packageTitleNode.innerHTML).toBe("Docker Desktop");
-});
+        expect(imageNode.style).toContain("background-image");
+        expect(packageTitleNode.innerHTML).toBe("Docker Desktop");
+    });
 
-test("should render Gratis whether the app is free", async () => {
-    setupTest(intlDutch);
+    test("should render Gratis whether the app is free", async () => {
+        setupTest(intlDutch);
 
-    const licenseText = screen.getByText(/Gratis/i);
-    expect(licenseText).toBeInTheDocument();
-});
+        const licenseText = screen.getByText(/Gratis/i);
+        expect(licenseText).toBeInTheDocument();
+    });
 
-test("should render whether the app is free or paid", async () => {
-    setupTest(intlDutch, true);
+    test("should render whether the app is free or paid", async () => {
+        setupTest(intlDutch, true);
 
-    const licenseText = screen.getByText(/Licensie vereist/i);
-    expect(licenseText).toBeInTheDocument();
+        const licenseText = screen.getByText(/Licensie vereist/i);
+        expect(licenseText).toBeInTheDocument();
+    });
 });

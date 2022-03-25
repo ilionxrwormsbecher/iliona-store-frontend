@@ -18,7 +18,7 @@ import { Alert } from "react-bootstrap";
 import { IReduxApplicationState } from "./models/redux/IReduxApplicationState";
 import { Spinner } from "./components/spinner/Spinner";
 import CategoryPackages from "./pages/CategoryPackages";
-import AddPackage from "./pages/AddPackage";
+import AddPackage from "./components/AddPackage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
 

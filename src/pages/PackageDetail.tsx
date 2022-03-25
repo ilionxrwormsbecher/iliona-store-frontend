@@ -213,13 +213,20 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     );
     const warningMessage = (
         <ToastWrapper>
-            <Alert variant="warning">{warningText}</Alert>
+            <Alert variant="warning" aria-label="warning-toast">
+                {warningText}
+            </Alert>
         </ToastWrapper>
     );
 
     const succesfullyInstalled = (
         <ToastWrapper>
-            <Alert onClose={() => dispatch(closeSuccessInstalledMessage())} dismissible variant="success">
+            <Alert
+                onClose={() => dispatch(closeSuccessInstalledMessage())}
+                aria-label="success-toast"
+                dismissible
+                variant="success"
+            >
                 <FormattedMessage
                     id="details.header.intsalling.message"
                     defaultMessage="De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden"
@@ -235,7 +242,6 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     );
 
     const handleInstall = (displayName: string) => {
-        console.log("1");
         dispatch(InstallPackage(displayName));
     };
 
@@ -287,7 +293,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
                                     <InstallButton
                                         disabled={packageDetails?.isFetching}
                                         onClick={() =>
-                                            handleInstall(packageDetails?.selectedPackageDetail[0]?.DisplayName)
+                                            handleInstall(packageDetails?.selectedPackageDetail[0]?.PackageName)
                                         }
                                     >
                                         <FormattedMessage

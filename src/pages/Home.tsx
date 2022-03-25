@@ -75,10 +75,6 @@ const Home = ({ intl }: WrappedComponentProps) => {
         ></CategoriesPackages>
     );
 
-    {
-        console.log(showError);
-    }
-
     return (
         <MainContent data-testid="wrapper">
             {showSpinner && <Spinner />}

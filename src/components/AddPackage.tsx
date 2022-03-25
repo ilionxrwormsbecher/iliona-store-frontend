@@ -243,7 +243,6 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (categories?.categories && categories?.categories.length === 0) {
-            console.log("1");
             dispatch(fetchIlionaCategories());
         }
     }, []);
@@ -259,8 +258,6 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
             setimageError(imageError);
         }
     }, [imageError]);
-
-    console.log("is fetching?", categories?.isFetching);
 
     const errorText = intl.formatMessage({
         id: "errormessages.general",
@@ -481,7 +478,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     Image
                                 </Label>
                                 {imageError && (
-                                    <ErrorLine role="alert" aria-label="image">
+                                    <ErrorLine role="alert" aria-label="image" data-testid="image-error">
                                         {imageError}
                                     </ErrorLine>
                                 )}
