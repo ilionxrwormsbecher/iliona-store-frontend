@@ -242,7 +242,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     );
 
     const handleInstall = (displayName: string) => {
-        dispatch(InstallPackage(displayName));
+        dispatch(InstallPackage(displayName, packageDetails?.computerName, packageDetails?.subscriptionKey));
     };
 
     return (

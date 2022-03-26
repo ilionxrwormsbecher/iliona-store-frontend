@@ -21,6 +21,7 @@ import CategoryPackages from "./pages/CategoryPackages";
 import AddPackage from "./components/AddPackage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
+import { fetchComputerName, fetchSubscriptionKey } from "./store/slices/packages/packagesActions";
 
 const Main = styled.main`
     width: 100%;
@@ -52,6 +53,8 @@ function App({ intl }: WrappedComponentProps) {
     useEffect(() => {
         setTheme(themeSelector("ilionx"));
         dispatch(fetchIlionaCategories());
+        dispatch(fetchComputerName());
+        dispatch(fetchSubscriptionKey());
     }, []);
 
     const errorText = intl.formatMessage({

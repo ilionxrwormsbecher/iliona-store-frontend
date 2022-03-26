@@ -103,9 +103,9 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
 };
 
 // GET Install a package
-export const InstallPackage = (packageName: string) => {
+export const InstallPackage = (packageName: string, computerName: string, subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchInstallPackageRequest(packageName));
+        dispatch(fetchInstallPackageRequest(packageName, computerName, subscriptionKey));
     };
 };
 
@@ -118,7 +118,9 @@ export function removePackageError() {
 }
 
 const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
-    packageName: string
+    packageName: string,
+    computerName: string,
+    subscriptionKey: string
 ) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
@@ -129,13 +131,14 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            requestHeaders.set("x-api-key", subscriptionKey);
             const response: Response = await fetch(`https://api.iliona.cloud/store-packages/install-package`, {
                 method: "POST",
                 headers: requestHeaders,
                 body: JSON.stringify({
                     packageName: packageName,
-                    clientIdentification: "dummyData",
+                    clientIdentification: computerName,
+                    subscriptionKey: subscriptionKey,
                 }),
             });
 
@@ -163,6 +166,100 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
         } catch (error) {
             const requestFailedAction: RequestFailedDispatchType = {
                 type: IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE,
+                payload: { errorMessage: error },
+            };
+            dispatch(requestFailedAction);
+        }
+    };
+};
+
+// GET Conmputer name
+export const fetchComputerName = () => {
+    return (dispatch: Dispatch<any>) => {
+        dispatch(fetchIlionaComputerNameRequest());
+    };
+};
+
+const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = () => {
+    return async (dispatch: Dispatch) => {
+        const requestStartedAction: RequestStartedDispatchType = {
+            type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_STARTED,
+        };
+        dispatch(requestStartedAction);
+
+        try {
+            const requestHeaders: any = new Headers();
+            requestHeaders.set("Content-Type", "application/json");
+            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            const response: Response = await fetch(`http://127.0.0.1:10001/computer`, {
+                headers: requestHeaders,
+            });
+
+            if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
+                const requestFailedAction: RequestFailedDispatchType = {
+                    type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
+                    payload: { errorMessage: "Something went wrong" },
+                };
+                return dispatch(requestFailedAction);
+            }
+            const result = await response.json();
+
+            console.log("result json", result.computer_name);
+
+            const requestSuccessAction: RequestSuccessDispatchType = {
+                payload: { computer: result.computer_name },
+                type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_SUCCESS,
+            };
+            dispatch(requestSuccessAction);
+        } catch (error) {
+            const requestFailedAction: RequestFailedDispatchType = {
+                type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
+                payload: { errorMessage: error },
+            };
+            dispatch(requestFailedAction);
+        }
+    };
+};
+
+// GET Conmputer name
+export const fetchSubscriptionKey = () => {
+    return (dispatch: Dispatch<any>) => {
+        dispatch(fetchIlionaSubscriptionKeyRequest());
+    };
+};
+
+const fetchIlionaSubscriptionKeyRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = () => {
+    return async (dispatch: Dispatch) => {
+        const requestStartedAction: RequestStartedDispatchType = {
+            type: IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_STARTED,
+        };
+        dispatch(requestStartedAction);
+
+        try {
+            const requestHeaders: any = new Headers();
+            requestHeaders.set("Content-Type", "application/json");
+            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            const response: Response = await fetch(`http://127.0.0.1:10001/subscriptionkey`, {
+                headers: requestHeaders,
+            });
+
+            if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
+                const requestFailedAction: RequestFailedDispatchType = {
+                    type: IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_FAILURE,
+                    payload: { errorMessage: "Something went wrong" },
+                };
+                return dispatch(requestFailedAction);
+            }
+            const result = await response.json();
+
+            const requestSuccessAction: RequestSuccessDispatchType = {
+                payload: { subscriptionKey: result.subscription_key },
+                type: IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_SUCCESS,
+            };
+            dispatch(requestSuccessAction);
+        } catch (error) {
+            const requestFailedAction: RequestFailedDispatchType = {
+                type: IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_FAILURE,
                 payload: { errorMessage: error },
             };
             dispatch(requestFailedAction);

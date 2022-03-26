@@ -11,6 +11,8 @@ const initialState: PackagesState = {
     isFetching: false,
     packageInstallFailed: false,
     packageInstallSuccessful: false,
+    computerName: "",
+    subscriptionKey: "",
 };
 
 export function PackagesReducer(
@@ -96,6 +98,57 @@ export function PackagesReducer(
                 errorMessage: "",
                 packageInstallFailed: false,
                 packageInstallSuccessful: false,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_STARTED:
+            return {
+                ...state,
+                isFetching: true,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: "",
+                packageInstallSuccessful: false,
+                computerName: action.payload.computer,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: action.payload.errorMessage,
+                packageInstallSuccessful: false,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_STARTED:
+            return {
+                ...state,
+                isFetching: true,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: "",
+                packageInstallSuccessful: false,
+                subscriptionKey: action.payload?.subscriptionKey,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: action.payload.errorMessage,
+                packageInstallSuccessful: false,
+                subscriptionKey: "",
             };
 
         default: {
