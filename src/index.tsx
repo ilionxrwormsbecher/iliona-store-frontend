@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MSW) {
 }
 
 ReactDOM.render(
-    <IntlProvider locale={"nl"} messages={translationSets["en"]}>
+    <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
         <Provider store={store}>
             <App />
         </Provider>

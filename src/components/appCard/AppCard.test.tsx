@@ -12,6 +12,7 @@ function setupTest(language: IntlShape, requiredLicense: boolean = false) {
     renderWithoutReducer(
         <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
             <AppCard
+                packageName="ILX-Docker"
                 title="Docker Desktop"
                 category="aa1ca463-a779-45fe-b1b7-9410521a9a84"
                 imageUrl="https://ilionaprod2001.blob.core.windows.net/app-store-logos/dockerLogoResized.png"
@@ -21,6 +22,7 @@ function setupTest(language: IntlShape, requiredLicense: boolean = false) {
                 rowkey="22afc55f-b02c-434b-8441-da96023094b7"
                 intl={language}
                 categories={categoriesMOCK}
+                localPackages={[]}
             />
         </IntlProvider>
     );

@@ -1,3 +1,4 @@
+import { IIlionaLocalPackage } from "./../../../models/ilionaLocalPackage";
 import { IIlionaPackages, IIlionaPackagesAbbreviated } from "../../../models/IIlionaPackage";
 
 export enum IlionaPackagesTypes {
@@ -21,6 +22,10 @@ export enum IlionaPackagesTypes {
     FETCH_ILIONA_SUBSCRIPTION_KEY_STARTED = "@@FETCH_ILIONA_SUBSCRIPTION_KEY_STARTED",
     FETCH_ILIONA_SUBSCRIPTION_KEY_SUCCESS = "@@FETCH_ILIONA_SUBSCRIPTION_KEY_SUCCESS",
 
+    FETCH_ILIONA_LOCAL_PACKAGES_FAILURE = "@@FETCH_ILIONA_LOCAL_PACKAGES_FAILURE",
+    FETCH_ILIONA_LOCAL_PACKAGES_STARTED = "@@FETCH_ILIONA_LOCAL_PACKAGES_STARTED",
+    FETCH_ILIONA_LOCAL_PACKAGES_SUCCESS = "@@FETCH_ILIONA_LOCAL_PACKAGES_SUCCESS",
+
     CLOSE_TOAST_MESSAGE = "@@CLOSE_TOAST_MESSAGE",
     REMOVE_PACKAGE_ERROR = "@@REMOVE_PACKAGE_ERROR",
 }
@@ -34,4 +39,5 @@ export type PackagesState = Readonly<{
     packageInstallFailed: boolean;
     computerName: string;
     subscriptionKey: string;
+    locallyInstalledPackages: IIlionaLocalPackage[];
 }>;

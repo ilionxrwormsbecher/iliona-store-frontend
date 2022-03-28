@@ -86,6 +86,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
             <CategoriesPackages
                 categories={categories?.categories}
                 packagesByCategory={packagesForCurrentRoute}
+                localPackages={packages?.locallyInstalledPackages}
             ></CategoriesPackages>
         ) : (
             <div data-testid="noPackagesAvailable"></div>

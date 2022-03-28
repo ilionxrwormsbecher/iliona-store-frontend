@@ -21,7 +21,7 @@ import CategoryPackages from "./pages/CategoryPackages";
 import AddPackage from "./components/AddPackage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
-import { fetchComputerName, fetchSubscriptionKey } from "./store/slices/packages/packagesActions";
+import { fetchComputerName, fetchLocalPackages, fetchSubscriptionKey } from "./store/slices/packages/packagesActions";
 
 const Main = styled.main`
     width: 100%;
@@ -46,6 +46,7 @@ const Wrapper = styled.div`
 function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
+    const computerName = useSelector((state: IReduxApplicationState) => state.packagesSlice.computerName);
     const dispatch = useDispatch();
 
     let showError = false;
@@ -56,6 +57,12 @@ function App({ intl }: WrappedComponentProps) {
         dispatch(fetchComputerName());
         dispatch(fetchSubscriptionKey());
     }, []);
+
+    useEffect(() => {
+        if (computerName) {
+            dispatch(fetchLocalPackages(computerName));
+        }
+    }, [computerName]);
 
     const errorText = intl.formatMessage({
         id: "errormessages.general",

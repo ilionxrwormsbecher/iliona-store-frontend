@@ -72,6 +72,7 @@ const Home = ({ intl }: WrappedComponentProps) => {
         <CategoriesPackages
             packagesByCategory={categoriesWithPackages}
             categories={categories?.categories}
+            localPackages={packages?.locallyInstalledPackages}
         ></CategoriesPackages>
     );
 

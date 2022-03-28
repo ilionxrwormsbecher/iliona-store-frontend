@@ -6,12 +6,15 @@ import { translateRoutePaths } from "../../i18n/CategoryTranslations";
 import { IIlionaPackagesAbbreviated } from "../../models/IIlionaPackage";
 import { IlionaPackageByCategory } from "../../models/IilionaPackagesByCategory";
 import { IIlionaCategory } from "../../models/Ilionacategory";
+import { IIlionaLocalPackage } from "../../models/ilionaLocalPackage";
+import { fetchLocalPackages } from "../../store/slices/packages/packagesActions";
 import AppCard from "../appCard/AppCard";
 import { Header1 } from "../html/header/Header";
 
 interface CategoryPackagesProps {
     packagesByCategory: IlionaPackageByCategory[];
     categories: IIlionaCategory[];
+    localPackages: IIlionaLocalPackage[];
 }
 
 const ContentArea = styled.div`
@@ -23,6 +26,7 @@ const ContentArea = styled.div`
 const CategoriesPackages = ({
     packagesByCategory,
     categories,
+    localPackages,
     intl,
 }: CategoryPackagesProps & WrappedComponentProps) => {
     let renderItems: any = "";
@@ -36,6 +40,7 @@ const CategoriesPackages = ({
                         <AppCard
                             key={p?.rowKey}
                             title={p?.displayName}
+                            packageName={p?.packageName}
                             imageUrl={p?.imageUrl}
                             summary={p?.summary}
                             category={p?.category}
@@ -43,6 +48,7 @@ const CategoriesPackages = ({
                             rowkey={p?.rowKey}
                             intl={intl}
                             categories={categories}
+                            localPackages={localPackages}
                         />
                     ))}
                 </ContentArea>

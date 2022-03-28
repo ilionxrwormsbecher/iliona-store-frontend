@@ -1,16 +1,12 @@
-import React, { HTMLAttributes, useEffect } from "react";
-import { Alert } from "react-bootstrap";
+import React from "react";
 import { IntlShape } from "react-intl";
-import injectIntl, { WrappedComponentProps } from "react-intl/src/components/injectIntl";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { translateRoutePaths } from "../../i18n/CategoryTranslations";
 import { IIlionaCategory } from "../../models/Ilionacategory";
-import { IReduxApplicationState } from "../../models/redux/IReduxApplicationState";
-import { fetchIlionaCategories } from "../../store/slices/categories/categoryActions";
-import { fetchIlionaPackages } from "../../store/slices/packages/packagesActions";
-import { Spinner } from "../spinner/Spinner";
+import { IIlionaLocalPackage } from "../../models/ilionaLocalPackage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 interface IAppCardProps {
     title: string;
@@ -20,9 +16,11 @@ interface IAppCardProps {
     backgroundColor?: string;
     summary?: string;
     requiresLicense?: boolean;
+    packageName: string;
     rowkey: string;
     intl: IntlShape;
     categories: IIlionaCategory[];
+    localPackages: IIlionaLocalPackage[];
 }
 
 const CardContainer = styled.div`
@@ -78,8 +76,10 @@ const AppCard = ({
     summary,
     requiresLicense,
     rowkey,
+    packageName,
     intl,
     categories,
+    localPackages,
     ...props
 }: IAppCardProps) => {
     let categoryObject;
@@ -92,6 +92,15 @@ const AppCard = ({
 
     if (categories.length > 0) {
         categoryObject = categories.filter((cat) => cat.RowKey === category);
+    }
+    let isInstalled = false;
+
+    if (localPackages) {
+        localPackages.filter((packageObj: IIlionaLocalPackage) => {
+            if (packageObj?.name === packageName) {
+                isInstalled = true;
+            }
+        });
     }
 
     return (
@@ -111,6 +120,12 @@ const AppCard = ({
 
                 <PackageContentContainer>
                     <PackageHeader data-testid="packageName" title={title}>
+                        {isInstalled && (
+                            <FontAwesomeIcon
+                                icon={faCheckCircle}
+                                style={{ color: "green", marginRight: "8px" }}
+                            ></FontAwesomeIcon>
+                        )}
                         {title}
                     </PackageHeader>
                     <PackageCategory>

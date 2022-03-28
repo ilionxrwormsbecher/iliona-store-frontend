@@ -1,3 +1,4 @@
+import { IIlionaLocalPackage } from "./../../../models/ilionaLocalPackage";
 import { fetchIlionaPackageDetails } from "./packagesActions";
 import { IIlionaPackagesAbbreviated } from "./../../../models/IIlionaPackage";
 /* eslint-disable indent */
@@ -13,6 +14,7 @@ const initialState: PackagesState = {
     packageInstallSuccessful: false,
     computerName: "",
     subscriptionKey: "",
+    locallyInstalledPackages: [] as IIlionaLocalPackage[],
 };
 
 export function PackagesReducer(
@@ -149,6 +151,34 @@ export function PackagesReducer(
                 errorMessage: action.payload.errorMessage,
                 packageInstallSuccessful: false,
                 subscriptionKey: "",
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_STARTED:
+            return {
+                ...state,
+                isFetching: true,
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: action.payload.errorMessage,
+                packageInstallSuccessful: false,
+                subscriptionKey: "",
+            };
+
+        case IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_SUCCESS:
+            console.log("action", action);
+
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: "",
+                packageInstallSuccessful: false,
+                locallyInstalledPackages: action.payload?.packages?.local_packages,
             };
 
         default: {
