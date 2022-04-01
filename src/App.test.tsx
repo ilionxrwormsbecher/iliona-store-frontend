@@ -5,7 +5,7 @@ import { IntlProvider } from "react-intl";
 
 import App from "./App";
 import { translationSets } from "./i18n/translations";
-import { abbreviatedPackagesMOCK, categoriesMOCK } from "./mocks/mockData";
+import { abbreviatedPackagesMOCK, categoriesMOCK, localPackagesMOCK } from "./mocks/mockData";
 import { server } from "./mocks/server";
 import { renderWithoutReducer } from "./utils/tests/customRender";
 
@@ -33,6 +33,16 @@ test("Should render the wrapper component within the page", async () => {
                     data: [],
                 })
             );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
         })
     );
 
@@ -56,6 +66,16 @@ test("Should render routes when there is no error and the page isn't loading.", 
                     data: abbreviatedPackagesMOCK,
                 })
             );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
         })
     );
 
@@ -83,6 +103,16 @@ test("Should render an error when categories could not be fetched", async () => 
                     data: [],
                 })
             );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
         })
     );
 

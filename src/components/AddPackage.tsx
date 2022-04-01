@@ -305,7 +305,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     {...register("displayName")}
                                     id="displayName"
                                     name="displayName"
-                                    placeholder="Name of the package"
+                                    placeholder="Display name of the package"
                                     autoFocus
                                 />
 
@@ -486,6 +486,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                 <input
                                     id="imageUrl"
                                     type="file"
+                                    data-testid="image-upload-button"
                                     accept="image/x-png,image/gif,image/jpeg"
                                     {...register("imageUrl")}
                                     onChange={async (event) => {

@@ -204,8 +204,6 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
             }
             const result = await response.json();
 
-            console.log("result json", result.computer_name);
-
             const requestSuccessAction: RequestSuccessDispatchType = {
                 payload: { computer: result.computer_name },
                 type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_SUCCESS,

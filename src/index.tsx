@@ -11,6 +11,8 @@ import { IntlProvider } from "react-intl";
 import { translationSets } from "./i18n/translations";
 
 if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MSW) {
+    console.log("------", process.env.REACT_APP_USE_MSW);
+    console.log("is running");
     const { worker } = require("./mocks/browser");
     worker.start();
 }

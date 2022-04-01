@@ -3,17 +3,21 @@ import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { Header1, Header2, Header3 } from "../components/html/header/Header";
+import { Header1, Header3 } from "../components/html/header/Header";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import {
     closeSuccessInstalledMessage,
+    fetchComputerName,
     fetchIlionaPackageDetails,
+    fetchLocalPackages,
+    fetchSubscriptionKey,
     InstallPackage,
 } from "../store/slices/packages/packagesActions";
 import { screenSize } from "../themes/global";
 import { Alert } from "react-bootstrap";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { translateRoutePaths } from "../i18n/CategoryTranslations";
+import { checkPackageIsInstalled } from "../utils/general";
 
 const ToastWrapper = styled.div`
     display: flex;
@@ -185,7 +189,12 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
+        dispatch(fetchComputerName());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(fetchLocalPackages(packageDetails.computerName));
+    }, [packageDetails.computerName]);
 
     if (packageDetails?.isFetching && !packageDetails?.packageInstallSuccessful) {
         showSpinner = true;
@@ -245,6 +254,15 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         dispatch(InstallPackage(displayName, packageDetails?.computerName, packageDetails?.subscriptionKey));
     };
 
+    let isInstalled = false;
+
+    if (packageDetails?.locallyInstalledPackages) {
+        isInstalled = checkPackageIsInstalled(
+            packageDetails?.locallyInstalledPackages,
+            packageDetails?.selectedPackageDetail[0]?.PackageName
+        );
+    }
+
     return (
         <>
             {showError && packageDetails?.errorMessage !== "duplicate entry" && errorMessage}
@@ -287,6 +305,20 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
                                         defaultMessage="Licentie"
                                     ></FormattedMessage>
                                     :<i> {licenseElement}</i>
+                                </div>
+                                <div className="installed-text">
+                                    <FormattedMessage
+                                        id="details.title.installed"
+                                        defaultMessage="geïnstalleerd"
+                                    ></FormattedMessage>
+                                    :
+                                    <i data-testid="isInstalled">
+                                        {isInstalled ? (
+                                            <FormattedMessage id="general.yes" defaultMessage="ja"></FormattedMessage>
+                                        ) : (
+                                            <FormattedMessage id="general.no" defaultMessage="nee"></FormattedMessage>
+                                        )}
+                                    </i>
                                 </div>
 
                                 <InstallButtonWrapper>

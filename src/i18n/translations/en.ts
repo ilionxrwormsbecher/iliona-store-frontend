@@ -20,6 +20,10 @@ export default {
     "details.title.installtext": "Install",
     "details.header.otherinfo": "Information",
     "details.header.intsalling.message": "The application is added to the installation queue",
+    "details.title.installed": "Installed",
+
+    "general.yes": "Yes",
+    "general.no": "No",
 
     "packages.nopackages-available": "Sorry, there are no packages available",
 };

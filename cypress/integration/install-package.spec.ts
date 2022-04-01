@@ -1,3 +1,4 @@
+import { localPackagesMOCK } from "./../../src/mocks/mockData";
 import { rest } from "msw";
 
 describe("Installing packages", () => {
@@ -468,12 +469,28 @@ describe("Installing packages", () => {
                             detail: "De applicatie staat momenteel in de wachtrij om geinstalleerd te worden, een ogenblik geduld alstublieft",
                         })
                     );
+                }),
+                rest.get(`http://127.0.0.1:10001/subscriptionkey`, (req, res, ctx) => {
+                    return res(ctx.json({ subscription_key: "kjfdjkldfjlkfdljkfds" }));
+                }),
+                rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+                    return res(
+                        ctx.json({
+                            computer_name: "8GGY4Y2_IL",
+                        })
+                    );
+                }),
+                rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+                    return res(ctx.json(localPackagesMOCK));
                 })
             );
 
             cy.findByRole("link", {
                 name: /adobe acrobat pro/i,
-            }).click();
+            })
+                .should("exist")
+                .should("have.attr", "href", `/details/a2898a96-4247-4708-87f4-f3bf44cf351b`)
+                .click({ force: true });
 
             cy.url().should("include", "/details/a2898a96-4247-4708-87f4-f3bf44cf351b");
 

@@ -1,8 +1,20 @@
+import { IIlionaLocalPackage } from "./../models/ilionaLocalPackage";
 export function checkObjectIsEmpty(object: Object) {
     if (object && Object.keys(object).length === 0 && Object.getPrototypeOf(object) === Object.prototype) {
         return true;
     }
     return false;
+}
+
+export function checkPackageIsInstalled(packageList: IIlionaLocalPackage[], packageToFind: string) {
+    let isInstalled = false;
+    packageList.filter((packageObj: IIlionaLocalPackage) => {
+        if (packageObj?.name === packageToFind) {
+            isInstalled = true;
+        }
+    });
+
+    return isInstalled;
 }
 
 export const checkFileMimetype = async (file: File, setField: any, setimageError: any) => {

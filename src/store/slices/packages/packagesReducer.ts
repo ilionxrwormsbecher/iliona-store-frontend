@@ -170,8 +170,6 @@ export function PackagesReducer(
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_SUCCESS:
-            console.log("action", action);
-
             return {
                 ...state,
                 isFetching: false,

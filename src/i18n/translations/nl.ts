@@ -21,6 +21,10 @@ export default {
     "details.title.installtext": "Installeren",
     "details.header.otherinfo": "Overige informatie",
     "details.header.intsalling.message": "De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden",
+    "details.title.installed": "Geïnstalleerd",
+
+    "general.yes": "Ja",
+    "general.no": "Nee",
 
     "packages.nopackages-available": "Er zijn geen applicaties beschikbaar",
 };

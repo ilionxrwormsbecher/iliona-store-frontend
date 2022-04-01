@@ -7,6 +7,7 @@ import { IIlionaCategory } from "../../models/Ilionacategory";
 import { IIlionaLocalPackage } from "../../models/ilionaLocalPackage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { checkPackageIsInstalled } from "../../utils/general";
 
 interface IAppCardProps {
     title: string;
@@ -96,11 +97,7 @@ const AppCard = ({
     let isInstalled = false;
 
     if (localPackages) {
-        localPackages.filter((packageObj: IIlionaLocalPackage) => {
-            if (packageObj?.name === packageName) {
-                isInstalled = true;
-            }
-        });
+        isInstalled = checkPackageIsInstalled(localPackages, packageName);
     }
 
     return (
