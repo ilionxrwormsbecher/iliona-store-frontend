@@ -10,6 +10,7 @@ import CategoriesPackages from "../components/categoryPackages/CategoriesPackage
 import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
+import { useNavigate } from "react-router-dom";
 
 const MainContent = styled.div`
     display: flex;
@@ -23,7 +24,11 @@ const Home = ({ intl }: WrappedComponentProps) => {
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
+    const errorMessageComputername = useSelector(
+        (state: IReduxApplicationState) => state.packagesSlice.computerNameError
+    );
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (packages.errorMessage === "duplicate entry" || packages.packageInstallSuccessful) {
@@ -57,6 +62,12 @@ const Home = ({ intl }: WrappedComponentProps) => {
             setCategoriesWithPackages(filterPackagesPerCategory(categories?.categories, packages?.ilionaPackages));
         }
     }, [packages?.ilionaPackages, categories?.categories]);
+
+    useEffect(() => {
+        if (errorMessageComputername === "Computer name not found") {
+            return navigate("notallowed");
+        }
+    }, [errorMessageComputername]);
 
     if (packages?.isFetching) {
         showSpinner = true;

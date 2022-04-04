@@ -26,4 +26,10 @@ export default {
     "general.no": "No",
 
     "packages.nopackages-available": "Sorry, there are no packages available",
+
+    "no.rights.header": "You do not have sufficient rights to use the App store",
+    "no.rights.subheader": "Please contact your service department to activate the store",
+
+    "error.header.text":
+        "An unexpected error occured, please try again or persist your administrator if the problem persists",
 };

@@ -15,6 +15,7 @@ const initialState: PackagesState = {
     computerName: "",
     subscriptionKey: "",
     locallyInstalledPackages: [] as IIlionaLocalPackage[],
+    computerNameError: "",
 };
 
 export function PackagesReducer(
@@ -115,6 +116,7 @@ export function PackagesReducer(
                 packageInstallFailed: false,
                 errorMessage: "",
                 packageInstallSuccessful: false,
+                computerNameError: "",
                 computerName: action.payload.computer,
             };
 
@@ -123,7 +125,8 @@ export function PackagesReducer(
                 ...state,
                 isFetching: false,
                 packageInstallFailed: false,
-                errorMessage: action.payload.errorMessage,
+                errorMessage: "",
+                computerNameError: "Computer name not found",
                 packageInstallSuccessful: false,
             };
 

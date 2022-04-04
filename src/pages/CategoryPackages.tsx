@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CategoriesPackages from "../components/categoryPackages/CategoriesPackages";
 import { Spinner } from "../components/spinner/Spinner";
 import { IlionaPackageByCategory } from "../models/IilionaPackagesByCategory";
@@ -25,6 +25,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     let location = useLocation();
 
     useEffect(() => {
@@ -50,6 +51,12 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
             dispatch(fetchIlionaCategories());
         }
     }, [dispatch]);
+
+    useEffect(() => {
+        if (packages.computerNameError === "Computer name not found") {
+            return navigate("notallowed");
+        }
+    }, [packages.computerNameError]);
 
     useEffect(() => {
         if (

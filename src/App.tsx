@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { HistoryRouter as Router } from "redux-first-history/rr6";
 import styled, { ThemeProvider } from "styled-components";
 import { HeaderComponent as Header } from "./components/header/Header";
@@ -22,6 +22,9 @@ import AddPackage from "./components/AddPackage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./Keycloak";
 import { fetchComputerName, fetchLocalPackages, fetchSubscriptionKey } from "./store/slices/packages/packagesActions";
+import NotAllowed from "./pages/NotAllowed";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "./components/errorComponent/ErrorFallback";
 
 const Main = styled.main`
     width: 100%;
@@ -47,6 +50,7 @@ function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const computerName = useSelector((state: IReduxApplicationState) => state.packagesSlice.computerName);
+    const packagesError = useSelector((state: IReduxApplicationState) => state.packagesSlice.errorMessage);
     const dispatch = useDispatch();
 
     let showError = false;
@@ -86,21 +90,25 @@ function App({ intl }: WrappedComponentProps) {
                     <Header background="/assets/img/logo_ggd.jpg" />
                     <Nav categories={categories.categories} />
                     <Main>
-                        {/* {categories.isFetching && (
-                            <MainContent data-testid="app-spinner">
-                                <Spinner />
-                            </MainContent>
-                        )} */}
-                        {showError && !categories.isFetching ? (
-                            <MainContent>{errorMessage}</MainContent>
-                        ) : (
-                            <Routes>
-                                <Route path="/categorie/:catName" element={<CategoryPackages />} />
-                                <Route path="/details/:rowkey" element={<PackageDetail />} />
-                                <Route path="/packages/add" element={<AddPackage />} />
-                                <Route path="/" element={<Home />} />
-                            </Routes>
-                        )}
+                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                            {/* {categories.isFetching && (
+                                <MainContent data-testid="app-spinner">
+                                    <Spinner />
+                                </MainContent>
+                            )} */}
+                            {showError && !categories.isFetching ? (
+                                <MainContent>{errorMessage}</MainContent>
+                            ) : (
+                                <Routes>
+                                    <Route path="/categorie/:catName" element={<CategoryPackages />} />
+                                    <Route path="/details/:rowkey" element={<PackageDetail />} />
+                                    <Route path="/packages/add" element={<AddPackage />} />
+                                    <Route path="/notAllowed" element={<NotAllowed />} />
+                                    <Route path="/" element={<Home />} />
+                                </Routes>
+                            )}
+                        </ErrorBoundary>
+                        ;
                     </Main>
                 </Wrapper>
             </Router>

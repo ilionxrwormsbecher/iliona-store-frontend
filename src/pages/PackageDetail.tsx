@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Header1, Header3 } from "../components/html/header/Header";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
@@ -186,6 +186,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     const packageDetails = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     let showSpinner = false;
     let showError = false;
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
@@ -195,6 +196,12 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     useEffect(() => {
         dispatch(fetchLocalPackages(packageDetails.computerName));
     }, [packageDetails.computerName]);
+
+    // useEffect(() => {
+    //     if (packageDetails.computerNameError === "Computer name not found") {
+    //         return navigate("notallowed");
+    //     }
+    // }, [packageDetails.computerNameError]);
 
     if (packageDetails?.isFetching && !packageDetails?.packageInstallSuccessful) {
         showSpinner = true;

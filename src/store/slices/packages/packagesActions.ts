@@ -198,7 +198,7 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
-                    payload: { errorMessage: "Something went wrong" },
+                    payload: { errorMessage: "Computer name not found" },
                 };
                 return dispatch(requestFailedAction);
             }
@@ -212,7 +212,7 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
         } catch (error) {
             const requestFailedAction: RequestFailedDispatchType = {
                 type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
-                payload: { errorMessage: error },
+                payload: { errorMessage: "Computer name not found" },
             };
             dispatch(requestFailedAction);
         }

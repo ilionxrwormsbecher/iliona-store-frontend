@@ -27,4 +27,10 @@ export default {
     "general.no": "Nee",
 
     "packages.nopackages-available": "Er zijn geen applicaties beschikbaar",
+
+    "no.rights.header": "U bent helaas niet gemachtigd om de store te gebruiken",
+    "no.rights.subheader": "Neem contact op met de servicedesk om de store te activeren",
+
+    "error.header.text":
+        "Er is een onverwachte fout opgetreden, probeer het nogmaals of neem contact op met uw beheerder",
 };
