@@ -197,11 +197,11 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
         dispatch(fetchLocalPackages(packageDetails.computerName));
     }, [packageDetails.computerName]);
 
-    // useEffect(() => {
-    //     if (packageDetails.computerNameError === "Computer name not found") {
-    //         return navigate("notallowed");
-    //     }
-    // }, [packageDetails.computerNameError]);
+    useEffect(() => {
+        if (packageDetails.computerNameError === "Computer name not found") {
+            return navigate("/notallowed");
+        }
+    }, [packageDetails.computerNameError]);
 
     if (packageDetails?.isFetching && !packageDetails?.packageInstallSuccessful) {
         showSpinner = true;
