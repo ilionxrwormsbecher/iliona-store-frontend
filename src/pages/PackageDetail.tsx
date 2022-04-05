@@ -199,7 +199,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (packageDetails.computerNameError === "Computer name not found") {
-            return navigate("/notallowed");
+            return navigate("/notallowed", { replace: true });
         }
     }, [packageDetails.computerNameError]);
 

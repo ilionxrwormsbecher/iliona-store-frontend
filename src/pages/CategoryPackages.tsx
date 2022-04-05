@@ -54,7 +54,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (packages.computerNameError === "Computer name not found") {
-            return navigate("/notallowed");
+            return navigate("/notallowed", { replace: true });
         }
     }, [packages.computerNameError]);
 

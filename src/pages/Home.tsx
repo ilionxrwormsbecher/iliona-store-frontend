@@ -65,7 +65,7 @@ const Home = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (errorMessageComputername === "Computer name not found") {
-            return navigate("/notallowed");
+            return navigate("/notallowed", { replace: true });
         }
     }, [errorMessageComputername]);
 
