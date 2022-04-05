@@ -10,11 +10,11 @@ const TopbarSection = styled.div`
     grid-column: 1 / 13;
     display: grid;
     grid-template-columns: 6.4rem repeat(10, 1fr) 6.4rem;
-    border-bottom: 1px solid ${p => p.theme.borderNeutral};
+    border-bottom: 1px solid ${(p) => p.theme.borderNeutral};
     background: white;
 `;
 
-const Brand =  styled.div`
+const Brand = styled.div`
     display: flex;
     align-items: center;
     grid-column: 1 / 3;
@@ -44,7 +44,7 @@ const LoggedInContainer = styled.div`
     }
 
     .login-avatar {
-        background: ${ p => p.theme.primaryColor};
+        background: ${(p) => p.theme.primaryColor};
         height: 4rem;
         width: 4rem;
         border-radius: 50%;
@@ -53,7 +53,6 @@ const LoggedInContainer = styled.div`
 `;
 
 export const HeaderBar = () => {
-
     // const { keycloak } = useKeycloak();
     return (
         <TopbarSection>
@@ -62,11 +61,9 @@ export const HeaderBar = () => {
             </Brand>
 
             <LoggedInContainer role="region">
-                <p className="logged-in-username" >
-                    {/* { keycloak?.tokenParsed?.preferred_username } */}
-                </p>
-                <div  className="login-avatar" data-testid="login-avatar">
-                </div>
+                <p className="logged-in-username">{/* { keycloak?.tokenParsed?.preferred_username } */}</p>
+                {/* <div  className="login-avatar" data-testid="login-avatar">
+                </div> */}
             </LoggedInContainer>
         </TopbarSection>
     );

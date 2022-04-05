@@ -87,7 +87,7 @@ function App({ intl }: WrappedComponentProps) {
             <Router history={history}>
                 <Wrapper>
                     <HeaderBar />
-                    <Header background="/assets/img/logo_ggd.jpg" />
+                    <Header background="/assets/img/logo_ilionx.png" />
                     <Nav categories={categories.categories} />
                     <Main>
                         <ErrorBoundary FallbackComponent={ErrorFallback}>
