@@ -118,6 +118,16 @@ test("Should display an alert when the server returns an error", async () => {
                     errorMessage: `Unexpected error`,
                 })
             );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
         })
     );
 
@@ -173,6 +183,16 @@ test.each<[string, number, string]>([
                 );
             }
         ),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
+        }),
         rest.post(`https://api.iliona.cloud/store-packages/install-package`, (req, res, ctx) => {
             return res(ctx.status(statusCode), ctx.json({ detail: "entry already exists" }));
         })
@@ -189,10 +209,10 @@ test.each<[string, number, string]>([
 
     userEvent.click(installButton);
 
-    await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
-
-    const alert = screen.getByRole("alert");
-    expect(alert.textContent).toBe(message);
+    waitFor(async () => {
+        const alert = screen.getByRole("alert");
+        expect(alert.textContent).toBe(message);
+    });
 });
 
 test("Should return a succes alert when the install package button has been pressed.", async () => {
@@ -231,6 +251,16 @@ test("Should return a succes alert when the install package button has been pres
                 );
             }
         ),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://localhost:10001/localpackages`, (req, res, ctx) => {
+            return res(ctx.json(localPackagesMOCK));
+        }),
         rest.post(`https://api.iliona.cloud/store-packages/install-package`, (req, res, ctx) => {
             return res(ctx.status(201), ctx.json(null));
         })
@@ -247,14 +277,14 @@ test("Should return a succes alert when the install package button has been pres
 
     userEvent.click(installButton);
 
-    await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
+    waitFor(async () => {
+        const alert = screen.getByRole("alert");
+        expect(alert.textContent).toBe("De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden");
 
-    const alert = screen.getByRole("alert");
-    expect(alert.textContent).toBe("De applicatie is toegevoegd aan de wachtrij om geinstalleerd te worden");
-
-    const alertCloseButton = screen.getByRole("button", { name: /close alert/i });
-    await userEvent.click(alertCloseButton);
-    expect(alert).not.toBeInTheDocument();
+        const alertCloseButton = screen.getByRole("button", { name: /close alert/i });
+        await userEvent.click(alertCloseButton);
+        expect(alert).not.toBeInTheDocument();
+    });
 });
 
 test("Should display whether a package is installed", async () => {

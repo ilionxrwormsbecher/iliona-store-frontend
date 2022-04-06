@@ -1,3 +1,4 @@
+import { ErrorMessagesEnum } from "./../../../models/errorsEnum";
 import { ActionCreator, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { IlionaPackagesTypes, PackagesState } from "./packageTypes";
@@ -145,7 +146,7 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             if (response.status === 422) {
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE,
-                    payload: { errorMessage: "duplicate entry" },
+                    payload: { errorMessage: ErrorMessagesEnum.duplicatePackage },
                 };
                 return dispatch(requestFailedAction);
             }
@@ -198,7 +199,7 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
-                    payload: { errorMessage: "Computer name not found" },
+                    payload: { errorMessage: ErrorMessagesEnum.noCSAClientFound },
                 };
                 return dispatch(requestFailedAction);
             }
@@ -212,7 +213,7 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
         } catch (error) {
             const requestFailedAction: RequestFailedDispatchType = {
                 type: IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE,
-                payload: { errorMessage: "Computer name not found" },
+                payload: { errorMessage: ErrorMessagesEnum.noCSAClientFound },
             };
             dispatch(requestFailedAction);
         }

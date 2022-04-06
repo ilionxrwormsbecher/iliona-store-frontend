@@ -50,16 +50,22 @@ function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const computerName = useSelector((state: IReduxApplicationState) => state.packagesSlice.computerName);
-    const packagesError = useSelector((state: IReduxApplicationState) => state.packagesSlice.errorMessage);
     const dispatch = useDispatch();
 
     let showError = false;
+    let appInitialLoading = false;
+
+    const getInitialData = async () => {
+        await setTheme(themeSelector("ilionx"));
+        await dispatch(fetchIlionaCategories());
+        await dispatch(fetchComputerName());
+        await dispatch(fetchSubscriptionKey());
+    };
 
     useEffect(() => {
-        setTheme(themeSelector("ilionx"));
-        dispatch(fetchIlionaCategories());
-        dispatch(fetchComputerName());
-        dispatch(fetchSubscriptionKey());
+        appInitialLoading = true;
+        getInitialData();
+        appInitialLoading = false;
     }, []);
 
     useEffect(() => {
@@ -96,7 +102,9 @@ function App({ intl }: WrappedComponentProps) {
                                     <Spinner />
                                 </MainContent>
                             )} */}
-                            {showError && !categories.isFetching ? (
+                            {appInitialLoading && <Spinner />}
+
+                            {showError && !appInitialLoading ? (
                                 <MainContent>{errorMessage}</MainContent>
                             ) : (
                                 <Routes>

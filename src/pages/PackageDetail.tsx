@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ import { Alert } from "react-bootstrap";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { translateRoutePaths } from "../i18n/CategoryTranslations";
 import { checkPackageIsInstalled } from "../utils/general";
+import { ErrorMessagesEnum } from "../models/errorsEnum";
 
 const ToastWrapper = styled.div`
     display: flex;
@@ -181,12 +182,12 @@ const AdditionalDetailsWrapper = styled.div`
 
 const PackageDetail = ({ intl }: WrappedComponentProps) => {
     let { rowkey } = useParams();
-
-    const dispatch = useDispatch();
-    const packageDetails = useSelector((state: IReduxApplicationState) => state.packagesSlice);
-    let showSpinner = false;
-    let showError = false;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const packageDetails = useSelector((state: IReduxApplicationState) => state.packagesSlice);
+    const [showSpinner, setShowSpinner] = useState(true);
+    let showError = false;
 
     useEffect(() => {
         dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : ""));
@@ -195,17 +196,14 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         dispatch(fetchLocalPackages(packageDetails.computerName));
+        setShowSpinner(false);
     }, [packageDetails.computerName]);
 
     useEffect(() => {
-        if (packageDetails.computerNameError === "Computer name not found") {
+        if (packageDetails.computerNameError === ErrorMessagesEnum.noCSAClientFound) {
             return navigate("/notallowed", { replace: true });
         }
     }, [packageDetails.computerNameError]);
-
-    if (packageDetails?.isFetching && !packageDetails?.packageInstallSuccessful) {
-        showSpinner = true;
-    }
 
     if (packageDetails?.errorMessage) {
         showError = true;
@@ -272,13 +270,13 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
     return (
         <>
-            {showError && packageDetails?.errorMessage !== "duplicate entry" && errorMessage}
-            {showError && packageDetails?.errorMessage === "duplicate entry" && warningMessage}
+            {showError && packageDetails?.errorMessage !== ErrorMessagesEnum.duplicatePackage && errorMessage}
+            {showError && packageDetails?.errorMessage === ErrorMessagesEnum.duplicatePackage && warningMessage}
             {packageDetails?.packageInstallSuccessful && !packageDetails?.errorMessage && succesfullyInstalled}
             <DetailPageWrapper>
-                {showSpinner && <Spinner />}
+                {(showSpinner || packageDetails?.locallyInstalledPackages?.length === 0) && <Spinner />}
 
-                {!showSpinner && (
+                {!showSpinner && packageDetails?.locallyInstalledPackages?.length > 0 && (
                     <section data-testid="body">
                         <HeaderWrapper>
                             <HeaderLeftSection>

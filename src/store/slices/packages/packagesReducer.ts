@@ -1,3 +1,4 @@
+import { ErrorMessagesEnum } from "./../../../models/errorsEnum";
 import { IIlionaLocalPackage } from "./../../../models/ilionaLocalPackage";
 import { fetchIlionaPackageDetails } from "./packagesActions";
 import { IIlionaPackagesAbbreviated } from "./../../../models/IIlionaPackage";
@@ -114,7 +115,6 @@ export function PackagesReducer(
                 ...state,
                 isFetching: false,
                 packageInstallFailed: false,
-                errorMessage: "",
                 packageInstallSuccessful: false,
                 computerNameError: "",
                 computerName: action.payload.computer,
@@ -125,8 +125,7 @@ export function PackagesReducer(
                 ...state,
                 isFetching: false,
                 packageInstallFailed: false,
-                errorMessage: "",
-                computerNameError: "Computer name not found",
+                computerNameError: ErrorMessagesEnum.noCSAClientFound,
                 packageInstallSuccessful: false,
             };
 
@@ -141,7 +140,6 @@ export function PackagesReducer(
                 ...state,
                 isFetching: false,
                 packageInstallFailed: false,
-                errorMessage: "",
                 packageInstallSuccessful: false,
                 subscriptionKey: action.payload?.subscriptionKey,
             };
@@ -177,7 +175,6 @@ export function PackagesReducer(
                 ...state,
                 isFetching: false,
                 packageInstallFailed: false,
-                errorMessage: "",
                 packageInstallSuccessful: false,
                 locallyInstalledPackages: action.payload?.packages?.local_packages,
             };

@@ -11,6 +11,7 @@ import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { fetchIlionaPackages, removePackageError } from "../store/slices/packages/packagesActions";
 import { filterPackagesPerCategory } from "../utils/orderPackagesByCategory";
 import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
+import { ErrorMessagesEnum } from "../models/errorsEnum";
 
 const MainContent = styled.main`
     display: flex;
@@ -21,24 +22,23 @@ const MainContent = styled.main`
 `;
 
 const CategoryPackages = ({ intl }: WrappedComponentProps) => {
-    const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
-    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
-    const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     let location = useLocation();
 
-    useEffect(() => {
-        if (packages.errorMessage === "duplicate entry" || packages.packageInstallSuccessful) {
-            dispatch(removePackageError());
-        }
-    }, [packages.errorMessage, packages.packageInstallSuccessful]);
-
-    let showSpinner = false;
-    let showError = false;
+    const [showSpinner, setShowSpinner] = useState(true);
+    const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
+    const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
+    const [categoriesWithPackages, setCategoriesWithPackages] = useState<IlionaPackageByCategory[]>([]);
 
     const pathNameAsArray = location?.pathname.split("/");
     const routeUrlFriendlyName = pathNameAsArray[pathNameAsArray.length - 1];
+
+    useEffect(() => {
+        if (packages.errorMessage === ErrorMessagesEnum.duplicatePackage || packages.packageInstallSuccessful) {
+            dispatch(removePackageError());
+        }
+    }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     useEffect(() => {
         if (packages.ilionaPackages && packages?.ilionaPackages.length === 0) {
@@ -53,7 +53,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     }, [dispatch]);
 
     useEffect(() => {
-        if (packages.computerNameError === "Computer name not found") {
+        if (packages.computerNameError === ErrorMessagesEnum.noCSAClientFound) {
             return navigate("/notallowed", { replace: true });
         }
     }, [packages.computerNameError]);
@@ -69,20 +69,9 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
         }
     }, [packages?.ilionaPackages, categories?.categories]);
 
-    if (packages?.isFetching) {
-        showSpinner = true;
+    if (packages?.locallyInstalledPackages.length > 0 && showSpinner) {
+        setShowSpinner(false);
     }
-
-    if (packages?.errorMessage) {
-        showError = true;
-    }
-
-    const errorText = intl.formatMessage({
-        id: "errormessages.general",
-        defaultMessage: "Er is iets fout gegaan, probeer het later opnieuw.",
-    });
-
-    const errorMessage = <Alert variant="danger">{errorText}</Alert>;
 
     const packagesForCurrentRoute = categoriesWithPackages.filter((cat: IlionaPackageByCategory) => {
         if (cat.name.toLowerCase() === routeUrlFriendlyName) return cat;
@@ -102,8 +91,20 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     return (
         <MainContent>
             {showSpinner && <Spinner />}
-            {showError && <div data-testid="error">{errorMessage}</div>}
-            {!showSpinner && !showError && content}
+
+            {packages?.errorMessage && (
+                <div data-testid="error">
+                    <Alert variant="danger">
+                        <FormattedMessage
+                            id="errormessages.general"
+                            defaultMessage="Er is iets fout gegaan, probeer het later opnieuw."
+                        ></FormattedMessage>
+                    </Alert>
+                    ;
+                </div>
+            )}
+
+            {!showSpinner && !packages?.errorMessage && content}
         </MainContent>
     );
 };

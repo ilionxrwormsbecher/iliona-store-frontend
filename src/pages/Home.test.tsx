@@ -27,6 +27,13 @@ test("Should render nothing when packages and categories are not loaded", async 
         }),
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(ctx.json({ data: [] }));
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
         })
     );
 
@@ -42,6 +49,20 @@ test("Should render nothing when categories are not loaded", async () => {
             return res(
                 ctx.json({
                     data: abbreviatedPackagesMOCK,
+                })
+            );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
                 })
             );
         })
@@ -63,14 +84,18 @@ test("Should render nothing when there are no packages", async () => {
     server.use(
         rest.get(`https://api.iliona.cloud/store-packages/list/`, (req, res, ctx) => {
             return res(ctx.json({ data: [] }));
-        })
-    );
-
-    server.use(
+        }),
         rest.get(`https://api.iliona.cloud/store-packages/categories`, (req, res, ctx) => {
             return res(
                 ctx.json({
                     data: categoriesMOCK,
+                })
+            );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
                 })
             );
         })
@@ -98,6 +123,13 @@ test("Should render Appcards under the related categories when packages and cate
                     data: categoriesMOCK,
                 })
             );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
+                })
+            );
         })
     );
 
@@ -117,6 +149,13 @@ test("Should render an error if packages cannot be loaded ", async () => {
                 ctx.status(404),
                 ctx.json({
                     errorMessage: `Unexpected error`,
+                })
+            );
+        }),
+        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+            return res(
+                ctx.json({
+                    computer_name: "8GGY4Y2_IL",
                 })
             );
         })
