@@ -8,14 +8,16 @@ import {
     RequestSuccessDispatchType,
 } from "../../../models/redux/IReduxActionTypes";
 
-export const fetchIlionaPackages = () => {
+export const fetchIlionaPackages = (subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchIlionaPackagesRequest());
+        dispatch(fetchIlionaPackagesRequest(subscriptionKey));
     };
 };
 
 // GET all packages with abbreviated
-const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = () => {
+const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
+    subscriptionKey
+) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
             type: IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_STARTED,
@@ -25,7 +27,7 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            requestHeaders.set("x-api-key", subscriptionKey);
             const response: Response = await fetch("https://api.iliona.cloud/store-packages/list/", {
                 headers: requestHeaders,
             });
@@ -56,14 +58,15 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
 };
 
 // GET the details for 1 package
-export const fetchIlionaPackageDetails = (id: string) => {
+export const fetchIlionaPackageDetails = (id: string, subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchIlionaPackageDetailsRequest(id));
+        dispatch(fetchIlionaPackageDetailsRequest(id, subscriptionKey));
     };
 };
 
 const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
-    id: string
+    id: string,
+    subscriptionKey: string
 ) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
@@ -74,7 +77,7 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            requestHeaders.set("x-api-key", subscriptionKey);
             const response: Response = await fetch(`https://api.iliona.cloud/store-packages/get_by_id/${id}`, {
                 headers: requestHeaders,
             });
@@ -191,7 +194,6 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
             const response: Response = await fetch(`http://127.0.0.1:10001/computer`, {
                 headers: requestHeaders,
             });
@@ -237,7 +239,6 @@ const fetchIlionaSubscriptionKeyRequest: ActionCreator<ThunkAction<Promise<any>,
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
             const response: Response = await fetch(`http://127.0.0.1:10001/subscriptionkey`, {
                 headers: requestHeaders,
             });
@@ -267,14 +268,15 @@ const fetchIlionaSubscriptionKeyRequest: ActionCreator<ThunkAction<Promise<any>,
 };
 
 // GET Local packages
-export const fetchLocalPackages = (computerName: string) => {
+export const fetchLocalPackages = (computerName: string, subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchIlionaLocalPackages(computerName));
+        dispatch(fetchIlionaLocalPackages(computerName, subscriptionKey));
     };
 };
 
 const fetchIlionaLocalPackages: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
-    computerName: string
+    computerName: string,
+    subscriptionKey: string
 ) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
@@ -285,7 +287,7 @@ const fetchIlionaLocalPackages: ActionCreator<ThunkAction<Promise<any>, Packages
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            requestHeaders.set("x-api-key", subscriptionKey);
             const response: Response = await fetch(`http://localhost:10001/localpackages`, {
                 headers: requestHeaders,
             });

@@ -42,13 +42,13 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (packages.ilionaPackages && packages?.ilionaPackages.length === 0) {
-            dispatch(fetchIlionaPackages());
+            dispatch(fetchIlionaPackages(packages?.subscriptionKey));
         }
     }, [dispatch]);
 
     useEffect(() => {
         if (categories?.categories && categories?.categories.length === 0) {
-            dispatch(fetchIlionaCategories());
+            dispatch(fetchIlionaCategories(packages?.subscriptionKey));
         }
     }, [dispatch]);
 

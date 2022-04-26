@@ -8,14 +8,16 @@ import {
     RequestSuccessDispatchType,
 } from "../../../models/redux/IReduxActionTypes";
 
-export const fetchIlionaCategories = () => {
+export const fetchIlionaCategories = (subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchIlionaCategoriesRequest());
+        dispatch(fetchIlionaCategoriesRequest(subscriptionKey));
     };
 };
 
 // GET all packages with abbreviated
-const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, CategoryState, null, any>> = () => {
+const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, CategoryState, null, any>> = (
+    subscriptionKey: string
+) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
             type: IlionaCategoryTypes.FETCH_ILIONA_CATEGORIES_STARTED,
@@ -25,7 +27,7 @@ const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, Cate
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            requestHeaders.set("x-api-key", process.env.REACT_APP_API_KEY);
+            requestHeaders.set("x-api-key", subscriptionKey);
             const response: Response = await fetch("https://api.iliona.cloud/store-packages/categories", {
                 headers: requestHeaders,
             });

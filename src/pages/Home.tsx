@@ -44,11 +44,11 @@ const Home = ({ intl }: WrappedComponentProps) => {
     }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     useEffect(() => {
-        dispatch(fetchIlionaPackages());
-        if (categories?.categories && categories.categories.length === 0) {
-            dispatch(fetchIlionaCategories());
+        dispatch(fetchIlionaPackages(packages?.subscriptionKey));
+        if (categories?.categories && categories.categories.length === 0 && packages?.subscriptionKey !== "") {
+            dispatch(fetchIlionaCategories(packages?.subscriptionKey));
         }
-    }, [dispatch]);
+    }, [dispatch, packages?.subscriptionKey]);
 
     useEffect(() => {
         if (errorMessageComputername === ErrorMessagesEnum.noCSAClientFound) {

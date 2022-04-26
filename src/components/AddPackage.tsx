@@ -235,6 +235,7 @@ const SubmitButton = styled.input.attrs({
 
 const AddPackage = ({ intl }: WrappedComponentProps) => {
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
+    const subscriptionkey = useSelector((state: IReduxApplicationState) => state.packagesSlice.subscriptionKey);
     const [image, setImage] = useState<File | undefined>(undefined);
     const [imageError, setimageError] = useState<string>("");
     const dispatch = useDispatch();
@@ -243,7 +244,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (categories?.categories && categories?.categories.length === 0) {
-            dispatch(fetchIlionaCategories());
+            dispatch(fetchIlionaCategories(subscriptionkey));
         }
     }, []);
 

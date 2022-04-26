@@ -50,27 +50,41 @@ function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const computerName = useSelector((state: IReduxApplicationState) => state.packagesSlice.computerName);
+    const subscriptionKey = useSelector((state: IReduxApplicationState) => state.packagesSlice.subscriptionKey);
     const dispatch = useDispatch();
 
     let showError = false;
     let appInitialLoading = false;
 
-    const getInitialData = async () => {
-        await setTheme(themeSelector("ilionx"));
-        await dispatch(fetchIlionaCategories());
-        await dispatch(fetchComputerName());
+    const fetchSubscriptionKeyData = async () => {
         await dispatch(fetchSubscriptionKey());
+    };
+
+    const getInitialData = async () => {
+        if (subscriptionKey != "") {
+            console.log("fetching 2");
+            await setTheme(themeSelector("ilionx"));
+            await dispatch(fetchIlionaCategories(subscriptionKey));
+            await dispatch(fetchComputerName());
+        }
     };
 
     useEffect(() => {
         appInitialLoading = true;
-        getInitialData();
-        appInitialLoading = false;
+        console.log(1);
+        fetchSubscriptionKeyData();
     }, []);
 
     useEffect(() => {
-        if (computerName) {
-            dispatch(fetchLocalPackages(computerName));
+        getInitialData();
+        console.log(2, subscriptionKey);
+        appInitialLoading = false;
+    }, [subscriptionKey]);
+
+    useEffect(() => {
+        console.log(3);
+        if (computerName && subscriptionKey) {
+            dispatch(fetchLocalPackages(computerName, subscriptionKey));
         }
     }, [computerName]);
 
@@ -80,7 +94,7 @@ function App({ intl }: WrappedComponentProps) {
     });
 
     const errorMessage = <Alert variant="danger">{errorText}</Alert>;
-    if (categories?.errorMessage) {
+    if (categories?.errorMessage && subscriptionKey != "" && !appInitialLoading) {
         showError = true;
     }
 
