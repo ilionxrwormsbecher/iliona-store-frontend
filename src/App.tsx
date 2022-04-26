@@ -79,7 +79,6 @@ function App({ intl }: WrappedComponentProps) {
 
     useEffect(() => {
         if (computerName && subscriptionKey != "") {
-            console.log("APP", subscriptionKey);
             dispatch(fetchLocalPackages(computerName, subscriptionKey));
         }
     }, [computerName]);

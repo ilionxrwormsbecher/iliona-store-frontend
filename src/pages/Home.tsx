@@ -45,7 +45,6 @@ const Home = ({ intl }: WrappedComponentProps) => {
 
     useEffect(() => {
         if (packages?.subscriptionKey != "") {
-            console.log("HOME", packages?.subscriptionKey);
             dispatch(fetchIlionaPackages(packages?.subscriptionKey));
             if (categories?.categories && categories.categories.length === 0 && packages?.subscriptionKey !== "") {
                 dispatch(fetchIlionaCategories(packages?.subscriptionKey));

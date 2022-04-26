@@ -41,13 +41,13 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     useEffect(() => {
-        if (packages.ilionaPackages && packages?.ilionaPackages.length === 0) {
+        if (packages.ilionaPackages && packages?.ilionaPackages.length === 0 && packages?.subscriptionKey != "") {
             dispatch(fetchIlionaPackages(packages?.subscriptionKey));
         }
     }, [dispatch]);
 
     useEffect(() => {
-        if (categories?.categories && categories?.categories.length === 0) {
+        if (categories?.categories && categories?.categories.length === 0 && packages?.subscriptionKey != "") {
             dispatch(fetchIlionaCategories(packages?.subscriptionKey));
         }
     }, [dispatch]);
@@ -92,7 +92,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
         <MainContent>
             {showSpinner && <Spinner />}
 
-            {packages?.errorMessage && (
+            {packages?.errorMessage && !showSpinner && packagesForCurrentRoute.length === 0 && (
                 <div data-testid="error">
                     <Alert variant="danger">
                         <FormattedMessage
