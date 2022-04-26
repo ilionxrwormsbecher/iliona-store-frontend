@@ -48,13 +48,13 @@ const Wrapper = styled.div`
 
 function App({ intl }: WrappedComponentProps) {
     const [theme, setTheme] = useState(ilionxTheme);
+    const [appInitialLoading, SetappInitialLoading] = useState(true);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const computerName = useSelector((state: IReduxApplicationState) => state.packagesSlice.computerName);
     const subscriptionKey = useSelector((state: IReduxApplicationState) => state.packagesSlice.subscriptionKey);
     const dispatch = useDispatch();
 
     let showError = false;
-    let appInitialLoading = false;
 
     const fetchSubscriptionKeyData = async () => {
         await dispatch(fetchSubscriptionKey());
@@ -65,21 +65,21 @@ function App({ intl }: WrappedComponentProps) {
             await setTheme(themeSelector("ilionx"));
             await dispatch(fetchIlionaCategories(subscriptionKey));
             await dispatch(fetchComputerName());
+            SetappInitialLoading(false);
         }
     };
 
     useEffect(() => {
-        appInitialLoading = true;
         fetchSubscriptionKeyData();
     }, []);
 
     useEffect(() => {
         getInitialData();
-        appInitialLoading = false;
     }, [subscriptionKey]);
 
     useEffect(() => {
-        if (computerName && subscriptionKey) {
+        if (computerName && subscriptionKey != "") {
+            console.log("APP", subscriptionKey);
             dispatch(fetchLocalPackages(computerName, subscriptionKey));
         }
     }, [computerName]);
@@ -111,7 +111,11 @@ function App({ intl }: WrappedComponentProps) {
                                     <Spinner />
                                 </MainContent>
                             )} */}
-                            {appInitialLoading && <Spinner />}
+                            {appInitialLoading && (
+                                <div style={{ display: "none" }}>
+                                    <Spinner />
+                                </div>
+                            )}
 
                             {showError && !appInitialLoading ? (
                                 <MainContent>{errorMessage}</MainContent>

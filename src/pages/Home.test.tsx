@@ -145,29 +145,29 @@ test("Should render nothing when there are no packages", async () => {
 //     expect(appCards.length).toBe(8);
 // });
 
-test("Should render an error if packages cannot be loaded ", async () => {
-    server.use(
-        rest.get(`https://api.iliona.cloud/store-packages/list/`, (req, res, ctx) => {
-            return res(
-                ctx.status(404),
-                ctx.json({
-                    errorMessage: `Unexpected error`,
-                })
-            );
-        }),
-        rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    computer_name: "8GGY4Y2_IL",
-                })
-            );
-        })
-    );
+// test("Should render an error if packages cannot be loaded ", async () => {
+//     server.use(
+//         rest.get(`https://api.iliona.cloud/store-packages/list/`, (req, res, ctx) => {
+//             return res(
+//                 ctx.status(404),
+//                 ctx.json({
+//                     errorMessage: `Unexpected error`,
+//                 })
+//             );
+//         }),
+//         rest.get(`http://127.0.0.1:10001/computer`, (req, res, ctx) => {
+//             return res(
+//                 ctx.json({
+//                     computer_name: "8GGY4Y2_IL",
+//                 })
+//             );
+//         })
+//     );
 
-    setupTest();
-    await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
+//     setupTest();
+//     await waitForElementToBeRemoved(() => screen.getByTestId("spinner"));
 
-    const error = screen.getByRole("alert");
-    expect(error).toBeInTheDocument();
-    expect(error.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw"`);
-});
+//     const error = screen.getByRole("alert");
+//     expect(error).toBeInTheDocument();
+//     expect(error.innerHTML).toMatchInlineSnapshot(`"Er is iets fout gegaan, probeer het later opnieuw"`);
+// });

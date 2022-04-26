@@ -44,9 +44,12 @@ const Home = ({ intl }: WrappedComponentProps) => {
     }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     useEffect(() => {
-        dispatch(fetchIlionaPackages(packages?.subscriptionKey));
-        if (categories?.categories && categories.categories.length === 0 && packages?.subscriptionKey !== "") {
-            dispatch(fetchIlionaCategories(packages?.subscriptionKey));
+        if (packages?.subscriptionKey != "") {
+            console.log("HOME", packages?.subscriptionKey);
+            dispatch(fetchIlionaPackages(packages?.subscriptionKey));
+            if (categories?.categories && categories.categories.length === 0 && packages?.subscriptionKey !== "") {
+                dispatch(fetchIlionaCategories(packages?.subscriptionKey));
+            }
         }
     }, [dispatch, packages?.subscriptionKey]);
 
