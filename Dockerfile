@@ -52,12 +52,11 @@ RUN mkdir /usr/src/reactapp
 WORKDIR /usr/src/reactapp
 # add `/usr/src/app/node_modules/.bin` to $PATH
 ENV PATH /usr/src/reactapp/node_modules/.bin:$PATH
-# TODO: for security purposes, you should update this Dockerfile to specify your own target user/group
-# -R changes the ownership rights of a file recursively
+
 COPY . /usr/src/reactapp
 RUN npm install --silent 
 USER root
 RUN npm install react-scripts@3.0.1 -g --silent 
 RUN npm install -g serve --save
 # start app
-CMD ["npm", "start-pod"]
+CMD ["npm", "starts-pod"]

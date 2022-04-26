@@ -60,7 +60,7 @@
     "scripts": {
         "start:cy": "cross-env REACT_APP_USE_MSW=true react-scripts -r @cypress/instrument-cra start",
         "start": "react-scripts start",
-        "starts-prod": "GENERATE_SOURCEMAP=false react-scripts build --production && serve -s build -l 3000",
+        "starts-prod": "react-scripts build --production && serve -s build -l 3000",
         "start:msw": "cross-env REACT_APP_USE_MSW=true react-scripts start",
         "cy:open": "cypress open",
         "test:e2e:dev": "start-server-and-test start:cy http://localhost:3000 cy:open",
