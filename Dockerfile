@@ -54,7 +54,7 @@ WORKDIR /usr/src/reactapp
 ENV PATH /usr/src/reactapp/node_modules/.bin:$PATH
 
 COPY . /usr/src/reactapp
-RUN npm install -g npm@8.7.0` to update!
+RUN npm install -g npm@8.7.0 to update!
 RUN npm install --silent 
 USER root
 RUN npm install react-scripts@5.0.0 -g --silent 
