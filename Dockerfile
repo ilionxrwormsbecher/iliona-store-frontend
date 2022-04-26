@@ -1,21 +1,23 @@
 
-# FROM node:16
+FROM node:16
 
-# ENV REACT_APP_API_KEY=test
+ENV REACT_APP_API_KEY=test
 
-# WORKDIR /app
-
-
-# COPY package.json .
-
-# RUN npm install
-
-# COPY . .
-
-# EXPOSE 3000
+WORKDIR /app
 
 
-# CMD ["npm", "start"]
+COPY package.json .
+
+RUN npm install
+RUN npm install react-scripts@5.0.0 -g --silent 
+RUN npm install -g serve --save
+
+COPY . .
+
+EXPOSE 3000
+
+
+CMD ["npm", "run", "starts-prod"]
 
 
 # # #############################   Stage 0, Build the app   #####################
@@ -46,18 +48,18 @@
 
 
 
-FROM node:16
-# set working directory
-RUN mkdir /usr/src/reactapp
-WORKDIR /usr/src/reactapp
-# add `/usr/src/app/node_modules/.bin` to $PATH
-ENV PATH /usr/src/reactapp/node_modules/.bin:$PATH
+# FROM node:16
+# # set working directory
+# RUN mkdir /usr/src/reactapp
+# WORKDIR /usr/src/reactapp
+# # add `/usr/src/app/node_modules/.bin` to $PATH
+# ENV PATH /usr/src/reactapp/node_modules/.bin:$PATH
 
-COPY . /usr/src/reactapp
-RUN npm install -g npm@8.7.0 to update!
-RUN npm install --silent 
-USER root
-RUN npm install react-scripts@5.0.0 -g --silent 
-RUN npm install -g serve --save
-# start app
-CMD ["npm", "starts-pod"]
+# COPY . /usr/src/reactapp
+# RUN npm install -g npm@8.7.0 to update!
+# RUN npm install --silent 
+# USER root
+# RUN npm install react-scripts@5.0.0 -g --silent 
+# RUN npm install -g serve --save
+# # start app
+# CMD ["npm", "starts-pod"]
