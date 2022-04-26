@@ -62,7 +62,6 @@ function App({ intl }: WrappedComponentProps) {
 
     const getInitialData = async () => {
         if (subscriptionKey != "") {
-            console.log("fetching 2");
             await setTheme(themeSelector("ilionx"));
             await dispatch(fetchIlionaCategories(subscriptionKey));
             await dispatch(fetchComputerName());
@@ -71,18 +70,15 @@ function App({ intl }: WrappedComponentProps) {
 
     useEffect(() => {
         appInitialLoading = true;
-        console.log(1);
         fetchSubscriptionKeyData();
     }, []);
 
     useEffect(() => {
         getInitialData();
-        console.log(2, subscriptionKey);
         appInitialLoading = false;
     }, [subscriptionKey]);
 
     useEffect(() => {
-        console.log(3);
         if (computerName && subscriptionKey) {
             dispatch(fetchLocalPackages(computerName, subscriptionKey));
         }
@@ -94,10 +90,9 @@ function App({ intl }: WrappedComponentProps) {
     });
 
     const errorMessage = <Alert variant="danger">{errorText}</Alert>;
-    if (categories?.errorMessage && subscriptionKey != "" && !appInitialLoading) {
+    if (categories?.errorMessage) {
         showError = true;
     }
-
     return (
         // <ReactKeycloakProvider
         //     authClient={ keycloak }

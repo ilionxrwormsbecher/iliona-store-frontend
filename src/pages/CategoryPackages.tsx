@@ -69,7 +69,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
         }
     }, [packages?.ilionaPackages, categories?.categories]);
 
-    if (packages?.locallyInstalledPackages.length > 0 && showSpinner) {
+    if (packages?.locallyInstalledPackages.length > 0 && categories?.categories?.length > 0 && showSpinner) {
         setShowSpinner(false);
     }
 
