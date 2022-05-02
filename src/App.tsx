@@ -81,7 +81,7 @@ function App({ intl }: WrappedComponentProps) {
         if (computerName && subscriptionKey != "") {
             dispatch(fetchLocalPackages(computerName, subscriptionKey));
         }
-    }, [computerName]);
+    }, [computerName, subscriptionKey]);
 
     const errorText = intl.formatMessage({
         id: "errormessages.general",

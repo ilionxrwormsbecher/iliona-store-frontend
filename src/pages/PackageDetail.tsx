@@ -124,6 +124,11 @@ const InstallButton = styled.button`
     outline: none;
     border: none;
     font-size: 14px;
+
+    &:disabled {
+        background: #ccc;
+        color: #222;
+    }
 `;
 
 const DescriptionArea = styled.div`
@@ -330,7 +335,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
 
                                 <InstallButtonWrapper>
                                     <InstallButton
-                                        disabled={packageDetails?.isFetching}
+                                        disabled={packageDetails?.isFetching || isInstalled}
                                         onClick={() =>
                                             handleInstall(packageDetails?.selectedPackageDetail[0]?.PackageName)
                                         }
