@@ -41,16 +41,11 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
     }, [packages.errorMessage, packages.packageInstallSuccessful]);
 
     useEffect(() => {
-        if (packages.ilionaPackages && packages?.ilionaPackages.length === 0 && packages?.subscriptionKey != "") {
+        if (packages?.subscriptionKey != "") {
+            dispatch(fetchIlionaCategories(packages?.subscriptionKey));
             dispatch(fetchIlionaPackages(packages?.subscriptionKey));
         }
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (categories?.categories && categories?.categories.length === 0 && packages?.subscriptionKey != "") {
-            dispatch(fetchIlionaCategories(packages?.subscriptionKey));
-        }
-    }, [dispatch]);
+    }, [dispatch, packages?.subscriptionKey]);
 
     useEffect(() => {
         if (packages.computerNameError === ErrorMessagesEnum.noCSAClientFound) {
@@ -69,7 +64,7 @@ const CategoryPackages = ({ intl }: WrappedComponentProps) => {
         }
     }, [packages?.ilionaPackages, categories?.categories]);
 
-    if (packages?.locallyInstalledPackages.length > 0 && categories?.categories?.length > 0 && showSpinner) {
+    if (packages?.ilionaPackages.length > 0 && categories?.categories?.length > 0 && showSpinner) {
         setShowSpinner(false);
     }
 

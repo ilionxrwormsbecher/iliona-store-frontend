@@ -190,9 +190,11 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     let showError = false;
 
     useEffect(() => {
-        dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : "", packageDetails?.subscriptionKey));
-        dispatch(fetchComputerName());
-    }, [dispatch]);
+        if (packageDetails?.subscriptionKey !== "") {
+            dispatch(fetchIlionaPackageDetails(rowkey ? rowkey : "", packageDetails?.subscriptionKey));
+            dispatch(fetchComputerName());
+        }
+    }, [dispatch, packageDetails?.subscriptionKey]);
 
     useEffect(() => {
         dispatch(fetchLocalPackages(packageDetails.computerName, packageDetails?.subscriptionKey));
