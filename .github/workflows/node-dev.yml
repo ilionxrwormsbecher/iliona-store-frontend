@@ -54,5 +54,5 @@ jobs:
                   password: ${{ secrets.ACR_PASSWORD }}
 
             - run: |
-                  docker build . --build-arg api_url=https://store-packages-dev.cl01.iliona.cloud -t ${{secrets.ACR_SERVER}}/iliona/store-frontend-dev:latest
+                  docker build . --build-arg api_url=https://store-packages-dev.cl01.iliona.cloud/ -t ${{secrets.ACR_SERVER}}/iliona/store-frontend-dev:latest
                   docker push ${{secrets.ACR_SERVER}}/iliona/store-frontend-dev:latest
