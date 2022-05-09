@@ -14,8 +14,6 @@ if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MSW) {
     worker.start();
 }
 
-console.log("this is dev ++++++++++++++++++++", process.env.REACT_APP_API_URL);
-
 ReactDOM.render(
     <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
         <Provider store={store}>
