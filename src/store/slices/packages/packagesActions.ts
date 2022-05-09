@@ -28,7 +28,7 @@ const fetchIlionaPackagesRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
-            const response: Response = await fetch("https://api.iliona.cloud/store-packages/list/", {
+            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}store-packages/list/`, {
                 headers: requestHeaders,
             });
 
@@ -78,7 +78,7 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
-            const response: Response = await fetch(`https://api.iliona.cloud/store-packages/get_by_id/${id}`, {
+            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}store-packages/get_by_id/${id}`, {
                 headers: requestHeaders,
             });
 
@@ -136,7 +136,7 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
-            const response: Response = await fetch(`https://api.iliona.cloud/store-packages/install-package`, {
+            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}store-packages/install-package`, {
                 method: "POST",
                 headers: requestHeaders,
                 body: JSON.stringify({
