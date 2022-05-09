@@ -39,6 +39,8 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
+              with:
+                  ref: development
 
             # create the date suffix ":yyyyMMddhhmm"
             - name: Get current date
