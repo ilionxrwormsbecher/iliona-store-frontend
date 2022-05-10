@@ -25,6 +25,7 @@ import { fetchComputerName, fetchLocalPackages, fetchSubscriptionKey } from "./s
 import NotAllowed from "./pages/NotAllowed";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/errorComponent/ErrorFallback";
+import InstallPackageThirdParty from "./pages/InstallPackageThirdParty";
 
 const Main = styled.main`
     width: 100%;
@@ -123,6 +124,7 @@ function App({ intl }: WrappedComponentProps) {
                                     <Route path="/categorie/:catName" element={<CategoryPackages />} />
                                     <Route path="/details/:rowkey" element={<PackageDetail />} />
                                     <Route path="/packages/add" element={<AddPackage />} />
+                                    <Route path="/installpackage" element={<InstallPackageThirdParty />} />
                                     <Route path="/notAllowed" element={<NotAllowed />} />
                                     <Route path="/" element={<Home />} />
                                 </Routes>

@@ -107,9 +107,14 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
 };
 
 // GET Install a package
-export const InstallPackage = (packageName: string, computerName: string, subscriptionKey: string) => {
+export const InstallPackage = (
+    packageName: string,
+    computerName: string,
+    subscriptionKey: string,
+    endpoint: string
+) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchInstallPackageRequest(packageName, computerName, subscriptionKey));
+        dispatch(fetchInstallPackageRequest(packageName, computerName, subscriptionKey, endpoint));
     };
 };
 
@@ -124,7 +129,8 @@ export function removePackageError() {
 const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
     packageName: string,
     computerName: string,
-    subscriptionKey: string
+    subscriptionKey: string,
+    endpoint: string
 ) => {
     return async (dispatch: Dispatch) => {
         const requestStartedAction: RequestStartedDispatchType = {
@@ -136,7 +142,7 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
-            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}install-package`, {
+            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
                 method: "POST",
                 headers: requestHeaders,
                 body: JSON.stringify({

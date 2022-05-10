@@ -263,7 +263,14 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
     );
 
     const handleInstall = (displayName: string) => {
-        dispatch(InstallPackage(displayName, packageDetails?.computerName, packageDetails?.subscriptionKey));
+        dispatch(
+            InstallPackage(
+                displayName,
+                packageDetails?.computerName,
+                packageDetails?.subscriptionKey,
+                "install-package"
+            )
+        );
     };
 
     let isInstalled = false;
