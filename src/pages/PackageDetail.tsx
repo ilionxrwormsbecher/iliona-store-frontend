@@ -267,6 +267,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
             InstallPackage(
                 displayName,
                 packageDetails?.computerName,
+                false,
                 packageDetails?.subscriptionKey,
                 "install-package"
             )

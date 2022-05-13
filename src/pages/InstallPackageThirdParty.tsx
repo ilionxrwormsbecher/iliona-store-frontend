@@ -3,7 +3,12 @@ import { Spinner } from "../components/spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
-import { fetchComputerName, fetchIlionaPackages, InstallPackage } from "../store/slices/packages/packagesActions";
+import {
+    fetchComputerName,
+    fetchIlionaPackages,
+    InstallPackage,
+    removePackageError,
+} from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -29,7 +34,6 @@ const InstallPackageWrapper = styled.div`
     grid-row: 6 / 7;
     grid-column: 1 / 13;
     flex-direction: column;
-    background: white;
 
     @media ${screenSize.tablet} {
         grid-column: 2 / 12;
@@ -132,6 +136,9 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [confirm, setConfirm] = useState<boolean>(false);
+    const [isSilentInstall, setIsSilentInstall] = useState<boolean>(false);
+    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [showInstallSuccess, setShowInstallSuccess] = useState<boolean>(false);
 
     const packages = useSelector((state: IReduxApplicationState) => state.packagesSlice);
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
@@ -140,20 +147,20 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
         (state: IReduxApplicationState) => state.packagesSlice.computerNameError
     );
 
-    const checkWhetherIsIcoAdmin = async () => {
-        const requestHeaders: any = new Headers();
-        requestHeaders.set("Content-Type", "application/json");
-        requestHeaders.set("x-api-key", packages?.subscriptionKey);
+    // const checkWhetherIsIcoAdmin = async () => {
+    //     const requestHeaders: any = new Headers();
+    //     requestHeaders.set("Content-Type", "application/json");
+    //     requestHeaders.set("x-api-key", packages?.subscriptionKey);
 
-        const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
-            method: "GET",
-            headers: requestHeaders,
-        });
+    //     const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
+    //         method: "GET",
+    //         headers: requestHeaders,
+    //     });
 
-        const allowed = await result.json();
+    //     const allowed = await result.json();
 
-        if (!allowed) return navigate("/notallowed", { replace: true });
-    };
+    //     if (!allowed) return navigate("/notallowed", { replace: true });
+    // };
 
     const {
         register,
@@ -171,6 +178,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
             InstallPackage(
                 getValues("packageName"),
                 getValues("computerName"),
+                isSilentInstall,
                 packages?.subscriptionKey,
                 "install-package-on-computer"
             )
@@ -188,7 +196,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                 dispatch(fetchIlionaCategories(packages?.subscriptionKey));
             }
 
-            const adminCheckResult = checkWhetherIsIcoAdmin();
+            // const adminCheckResult = checkWhetherIsIcoAdmin();
         }
     }, [dispatch, packages?.subscriptionKey]);
 
@@ -200,97 +208,137 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
         }
     }, [errorMessageComputername, packages.computerName]);
 
+    if (packages?.errorMessage && !showAlert) {
+        dispatch(removePackageError());
+        setShowAlert(true);
+        setShowInstallSuccess(false);
+    }
+
+    if (packages?.packageInstallSuccessful && !showInstallSuccess) {
+        dispatch(removePackageError());
+        setShowAlert(false);
+        setShowInstallSuccess(true);
+    }
+
     return (
         <>
             {(showSpinner && <Spinner />) || (!packages.computerName && <Spinner />)}
 
-            {!showSpinner && packages?.errorMessage && (
-                <InstallPackageWrapper>
-                    <Alert variant="danger">
+            <InstallPackageWrapper>
+                {!showSpinner && showAlert && (
+                    <Alert variant="danger" className="mb-4" dismissible onClose={() => setShowAlert(false)}>
                         <FormattedMessage
                             id="errormessages.general"
                             defaultMessage="Er is iets fout gegaan, probeer het later opnieuw."
                         ></FormattedMessage>
                     </Alert>
-                </InstallPackageWrapper>
-            )}
+                )}
 
-            {!showSpinner && packages.computerName && (
-                <InstallPackageWrapper>
-                    <TitleWrapper>
-                        <Header1>Install a package</Header1>
-                    </TitleWrapper>
-                    <form onSubmit={handleSubmit(() => onSubmit())}>
-                        <FormContent>
-                            <FormWrapper>
-                                <div>
-                                    <Label htmlFor="packageName">Pakketnaam</Label>
-                                    {errors.packageName && (
-                                        <ErrorLine role="alert" aria-label="pakketnaam">
-                                            De pakketnaam is vereist
-                                        </ErrorLine>
-                                    )}
-                                    <Textbox
-                                        {...register("packageName")}
-                                        id="packageName"
-                                        name="packageName"
-                                        placeholder="Naam van package"
-                                        autoFocus
-                                        tabIndex={1}
+                {!showSpinner && showInstallSuccess && !packages?.errorMessage && (
+                    <Alert variant="success" className="mb-4" dismissible onClose={() => setShowInstallSuccess(false)}>
+                        Het pakket {getValues("packageName")} wordt geinstalleerd op {getValues("computerName")}
+                    </Alert>
+                )}
+
+                {!showSpinner && packages.computerName && (
+                    <div style={{ background: "#fff" }}>
+                        <TitleWrapper>
+                            <Header1>Install a package</Header1>
+                        </TitleWrapper>
+                        <form onSubmit={handleSubmit(() => onSubmit())}>
+                            <FormContent>
+                                <FormWrapper>
+                                    <div>
+                                        <Label htmlFor="packageName">Pakketnaam</Label>
+                                        {errors.packageName && (
+                                            <ErrorLine role="alert" aria-label="pakketnaam">
+                                                De pakketnaam is vereist
+                                            </ErrorLine>
+                                        )}
+                                        <Textbox
+                                            {...register("packageName")}
+                                            id="packageName"
+                                            name="packageName"
+                                            placeholder="Naam van package"
+                                            autoFocus
+                                            tabIndex={1}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="computerName">Computernaam</Label>
+                                        {errors.computerName && (
+                                            <ErrorLine role="alert" aria-label="computernaam">
+                                                De computernaam is vereist
+                                            </ErrorLine>
+                                        )}
+                                        <Textbox
+                                            {...register("computerName")}
+                                            id="computerName"
+                                            name="computerName"
+                                            placeholder="Computernaam"
+                                            tabIndex={2}
+                                        />
+                                    </div>
+
+                                    <Label
+                                        htmlFor="isSilentInstall"
+                                        style={{
+                                            display: "inline-block",
+                                            marginRight: "32px",
+                                            marginBottom: "16px",
+                                        }}
+                                    >
+                                        <input
+                                            onClick={() => setIsSilentInstall(!isSilentInstall)}
+                                            type="checkbox"
+                                            name="isSilentInstall"
+                                            value={isSilentInstall.toString()}
+                                            id="isSilentInstall"
+                                            style={{ display: "inline-block" }}
+                                            tabIndex={3}
+                                        />
+                                        &nbsp;
+                                        <span>Toon toast notificatie na installatie</span>
+                                    </Label>
+
+                                    <Label
+                                        htmlFor="confirm"
+                                        style={{
+                                            display: "inline-block",
+                                            marginRight: "32px",
+                                        }}
+                                    >
+                                        <input
+                                            onClick={() => setConfirm(!confirm)}
+                                            type="checkbox"
+                                            name="confirm"
+                                            value={confirm.toString()}
+                                            id="confirm"
+                                            style={{ display: "inline-block" }}
+                                            tabIndex={4}
+                                        />
+                                        &nbsp;
+                                        <span>
+                                            Weet u zeker dat u package "{getValues("packageName")}" op computer "
+                                            {getValues("computerName")}" wilt installeren?
+                                        </span>
+                                    </Label>
+
+                                    <SubmitButton
+                                        disabled={
+                                            !checkObjectIsEmpty(errors) ||
+                                            !confirm ||
+                                            getValues("packageName") == "" ||
+                                            getValues("computerName") == ""
+                                        }
                                     />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="computerName">Computernaam</Label>
-                                    {errors.computerName && (
-                                        <ErrorLine role="alert" aria-label="computernaam">
-                                            De computernaam is vereist
-                                        </ErrorLine>
-                                    )}
-                                    <Textbox
-                                        {...register("computerName")}
-                                        id="computerName"
-                                        name="computerName"
-                                        placeholder="Computernaam"
-                                        tabIndex={2}
-                                    />
-                                </div>
-
-                                <Label
-                                    htmlFor="confirm"
-                                    style={{
-                                        display: "inline-block",
-                                        marginRight: "32px",
-                                    }}
-                                >
-                                    <input
-                                        onClick={() => setConfirm(!confirm)}
-                                        type="checkbox"
-                                        name="confirm"
-                                        value={confirm.toString()}
-                                        id="confirm"
-                                        style={{ display: "inline-block" }}
-                                    />
-                                    &nbsp;
-                                    <span>
-                                        Weet u zeker dat u package "{getValues("packageName")}" op computer "
-                                        {getValues("computerName")}" wilt installeren?
-                                    </span>
-                                </Label>
-
-                                <SubmitButton
-                                    disabled={
-                                        !checkObjectIsEmpty(errors) ||
-                                        !confirm ||
-                                        getValues("packageName") == "" ||
-                                        getValues("computerName") == ""
-                                    }
-                                />
-                            </FormWrapper>
-                        </FormContent>
-                    </form>
-                </InstallPackageWrapper>
-            )}
+                                </FormWrapper>
+                            </FormContent>
+                        </form>
+                    </div>
+                )}
+            </InstallPackageWrapper>
         </>
     );
 };

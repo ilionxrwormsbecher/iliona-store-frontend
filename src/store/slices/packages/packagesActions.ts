@@ -110,11 +110,12 @@ const fetchIlionaPackageDetailsRequest: ActionCreator<ThunkAction<Promise<any>, 
 export const InstallPackage = (
     packageName: string,
     computerName: string,
+    isSilentInstall: boolean,
     subscriptionKey: string,
     endpoint: string
 ) => {
     return (dispatch: Dispatch<any>) => {
-        dispatch(fetchInstallPackageRequest(packageName, computerName, subscriptionKey, endpoint));
+        dispatch(fetchInstallPackageRequest(packageName, computerName, isSilentInstall, subscriptionKey, endpoint));
     };
 };
 
@@ -129,6 +130,7 @@ export function removePackageError() {
 const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
     packageName: string,
     computerName: string,
+    isSilentInstall: boolean,
     subscriptionKey: string,
     endpoint: string
 ) => {
@@ -148,6 +150,7 @@ const fetchInstallPackageRequest: ActionCreator<ThunkAction<Promise<any>, Packag
                 body: JSON.stringify({
                     packageName: packageName,
                     clientIdentification: computerName,
+                    isSilentInstall: isSilentInstall,
                     subscriptionKey: subscriptionKey,
                 }),
             });
