@@ -44,6 +44,10 @@ const InstallPackageWrapper = styled.div`
         grid-column: 4 / 10;
         margin: 3.2rem 0;
     }
+
+    input[type="checkbox"] {
+        accent-color: ${(p) => p.theme.primaryColor};
+    }
 `;
 
 const TitleWrapper = styled.div`
@@ -115,7 +119,7 @@ const Label = styled.label`
 
 const SubmitButton = styled.input.attrs({
     type: "submit",
-    value: "Submit",
+    value: "Installeer package",
 })`
     padding: 4px 64px;
     background-color: ${(p) => p.theme.primaryColor};
@@ -147,20 +151,20 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
         (state: IReduxApplicationState) => state.packagesSlice.computerNameError
     );
 
-    // const checkWhetherIsIcoAdmin = async () => {
-    //     const requestHeaders: any = new Headers();
-    //     requestHeaders.set("Content-Type", "application/json");
-    //     requestHeaders.set("x-api-key", packages?.subscriptionKey);
+    const checkWhetherIsIcoAdmin = async () => {
+        const requestHeaders: any = new Headers();
+        requestHeaders.set("Content-Type", "application/json");
+        requestHeaders.set("x-api-key", packages?.subscriptionKey);
 
-    //     const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
-    //         method: "GET",
-    //         headers: requestHeaders,
-    //     });
+        const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
+            method: "GET",
+            headers: requestHeaders,
+        });
 
-    //     const allowed = await result.json();
+        const allowed = await result.json();
 
-    //     if (!allowed) return navigate("/notallowed", { replace: true });
-    // };
+        if (!allowed) return navigate("/notallowed", { replace: true });
+    };
 
     const {
         register,
@@ -196,7 +200,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                 dispatch(fetchIlionaCategories(packages?.subscriptionKey));
             }
 
-            // const adminCheckResult = checkWhetherIsIcoAdmin();
+            const adminCheckResult = checkWhetherIsIcoAdmin();
         }
     }, [dispatch, packages?.subscriptionKey]);
 
