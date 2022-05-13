@@ -200,7 +200,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                 dispatch(fetchIlionaCategories(packages?.subscriptionKey));
             }
 
-            const adminCheckResult = checkWhetherIsIcoAdmin();
+            checkWhetherIsIcoAdmin();
         }
     }, [dispatch, packages?.subscriptionKey]);
 
