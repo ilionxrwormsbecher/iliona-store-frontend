@@ -168,9 +168,11 @@ const ImageWrapper = styled.div`
 `;
 
 const ImageContainer = styled.div`
-    display: block;
-    background: salmon;
-    border: 1px solid hotpink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #ced4da;
     width: 100%;
     height: 170px;
 `;
@@ -202,6 +204,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
     const categories = useSelector((state: IReduxApplicationState) => state.categorySlice);
     const subscriptionkey = useSelector((state: IReduxApplicationState) => state.packagesSlice.subscriptionKey);
     const [image, setImage] = useState<File | undefined>(undefined);
+    const [imageFile, setimageFile] = useState("");
     const [imageError, setimageError] = useState<string>("");
     const dispatch = useDispatch();
     let showSpinner = false;
@@ -254,6 +257,11 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
         data.requires_license = true;
 
         dispatch(AddPackageRedux(data, image, subscriptionkey));
+    };
+
+    const generateFile = (event: any) => {
+        console.log("event", event);
+        setimageFile(URL.createObjectURL(event.target.files[0]));
     };
 
     return (
@@ -494,7 +502,9 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                 <SubmitButton />
                             </FormWrapper>
                             <ImageWrapper>
-                                <ImageContainer></ImageContainer>
+                                <ImageContainer>
+                                    <img src={imageFile} alt="icon" />
+                                </ImageContainer>
                                 <Label htmlFor="image_url" style={{ marginTop: "24px" }}>
                                     Image
                                 </Label>
@@ -517,6 +527,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                                 setImage,
                                                 setimageError
                                             );
+                                            generateFile(event);
                                         }
                                     }}
                                 />
