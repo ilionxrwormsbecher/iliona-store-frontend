@@ -10,22 +10,28 @@ import { IReduxApplicationState } from "../models/redux/IReduxApplicationState";
 import { IIlionaCategory } from "../models/Ilionacategory";
 import { checkFileMimetype, checkObjectIsEmpty } from "../utils/general";
 import { fetchIlionaCategories } from "../store/slices/categories/categoryActions";
-import { Spinner } from "../components/spinner/Spinner";
+import { AddPackageRedux } from "../store/slices/packages/packagesActions";
 import { Alert } from "react-bootstrap";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { IAddPackage } from "../models/IAddPackage";
+import { Textbox } from "../styles/shared/formStyles";
 
 const schema = yup
     .object({
-        packageName: yup.string().required(),
-        installationTime: yup.number().positive().integer().required(),
+        package_name: yup.string().required(),
+        installation_time: yup.number().positive().integer().required(),
         category: yup.string().required(),
+        customer_shorthand: yup.string().required(),
         dependencies: yup.string(),
         description: yup.string().required(),
-        displayName: yup.string().required(),
-        isVisible: yup.boolean().required(),
-        licenseMessage: yup.string().required(),
+        display_name: yup.string().required(),
+        is_visible: yup.boolean().required(),
+        license_message: yup.string().required(),
+        need_to_restart: yup.boolean().required(),
         summary: yup.string().required(),
-        publishDate: yup.string(),
+        publish_date: yup.string(),
+        source_repository: yup.string().required(),
+        tags: yup.string().required(),
         weight: yup.number().positive().integer().required(),
     })
     .required();
@@ -61,47 +67,6 @@ const ErrorLine = styled.p`
 
 const TitleWrapper = styled.div`
     margin: 32px 32px 0 32px; ;
-`;
-
-const Textbox = styled.input`
-    display: block;
-    width: 100%;
-    padding: 6px 12px;
-    font-size: 1.6rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: ${(p) => p.theme.primaryTextColor};
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 0;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    margin-bottom: 24px;
-
-    &:focus-visible {
-        outline: -webkit-focus-ring-color 1px;
-        outline-color: ${(p) => p.theme.primaryColor};
-        outline-style: auto;
-        outline-width: 1px;
-    }
-    &::placeholder {
-        /* Chrome, Firefox, Opera, Safari 10.1+ */
-        color: #999;
-        opacity: 1; /* Firefox */
-    }
-
-    &:-ms-input-placeholder {
-        /* Internet Explorer 10-11 */
-        color: #999;
-    }
-
-    &::-ms-input-placeholder {
-        /* Microsoft Edge */
-        color: #999;
-    }
 `;
 
 const TextArea = styled.textarea`
@@ -252,7 +217,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
         if (categories?.categories && categories?.categories.length > 0) {
             setValue("category", categories.categories[0].RowKey);
         }
-    }, [categories]);
+    }, [categories, subscriptionkey]);
 
     useEffect(() => {
         if (imageError && imageError !== "") {
@@ -282,7 +247,14 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
         resolver: yupResolver(schema),
         mode: "onBlur",
     });
-    const onSubmit = (data: any) => console.log(data);
+    const onSubmit = (data: any) => {
+        data.image_url = image?.name;
+        data.is_already_installed = false;
+        data.publish_date = Date.now();
+        data.requires_license = true;
+
+        dispatch(AddPackageRedux(data, image, subscriptionkey));
+    };
 
     return (
         <>
@@ -296,16 +268,16 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FormContent>
                             <FormWrapper>
-                                <Label htmlFor="displayName">Display name</Label>
-                                {errors.displayName && (
+                                <Label htmlFor="display_name">Display name</Label>
+                                {errors.display_name && (
                                     <ErrorLine role="alert" aria-label="display name">
                                         The display name is required
                                     </ErrorLine>
                                 )}
                                 <Textbox
-                                    {...register("displayName")}
-                                    id="displayName"
-                                    name="displayName"
+                                    {...register("display_name")}
+                                    id="display_name"
+                                    name="display_name"
                                     placeholder="Display name of the package"
                                     autoFocus
                                 />
@@ -327,23 +299,59 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     })}
                                 </Select>
 
+                                <Label htmlFor="customer_shorthand">Customer shorthand</Label>
+                                {errors.customer_shorthand && (
+                                    <ErrorLine role="alert" aria-label="customer_shorthand">
+                                        Customer shorthand is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("customer_shorthand")}
+                                    id="customer_shorthand"
+                                    name="customer_shorthand"
+                                    placeholder="The customer shortname"
+                                    autoFocus
+                                />
+                                <Label htmlFor="source_repository">Source repository</Label>
+                                {errors.source_repository && (
+                                    <ErrorLine role="alert" aria-label="source_repository">
+                                        Source repository is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("source_repository")}
+                                    id="source_repository"
+                                    name="source_repository"
+                                    placeholder="Nname of the source repository"
+                                    autoFocus
+                                />
+
+                                <Label htmlFor="need_to_restart">Need to restart</Label>
+
+                                <Select {...register("need_to_restart")} id="need_to_restart">
+                                    <option value="false" selected={true}>
+                                        Nee
+                                    </option>
+                                    <option value="true">Ja</option>
+                                </Select>
+
                                 <FormItemsHalfSizeWrapper>
                                     <div>
-                                        <Label htmlFor="installationTime">Installation time</Label>
-                                        {errors.installationTime && (
+                                        <Label htmlFor="installation_time">Installation time</Label>
+                                        {errors.installation_time && (
                                             <ErrorLine role="alert" aria-label="installation">
                                                 Installation is required and should be a number
                                             </ErrorLine>
                                         )}
                                         <Textbox
-                                            {...register("installationTime")}
-                                            id="installationTime"
-                                            name="installationTime"
+                                            {...register("installation_time")}
+                                            id="installation_time"
+                                            name="installation_time"
                                             style={{
                                                 display: "inline-block",
                                                 width: "calc(100% - 16px)",
                                             }}
-                                            placeholder="The time in minutes the package needs to isntall"
+                                            placeholder="The time in minutes the package needs to install"
                                         />
                                     </div>
 
@@ -363,6 +371,20 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                         />
                                     </div>
                                 </FormItemsHalfSizeWrapper>
+
+                                <Label htmlFor="tags">Tags</Label>
+                                {errors.tags && (
+                                    <ErrorLine role="alert" aria-label="tags">
+                                        Tags is required
+                                    </ErrorLine>
+                                )}
+                                <Textbox
+                                    {...register("tags")}
+                                    id="tags"
+                                    name="tags"
+                                    style={{ display: "inline-block" }}
+                                    placeholder="The tags of the package"
+                                />
 
                                 <Label htmlFor="summary">Summary</Label>
                                 {errors.summary && (
@@ -390,16 +412,16 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     placeholder="If the package has any description please state them here."
                                 />
 
-                                <Label htmlFor="packageName">Package name</Label>
-                                {errors.packageName && (
+                                <Label htmlFor="package_name">Package name</Label>
+                                {errors.package_name && (
                                     <ErrorLine role="alert" aria-label="package name">
                                         Package name is required
                                     </ErrorLine>
                                 )}
                                 <Textbox
-                                    {...register("packageName")}
-                                    id="packageName"
-                                    name="packageName"
+                                    {...register("package_name")}
+                                    id="package_name"
+                                    name="package_name"
                                     placeholder="The name of the package"
                                 />
 
@@ -416,20 +438,20 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     placeholder="If the package has any dependencies please state them here."
                                 />
 
-                                <Label htmlFor="licenseMessage">License message</Label>
-                                {errors.licenseMessage && (
+                                <Label htmlFor="license_message">License message</Label>
+                                {errors.license_message && (
                                     <ErrorLine role="alert" aria-label="license">
                                         The license is required
                                     </ErrorLine>
                                 )}
                                 <Textbox
-                                    {...register("licenseMessage")}
-                                    id="licenseMessage"
-                                    name="licenseMessage"
+                                    {...register("license_message")}
+                                    id="license_message"
+                                    name="license_message"
                                     placeholder="The license message of the package"
                                 />
 
-                                <Label htmlFor="isVisible">Visible</Label>
+                                <Label htmlFor="is_visible">Visible</Label>
                                 {errors.isVisible && (
                                     <ErrorLine role="alert" aria-label="visibility">
                                         Visible is required
@@ -444,9 +466,9 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     }}
                                 >
                                     <input
-                                        {...register("isVisible")}
+                                        {...register("is_visible")}
                                         type="radio"
-                                        name="isVisible"
+                                        name="is_visible"
                                         value="true"
                                         id="isVisible-yes"
                                     />
@@ -460,22 +482,20 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                     }}
                                 >
                                     <input
-                                        {...register("isVisible")}
+                                        {...register("is_visible")}
                                         type="radio"
-                                        name="isVisible"
+                                        name="is_visible"
                                         value="false"
                                         id="isVisible-no"
                                     />
                                     &nbsp; No
                                 </Label>
 
-                                <SubmitButton
-                                // disabled={!checkObjectIsEmpty(errors) || imageError !== "" || image === undefined}
-                                />
+                                <SubmitButton />
                             </FormWrapper>
                             <ImageWrapper>
                                 <ImageContainer></ImageContainer>
-                                <Label htmlFor="imageUrl" style={{ marginTop: "24px" }}>
+                                <Label htmlFor="image_url" style={{ marginTop: "24px" }}>
                                     Image
                                 </Label>
                                 {imageError && (
@@ -485,11 +505,11 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                 )}
                                 <p>{image?.name}</p>
                                 <input
-                                    id="imageUrl"
+                                    id="image_url"
                                     type="file"
                                     data-testid="image-upload-button"
                                     accept="image/x-png,image/gif,image/jpeg"
-                                    {...register("imageUrl")}
+                                    {...register("image_url")}
                                     onChange={async (event) => {
                                         if (event?.currentTarget?.files) {
                                             await checkFileMimetype(
@@ -502,6 +522,7 @@ const AddPackage = ({ intl }: WrappedComponentProps) => {
                                 />
                             </ImageWrapper>
                         </FormContent>
+                        {console.log(errors)}
                     </form>
                 </AddPackageWrapper>
             )}

@@ -7,6 +7,8 @@ import {
     RequestStartedDispatchType,
     RequestSuccessDispatchType,
 } from "../../../models/redux/IReduxActionTypes";
+import { IAddPackage } from "../../../models/IAddPackage";
+import { data } from "msw/lib/types/context";
 
 export const fetchIlionaPackages = (subscriptionKey: string) => {
     return (dispatch: Dispatch<any>) => {
@@ -203,7 +205,7 @@ const fetchIlionaComputerNameRequest: ActionCreator<ThunkAction<Promise<any>, Pa
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            const response: Response = await fetch(`http://127.0.0.1:10001/computer`, {
+            const response: Response = await fetch(`http://127.0.0.1:10002/computer`, {
                 headers: requestHeaders,
             });
 
@@ -248,7 +250,7 @@ const fetchIlionaSubscriptionKeyRequest: ActionCreator<ThunkAction<Promise<any>,
         try {
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
-            const response: Response = await fetch(`http://127.0.0.1:10001/subscriptionkey`, {
+            const response: Response = await fetch(`http://127.0.0.1:10002/subscriptionkey`, {
                 headers: requestHeaders,
             });
 
@@ -297,12 +299,11 @@ const fetchIlionaLocalPackages: ActionCreator<ThunkAction<Promise<any>, Packages
             const requestHeaders: any = new Headers();
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
-            const response: Response = await fetch(`http://localhost:10001/localpackages`, {
+            const response: Response = await fetch(`http://localhost:10002/localpackages`, {
                 headers: requestHeaders,
             });
 
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
-                6;
                 const requestFailedAction: RequestFailedDispatchType = {
                     type: IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_FAILURE,
                     payload: { errorMessage: "Something went wrong" },
@@ -322,6 +323,79 @@ const fetchIlionaLocalPackages: ActionCreator<ThunkAction<Promise<any>, Packages
                 payload: { errorMessage: error },
             };
             dispatch(requestFailedAction);
+        }
+    };
+};
+
+// POST add a package to the appstore
+export const AddPackageRedux = (packageData: IAddPackage, image: any, subscriptionkey: string) => {
+    return (dispatch: Dispatch<any>) => {
+        dispatch(AddPackageRequest(packageData, image, subscriptionkey));
+    };
+};
+
+const AddPackageRequest: ActionCreator<ThunkAction<Promise<any>, PackagesState, null, any>> = (
+    packageData: IAddPackage,
+    image: any,
+    subscriptionKey: string
+) => {
+    return async (dispatch: Dispatch) => {
+        const requestStartedAction: RequestStartedDispatchType = {
+            type: IlionaPackagesTypes.ILIONA_ADD_PACKAGE_STARTED,
+        };
+        dispatch(requestStartedAction);
+
+        const formData = new FormData();
+        formData.append("incoming_file", image);
+
+        try {
+            const requestHeaders: any = new Headers();
+            requestHeaders.set("x-api-key", subscriptionKey);
+            const response: Response = await fetch(`http://localhost:8001/files/`, {
+                method: "POST",
+                headers: requestHeaders,
+                body: formData,
+            });
+
+            if (response.status === 200 || response.status === 201 || response.status === 204) {
+                console.log(image);
+                const body = JSON.stringify(packageData);
+
+                const requestHeadersAddPackage: any = new Headers();
+                requestHeadersAddPackage.set("Content-Type", "application/json");
+                requestHeadersAddPackage.set("x-api-key", subscriptionKey);
+
+                const responseForPackage: Response = await fetch(`http://localhost:8001/add-package`, {
+                    method: "POST",
+                    headers: requestHeadersAddPackage,
+                    body,
+                });
+
+                console.log("--TTT--", responseForPackage);
+            }
+
+            // if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
+
+            //     const requestFailedAction: RequestFailedDispatchType = {
+            //         type: IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_FAILURE,
+            //         payload: { errorMessage: "Something went wrong" },
+            //     };
+            //     return dispatch(requestFailedAction);
+            // }
+            // const result = await response.json();
+
+            // const requestSuccessAction: RequestSuccessDispatchType = {
+            //     payload: { packages: result },
+            //     type: IlionaPackagesTypes.FETCH_ILIONA_LOCAL_PACKAGES_SUCCESS,
+            // };
+            // dispatch(requestSuccessAction);
+        } catch (error) {
+            console.log("++++++++++++++", error);
+            // const requestFailedAction: RequestFailedDispatchType = {
+            //     type: IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE,
+            //     payload: { errorMessage: error },
+            // };
+            // dispatch(requestFailedAction);
         }
     };
 };
