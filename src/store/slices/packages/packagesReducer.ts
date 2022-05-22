@@ -179,6 +179,31 @@ export function PackagesReducer(
                 locallyInstalledPackages: action.payload?.packages?.local_packages,
             };
 
+        case IlionaPackagesTypes.ILIONA_ADD_PACKAGE_STARTED:
+            return {
+                ...state,
+                isFetching: true,
+            };
+
+        case IlionaPackagesTypes.ILIONA_ADD_PACKAGE_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                errorMessage: action.payload.errorMessage,
+                packageInstallSuccessful: false,
+                subscriptionKey: "",
+            };
+
+        case IlionaPackagesTypes.ILIONA_ADD_PACKAGE_SUCCESS:
+            return {
+                ...state,
+                isFetching: false,
+                packageInstallFailed: false,
+                packageInstallSuccessful: false,
+                ilionaPackages: action.payload?.packages,
+            };
+
         default: {
             return state;
         }
