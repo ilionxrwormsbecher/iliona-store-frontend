@@ -29,7 +29,7 @@ const fetchIlionaCategoriesRequest: ActionCreator<ThunkAction<Promise<any>, Cate
             requestHeaders.set("Content-Type", "application/json");
             requestHeaders.set("x-api-key", subscriptionKey);
             // const response: Response = await fetch(`${process.env.REACT_APP_API_URL}categories`, {
-            const response: Response = await fetch(`http://localhost:8001/categories`, {
+            const response: Response = await fetch(`${process.env.REACT_APP_API_URL}categories`, {
                 headers: requestHeaders,
             });
 
