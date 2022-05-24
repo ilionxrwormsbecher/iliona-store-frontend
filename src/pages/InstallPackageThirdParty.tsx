@@ -20,7 +20,7 @@ import { ErrorMessagesEnum } from "../models/errorsEnum";
 import { screenSize } from "../themes/global";
 import { Header1 } from "../components/html/header/Header";
 import { useForm } from "react-hook-form";
-import { checkObjectIsEmpty } from "../utils/general";
+import { checkObjectIsEmpty, checkWhetherIsIcoAdmin } from "../utils/general";
 import { ErrorLine, FormContent, FormWrapper, Label, SubmitButton, Textbox } from "../styles/shared/formStyles";
 
 const schema = yup
@@ -70,25 +70,11 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
         (state: IReduxApplicationState) => state.packagesSlice.computerNameError
     );
 
-    const checkWhetherIsIcoAdmin = async () => {
-        const requestHeaders: any = new Headers();
-        requestHeaders.set("Content-Type", "application/json");
-        requestHeaders.set("x-api-key", packages?.subscriptionKey);
-
-        const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
-            method: "GET",
-            headers: requestHeaders,
-        });
-
-        const allowed = await result.json();
-
-        if (!allowed) return navigate("/notallowed", { replace: true });
-    };
-
     const {
         register,
         handleSubmit,
         setValue,
+        reset,
         getValues,
         formState: { errors },
     } = useForm({
@@ -106,6 +92,13 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                 "install-package-on-computer"
             )
         );
+
+        reset({
+            packageName: "",
+            computerName: "",
+        });
+        setConfirm(false);
+        setIsSilentInstall(false);
     };
 
     useEffect(() => {
@@ -119,7 +112,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                 dispatch(fetchIlionaCategories(packages?.subscriptionKey));
             }
 
-            // checkWhetherIsIcoAdmin();
+            checkWhetherIsIcoAdmin(packages?.subscriptionKey, navigate);
         }
     }, [dispatch, packages?.subscriptionKey]);
 
@@ -213,10 +206,11 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                                         }}
                                     >
                                         <input
-                                            onClick={() => setIsSilentInstall(!isSilentInstall)}
+                                            onChange={() => setIsSilentInstall(!isSilentInstall)}
                                             type="checkbox"
                                             name="isSilentInstall"
                                             value={isSilentInstall.toString()}
+                                            checked={isSilentInstall}
                                             id="isSilentInstall"
                                             style={{ display: "inline-block" }}
                                             tabIndex={3}
@@ -233,10 +227,11 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                                         }}
                                     >
                                         <input
-                                            onClick={() => setConfirm(!confirm)}
+                                            onChange={() => setConfirm(!confirm)}
                                             type="checkbox"
                                             name="confirm"
                                             value={confirm.toString()}
+                                            checked={confirm}
                                             id="confirm"
                                             style={{ display: "inline-block" }}
                                             tabIndex={4}

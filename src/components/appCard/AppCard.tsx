@@ -106,7 +106,7 @@ const AppCard = ({
                 <ImageContainer
                     data-testid="packageImage"
                     style={{
-                        backgroundImage: `url(${imageUrl})`,
+                        backgroundImage: `url(${process.env.REACT_APP_BLOB_STORAGE_URL}${imageUrl})`,
                         width: "100%",
                         height: "230px",
                         backgroundPosition: "center",

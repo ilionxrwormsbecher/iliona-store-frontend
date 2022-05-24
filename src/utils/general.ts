@@ -1,3 +1,4 @@
+import { NavigateFunction } from "react-router-dom";
 import { IIlionaLocalPackage } from "./../models/ilionaLocalPackage";
 export function checkObjectIsEmpty(object: Object) {
     if (object && Object.keys(object).length === 0 && Object.getPrototypeOf(object) === Object.prototype) {
@@ -16,6 +17,21 @@ export function checkPackageIsInstalled(packageList: IIlionaLocalPackage[], pack
 
     return isInstalled;
 }
+
+export const checkWhetherIsIcoAdmin = async (subscriptionKey: string, navigate: NavigateFunction) => {
+    const requestHeaders: any = new Headers();
+    requestHeaders.set("Content-Type", "application/json");
+    requestHeaders.set("x-api-key", subscriptionKey);
+
+    const result = await fetch(`${process.env.REACT_APP_API_URL}is-admin`, {
+        method: "GET",
+        headers: requestHeaders,
+    });
+
+    const allowed = await result.json();
+
+    if (!allowed) return navigate("/notallowed", { replace: true });
+};
 
 export const checkFileMimetype = async (file: File, setField: any, setimageError: any) => {
     let blob = file;

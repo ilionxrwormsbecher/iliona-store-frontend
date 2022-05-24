@@ -297,7 +297,7 @@ const PackageDetail = ({ intl }: WrappedComponentProps) => {
                             <HeaderLeftSection>
                                 <div
                                     style={{
-                                        backgroundImage: `url(${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`,
+                                        backgroundImage: `url(${process.env.REACT_APP_BLOB_STORAGE_URL}${packageDetails?.selectedPackageDetail[0]?.ImageUrl})`,
                                         maxWidth: "204px",
                                         height: "230px",
                                         backgroundPosition: "center",

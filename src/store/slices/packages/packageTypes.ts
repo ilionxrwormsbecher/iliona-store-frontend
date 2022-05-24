@@ -45,4 +45,5 @@ export type PackagesState = Readonly<{
     subscriptionKey: string;
     locallyInstalledPackages: IIlionaLocalPackage[];
     computerNameError: string;
+    packageAdded: boolean;
 }>;

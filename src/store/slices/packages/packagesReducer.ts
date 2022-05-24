@@ -17,6 +17,7 @@ const initialState: PackagesState = {
     subscriptionKey: "",
     locallyInstalledPackages: [] as IIlionaLocalPackage[],
     computerNameError: "",
+    packageAdded: false,
 };
 
 export function PackagesReducer(
@@ -28,6 +29,7 @@ export function PackagesReducer(
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_FAILURE:
@@ -35,6 +37,7 @@ export function PackagesReducer(
                 ...state,
                 errorMessage: action?.payload?.errorMessage,
                 isFetching: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGES_SUCCESS:
@@ -43,12 +46,14 @@ export function PackagesReducer(
                 ilionaPackages: action.payload.packages.data,
                 errorMessage: "",
                 isFetching: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_STARTED:
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_FAILURE:
@@ -56,6 +61,7 @@ export function PackagesReducer(
                 ...state,
                 errorMessage: action.payload.errorMessage,
                 isFetching: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_PACKAGE_DETAIL_SUCCESS:
@@ -64,12 +70,14 @@ export function PackagesReducer(
                 selectedPackageDetail: action.payload.packageDetails.data,
                 errorMessage: "",
                 isFetching: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_STARTED:
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_FAILURE:
@@ -79,6 +87,7 @@ export function PackagesReducer(
                 isFetching: false,
                 packageInstallFailed: true,
                 packageInstallSuccessful: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_INSTALL_PACKAGE_SUCCESS:
@@ -88,12 +97,15 @@ export function PackagesReducer(
                 packageInstallFailed: false,
                 errorMessage: "",
                 packageInstallSuccessful: action.payload.installed,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.CLOSE_TOAST_MESSAGE:
+            console.log("i get to close");
             return {
                 ...state,
                 packageInstallSuccessful: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.REMOVE_PACKAGE_ERROR:
@@ -102,12 +114,14 @@ export function PackagesReducer(
                 errorMessage: "",
                 packageInstallFailed: false,
                 packageInstallSuccessful: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_STARTED:
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_SUCCESS:
@@ -118,6 +132,7 @@ export function PackagesReducer(
                 packageInstallSuccessful: false,
                 computerNameError: "",
                 computerName: action.payload.computer,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_COMPUTER_NAME_FAILURE:
@@ -127,12 +142,14 @@ export function PackagesReducer(
                 packageInstallFailed: false,
                 computerNameError: ErrorMessagesEnum.noCSAClientFound,
                 packageInstallSuccessful: false,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_STARTED:
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.FETCH_ILIONA_SUBSCRIPTION_KEY_SUCCESS:
@@ -183,6 +200,7 @@ export function PackagesReducer(
             return {
                 ...state,
                 isFetching: true,
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.ILIONA_ADD_PACKAGE_FAILURE:
@@ -193,6 +211,7 @@ export function PackagesReducer(
                 errorMessage: action.payload.errorMessage,
                 packageInstallSuccessful: false,
                 subscriptionKey: "",
+                packageAdded: false,
             };
 
         case IlionaPackagesTypes.ILIONA_ADD_PACKAGE_SUCCESS:
@@ -202,6 +221,7 @@ export function PackagesReducer(
                 packageInstallFailed: false,
                 packageInstallSuccessful: false,
                 ilionaPackages: action.payload?.packages,
+                packageAdded: true,
             };
 
         default: {
