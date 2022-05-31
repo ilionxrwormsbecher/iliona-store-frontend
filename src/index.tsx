@@ -14,6 +14,10 @@ if (process.env.NODE_ENV === "development" && process.env.REACT_APP_USE_MSW) {
     worker.start();
 }
 
+console.log("REACT_APP_STOREFRONT_PORT", process.env.REACT_APP_STOREFRONT_PORT);
+console.log("REACT_APP_API_URL", process.env.REACT_APP_API_URL);
+console.log("REACT_APP_BLOB_STORAGE_URL", process.env.REACT_APP_BLOB_STORAGE_URL);
+
 ReactDOM.render(
     <IntlProvider locale={"nl"} messages={translationSets["nl"]}>
         <Provider store={store}>
