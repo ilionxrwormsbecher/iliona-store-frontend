@@ -9,7 +9,7 @@ ENV REACT_APP_BLOB_STORAGE_URL="|REACT_APP_BLOB_STORAGE_URL|"
 #copy the package.json plus lockfile. use the frozen install command to make sure nothing changes from the package*.json.
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci
+RUN npm install
 
 # make sure to install react-scrips as global to the machine thats building the package.
 RUN npm install react-scripts@5.0.0 -g
