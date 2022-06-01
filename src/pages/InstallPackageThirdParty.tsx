@@ -27,6 +27,7 @@ const schema = yup
     .object({
         packageName: yup.string().required(),
         computerName: yup.string().required(),
+        customerShorthand: yup.string().required(),
     })
     .required();
 
@@ -83,6 +84,8 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
     });
 
     const onSubmit = () => {
+        console.log("values", getValues("customerShorthand"));
+
         dispatch(
             InstallPackage(
                 getValues("packageName"),
@@ -96,6 +99,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
         reset({
             packageName: "",
             computerName: "",
+            customerShorthand: "",
         });
         setConfirm(false);
         setIsSilentInstall(false);
@@ -197,6 +201,22 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                                         />
                                     </div>
 
+                                    <div>
+                                        <Label htmlFor="customerShorthand">Afkorting klantnaam</Label>
+                                        {errors.computerName && (
+                                            <ErrorLine role="alert" aria-label="customerShorthand">
+                                                De afkorting klantnaam is vereist
+                                            </ErrorLine>
+                                        )}
+                                        <Textbox
+                                            {...register("customerShorthand")}
+                                            id="customerShorthand"
+                                            name="customerShorthand"
+                                            placeholder="customerShorthand"
+                                            tabIndex={3}
+                                        />
+                                    </div>
+
                                     <Label
                                         htmlFor="isSilentInstall"
                                         style={{
@@ -213,7 +233,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                                             checked={isSilentInstall}
                                             id="isSilentInstall"
                                             style={{ display: "inline-block" }}
-                                            tabIndex={3}
+                                            tabIndex={4}
                                         />
                                         &nbsp;
                                         <span>Toon toast notificatie na installatie</span>
@@ -234,7 +254,7 @@ const InstallPackageThirdParty = ({ intl }: WrappedComponentProps) => {
                                             checked={confirm}
                                             id="confirm"
                                             style={{ display: "inline-block" }}
-                                            tabIndex={4}
+                                            tabIndex={5}
                                         />
                                         &nbsp;
                                         <span>
