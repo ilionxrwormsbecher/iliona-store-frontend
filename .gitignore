@@ -25,4 +25,4 @@ yarn-error.log*
 
 src/secrets/apikey.ts
 .env.development
-startup.sh
+startup.dev.sh
