@@ -1,4 +1,4 @@
-FROM node:16.3.0 as build-stage
+FROM node:16.3.0-alpine as build-stage
 WORKDIR /app
 
 # Set env variables
@@ -19,10 +19,10 @@ COPY . ./
 RUN npm run build
 
 # Copy the files over to Nginx
-FROM nginx:stable
+FROM nginx:stable-alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY startup.sh /opt/store/startup.sh
 
 # Copy the default nginx.conf and post build script.
 COPY default.conf /etc/nginx/conf.d/default.conf
-CMD ["bash","/opt/store/startup.sh"]
+CMD ["sh","/opt/store/startup.sh"]
