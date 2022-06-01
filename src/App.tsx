@@ -93,11 +93,13 @@ function App({ intl }: WrappedComponentProps) {
     if (categories?.errorMessage) {
         showError = true;
     }
+
+    console.log(process.env.REACT_APP_CLIENTID);
+    console.log(process.env.REACT_APP_REALM);
+    console.log(process.env.REACT_APP_URL);
+
     return (
-        // <ReactKeycloakProvider
-        //     authClient={ keycloak }
-        //     initOptions={ { onLoad: "login-required" } }
-        // >
+        // <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: "login-required" }}>
         <ThemeProvider theme={theme}>
             <Router history={history}>
                 <Wrapper>
@@ -106,11 +108,6 @@ function App({ intl }: WrappedComponentProps) {
                     <Nav categories={categories.categories} />
                     <Main>
                         <ErrorBoundary FallbackComponent={ErrorFallback}>
-                            {/* {categories.isFetching && (
-                                <MainContent data-testid="app-spinner">
-                                    <Spinner />
-                                </MainContent>
-                            )} */}
                             {appInitialLoading && (
                                 <div style={{ display: "none" }}>
                                     <Spinner />

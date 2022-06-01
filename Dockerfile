@@ -24,5 +24,5 @@ COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY startup.sh /opt/store/startup.sh
 
 # Copy the default nginx.conf and post build script.
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
 CMD ["bash","/opt/store/startup.sh"]
