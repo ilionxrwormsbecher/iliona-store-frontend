@@ -21,9 +21,10 @@ RUN npm run build
 # Copy the files over to Nginx
 FROM nginx:stable-alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
-COPY startup.sh /opt/store/startup.sh
+COPY startup.sh /startup.sh
+RUN chmod +x /startup.sh
 
 
 # Copy the default nginx.conf and post build script.
 COPY default.conf /etc/nginx/conf.d/default.conf
-CMD ["sh","/opt/store/startup.sh"]
+CMD ["sh","/startup.sh"]
