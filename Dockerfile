@@ -23,6 +23,7 @@ FROM nginx:stable-alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY startup.sh /opt/store/startup.sh
 
+
 # Copy the default nginx.conf and post build script.
 COPY default.conf /etc/nginx/conf.d/default.conf
 CMD ["sh","/opt/store/startup.sh"]
