@@ -26,6 +26,7 @@ import NotAllowed from "./pages/NotAllowed";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/errorComponent/ErrorFallback";
 import InstallPackageThirdParty from "./pages/InstallPackageThirdParty";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 const Main = styled.main`
     width: 100%;
@@ -99,40 +100,61 @@ function App({ intl }: WrappedComponentProps) {
     console.log(process.env.REACT_APP_URL);
 
     return (
-        // <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: "login-required" }}>
-        <ThemeProvider theme={theme}>
-            <Router history={history}>
-                <Wrapper>
-                    <HeaderBar />
-                    <Header background="/assets/img/logo_ilionx.png" />
-                    <Nav categories={categories.categories} />
-                    <Main>
-                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                            {appInitialLoading && (
-                                <div style={{ display: "none" }}>
-                                    <Spinner />
-                                </div>
-                            )}
+        <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: "login-required" }}>
+            <ThemeProvider theme={theme}>
+                <Router history={history}>
+                    <Wrapper>
+                        <HeaderBar />
+                        <Header background="/assets/img/logo_ilionx.png" />
+                        <Nav categories={categories.categories} />
+                        <Main>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                {appInitialLoading && (
+                                    <div style={{ display: "none" }}>
+                                        <Spinner />
+                                    </div>
+                                )}
 
-                            {showError && !appInitialLoading ? (
-                                <MainContent>{errorMessage}</MainContent>
-                            ) : (
-                                <Routes>
-                                    <Route path="/categorie/:catName" element={<CategoryPackages />} />
-                                    <Route path="/details/:rowkey" element={<PackageDetail />} />
-                                    <Route path="/packages/add" element={<AddPackage />} />
-                                    <Route path="/installpackage" element={<InstallPackageThirdParty />} />
-                                    <Route path="/notAllowed" element={<NotAllowed />} />
-                                    <Route path="/" element={<Home />} />
-                                </Routes>
-                            )}
-                        </ErrorBoundary>
-                        ;
-                    </Main>
-                </Wrapper>
-            </Router>
-        </ThemeProvider>
-        // </ReactKeycloakProvider>
+                                {showError && !appInitialLoading ? (
+                                    <MainContent>{errorMessage}</MainContent>
+                                ) : (
+                                    <Routes>
+                                        <Route
+                                            path="/categorie/:catName"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <CategoryPackages />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/details/:rowkey"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <PackageDetail />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route path="/packages/add" element={<AddPackage />} />
+                                        <Route path="/installpackage" element={<InstallPackageThirdParty />} />
+                                        <Route path="/notAllowed" element={<NotAllowed />} />
+                                        <Route
+                                            path="/"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <Home />
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                    </Routes>
+                                )}
+                            </ErrorBoundary>
+                            ;
+                        </Main>
+                    </Wrapper>
+                </Router>
+            </ThemeProvider>
+        </ReactKeycloakProvider>
     );
 }
 
