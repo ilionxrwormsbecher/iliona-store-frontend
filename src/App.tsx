@@ -19,14 +19,14 @@ import { IReduxApplicationState } from "./models/redux/IReduxApplicationState";
 import { Spinner } from "./components/spinner/Spinner";
 import CategoryPackages from "./pages/CategoryPackages";
 import AddPackage from "./pages/AddPackage";
-import { ReactKeycloakProvider } from "@react-keycloak/web";
-import keycloak from "./Keycloak";
 import { fetchComputerName, fetchLocalPackages, fetchSubscriptionKey } from "./store/slices/packages/packagesActions";
 import NotAllowed from "./pages/NotAllowed";
+import keycloak from "./Keycloak";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/errorComponent/ErrorFallback";
 import InstallPackageThirdParty from "./pages/InstallPackageThirdParty";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import { ReactKeycloakProvider } from "@react-keycloak/web";
 
 const Main = styled.main`
     width: 100%;
@@ -94,10 +94,6 @@ function App({ intl }: WrappedComponentProps) {
     if (categories?.errorMessage) {
         showError = true;
     }
-
-    console.log(process.env.REACT_APP_CLIENTID);
-    console.log(process.env.REACT_APP_REALM);
-    console.log(process.env.REACT_APP_URL);
 
     return (
         <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: "login-required" }}>
